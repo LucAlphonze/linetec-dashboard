@@ -4,7 +4,7 @@ FROM node:lts
 WORKDIR /home/node/app
 
 # Copy dependency definitions
-COPY package*.json /home/node/app
+COPY package*.json /home/node/app/
 
 # Install dependecies
 RUN npm install
