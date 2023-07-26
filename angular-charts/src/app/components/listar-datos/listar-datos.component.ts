@@ -11,8 +11,9 @@ Chart.register(...registerables);
 })
 export class ListarDatosComponent implements OnInit, OnDestroy {
   listDatos: any[] = [];
-  sensor_1: string = 'variable sensor 1';
-  sensor_2: string = 'variable sensor 2';
+  sensor_1: string = 'sensor 1';
+  sensor_2: string = 'sensor 2';
+  pulsador: string = 'Pulsador';
   id: any = 0;
   chart: any;
   title: string = 'Prueba angular';
@@ -31,6 +32,9 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
         this.chart.data.datasets[1].data = this.listDatos
           .filter((x) => x.id_variable.nombre == this.sensor_2)
           .map((x) => x.valor_lectura);
+        this.chart.data.datasets[2].data = this.listDatos
+          .filter((x) => x.id_variable.nombre == this.pulsador)
+          .map((x) => x.valor_lectura);
 
         this.chart.data.labels = this.listDatos.map((x) => x.fecha_lectura);
         this.chart.update();
@@ -38,7 +42,8 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
           'despues del for each',
           this.chart.data.labels,
           this.chart.data.datasets[0].data,
-          this.chart.data.datasets[1].data
+          this.chart.data.datasets[1].data,
+          this.chart.data.datasets[2].data
         );
       });
     }, 10000);
@@ -60,6 +65,13 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
             label: 'sensor 2',
             fill: false,
             borderColor: 'rgba(255, 0, 0)',
+            tension: 0.1,
+          },
+          {
+            data: [],
+            label: 'pulsador',
+            fill: false,
+            borderColor: 'rgba(0, 255, 0)',
             tension: 0.1,
           },
         ],

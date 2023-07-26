@@ -1,18 +1,12 @@
-FROM node:lts
+FROM node:17-alpine3.14 as build
+WORKDIR /app
 
-# Change directory so that our commands run inside this new directory
-WORKDIR /home/node/app
+RUN npm install -g @angular/cli
 
-# Copy dependency definitions
-COPY package*.json /home/node/app/
-
-# Install dependecies
+COPY ./package.json .
 RUN npm install
-
-# Get all the code needed to run the app
 COPY . .
+RUN ng build
 
-# Expose the port the app runs in
-EXPOSE 4200
-
-# Serve the app
+FROM nginx as runtime
+COPY --from=build /app/dist/angular-charts /usr/share/nginx/html

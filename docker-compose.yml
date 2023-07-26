@@ -67,17 +67,10 @@ services:
     command: "sh start_script.sh"
 
   angular-app:
-    build: ./angular-charts
     container_name: angular-app
-    restart: always
-    working_dir: /home/node/app
-    networks:
-      - code-network
+    build: ./angular-charts
     ports:
-      - 4200:4200
-    volumes:
-      - ./angular-charts:/home/node/app
-    command: "sh start_script.sh"
+      - 8080:80
 
 networks:
   code-network:

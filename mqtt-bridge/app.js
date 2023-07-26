@@ -21,9 +21,11 @@ servClient.on("message", function (topic, message) {
   for (let i = 0; i < messageJSON.length; i++) {
     console.log("json: ", messageJSON[i], "en la posicion: ", i);
     var pruebaJson = {
-      id_variable: messageJSON[i].id,
+      id_variable: messageJSON[i]?.id
+        ? messageJSON[i].id
+        : "64be9904e707de188fdd5349",
       valor_lectura: messageJSON[i].v,
-      fecha_lectura: new Date().toLocaleString(),
+      fecha_lectura: new Date(),
     };
     axios
       .post(`http://rest-api:3001/api/registro-general`, pruebaJson)
