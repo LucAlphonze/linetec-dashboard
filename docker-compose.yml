@@ -67,11 +67,15 @@ services:
     command: "sh start_script.sh"
 
   angular-app:
+    image: nginx
     container_name: angular-app
-    build: ./angular-charts
+    networks:
+      - code-network
+    restart: always
     ports:
       - 8080:80
-
+    volumes:
+      - ./angular-charts/dist/angular-charts:/usr/share/nginx/html
 networks:
   code-network:
     driver: bridge
