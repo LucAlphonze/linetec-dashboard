@@ -30,7 +30,7 @@ services:
     restart: always
 
   mqtt-bridge:
-    image: "node:17-alpine3.14"
+    build: ./mqtt-bridge
     container_name: mqtt-bridge
     depends_on:
       - rest-api
@@ -40,15 +40,15 @@ services:
     user: "node"
     ports:
       - 3000:3000
-    working_dir: /home/node/app
+    working_dir: /app
     environment:
       - NODE_ENV=${NODE_ENV}
     volumes:
-      - ./mqtt-bridge:/home/node/app
-    command: "sh start_script.sh"
+      - ./mqtt-bridge:/app
+      - /app/node_modules
 
   rest-api:
-    image: "node:17-alpine3.14"
+    build: ./rest-api
     container_name: rest-api
     depends_on:
       - mongo
@@ -56,14 +56,14 @@ services:
       - code-network
     restart: always
     user: "node"
-    working_dir: /home/node/app
+    working_dir: /app
     environment:
       - NODE_ENV=${NODE_ENV}
     ports:
       - 3001:3001 #to outside host:container
     volumes:
-      - ./rest-api:/home/node/app
-    command: "sh start_script.sh"
+      - ./rest-api:/app
+      - /app/node_modules
 
   angular-app:
     image: nginx
