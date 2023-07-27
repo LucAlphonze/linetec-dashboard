@@ -40,7 +40,6 @@ services:
     user: "node"
     ports:
       - 3000:3000
-
     working_dir: /home/node/app
     environment:
       - NODE_ENV=${NODE_ENV}
@@ -49,7 +48,7 @@ services:
     command: "sh start_script.sh"
 
   rest-api:
-    build: ./rest-api
+    image: "node:17-alpine3.14"
     container_name: rest-api
     depends_on:
       - mongo
