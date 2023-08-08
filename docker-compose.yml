@@ -72,7 +72,7 @@ services:
       - code-network
     restart: always
     ports:
-      - 8080:80
+      - 80:80
     volumes:
       - ./angular-charts/dist/angular-charts:/usr/share/nginx/html
 networks:
