@@ -1,4 +1,4 @@
-const Personal = require("../models/personal");
+const Personal = require("../models/personal.model");
 
 const obtenerPersonal = async (req, res) => {
   try {
