@@ -11,6 +11,8 @@ Chart.register(...registerables);
 })
 export class ListarDatosComponent implements OnInit, OnDestroy {
   listDatos: any[] = [];
+  listVariables: any[] = [];
+  listCheckbox: any[] = [];
   sensor_1: string = 'sensor 1';
   sensor_2: string = 'sensor 2';
   pulsador: string = 'Pulsador';
@@ -22,59 +24,12 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    setInterval(() => {
-      this._httpService.getValores().subscribe((data) => {
-        this.listDatos = data['datos'];
-        console.log(this.listDatos);
-        this.chart.data.datasets[0].data = this.listDatos
-          .filter((x) => x.id_variable.nombre == this.sensor_1)
-          .map((x) => x.valor_lectura);
-        this.chart.data.datasets[1].data = this.listDatos
-          .filter((x) => x.id_variable.nombre == this.sensor_2)
-          .map((x) => x.valor_lectura);
-        this.chart.data.datasets[2].data = this.listDatos
-          .filter((x) => x.id_variable.nombre == this.pulsador)
-          .map((x) => x.valor_lectura);
-
-        this.chart.data.labels = this.listDatos.map((x) => x.fecha_lectura);
-        this.chart.update();
-        console.log(
-          'despues del for each',
-          this.chart.data.labels,
-          this.chart.data.datasets[0].data,
-          this.chart.data.datasets[1].data,
-          this.chart.data.datasets[2].data
-        );
-      });
-    }, 10000);
-
+    this.getVariables();
     this.chart = new Chart('myChart', {
       type: 'line',
       data: {
         labels: [],
-        datasets: [
-          {
-            data: [],
-            label: 'sensor 1',
-            fill: false,
-            borderColor: 'rgb(75, 192, 192)',
-            tension: 0.1,
-          },
-          {
-            data: [],
-            label: 'sensor 2',
-            fill: false,
-            borderColor: 'rgba(255, 0, 0)',
-            tension: 0.1,
-          },
-          {
-            data: [],
-            label: 'pulsador',
-            fill: false,
-            borderColor: 'rgba(0, 255, 0)',
-            tension: 0.1,
-          },
-        ],
+        datasets: [],
       },
       options: {
         scales: {
@@ -85,9 +40,97 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
       },
     });
   }
+
   ngOnDestroy(): void {
     if (this.id) {
       clearInterval(this.id);
     }
+  }
+
+  getRegistros(value: any) {
+    this.chart.data.datasets.forEach((array: any) => {
+      array.data = [];
+    });
+    console.log(value);
+    for (let i = 0; i < this.listCheckbox.length; i++) {
+      this._httpService
+        .getValores(this.listCheckbox[i]._id)
+        .subscribe((data) => {
+          this.listDatos = data['datos'];
+          console.log('datos: ', this.listDatos);
+          for (let j = 0; j < this.chart.data.datasets.length; j++) {
+            if (
+              this.listCheckbox[i].nombre == this.chart.data.datasets[j].label
+            ) {
+              console.log(
+                'IF TRUE',
+                'check box nombre: ',
+                this.listCheckbox[i].nombre,
+                'en la posicion i:',
+                i,
+                'variable nombre: ',
+                this.chart.data.datasets[j],
+                'en la posicion: ',
+                j
+              );
+              this.chart.data.labels = this.listDatos.map(
+                (x) => x.fecha_lectura
+              );
+              console.log('despues del for each', this.chart.data.labels);
+              this.chart.data.datasets[j].data = this.listDatos.map(
+                (x) => x.valor_lectura
+              );
+            } else {
+              console.log(
+                'ELSE',
+                'check box nombre: ',
+                this.listCheckbox[i].nombre,
+                'en la posicion i:',
+                i,
+                'variable nombre: ',
+                this.chart.data.datasets[j],
+                'en la posicion: ',
+                j
+              );
+            }
+            if (j == this.chart.data.datasets.length) {
+              j = 0;
+            }
+          }
+          this.chart.update();
+        });
+      console.log(this.chart.data.datasets[i].data);
+    }
+    console.log('data label', this.chart.data.datasets);
+  }
+
+  makeCheckboxArray(value: any) {
+    let newValue = JSON.parse(value.source._value);
+    console.log('chip presionado', newValue);
+    if (value.selected == true) {
+      this.listCheckbox.push(newValue);
+    } else {
+      function desmarcar(valor: any) {
+        return value.source._value != valor;
+      }
+      this.listCheckbox = this.listCheckbox.filter((x) => desmarcar(x));
+    }
+    console.log(this.listCheckbox);
+  }
+  getVariables() {
+    this._httpService.getVariables().subscribe((data) => {
+      this.listVariables = data;
+      console.log(this.listVariables);
+
+      for (let i = 0; i < this.listVariables.length; i++) {
+        this.chart.data.datasets[i] = {
+          data: [],
+          label: [this.listVariables[i].nombre],
+          fill: false,
+          borderColor: 'rgb(255, 0, 0)',
+          tension: 0.1,
+        };
+      }
+    });
   }
 }

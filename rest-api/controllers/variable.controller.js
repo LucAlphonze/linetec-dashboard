@@ -2,7 +2,9 @@ const Variable = require("../models/variable.model");
 
 const obtenerVariables = async (req, res) => {
   try {
-    const variables = await Variable.find();
+    const variables = await Variable.find()
+      .populate("id_maquina", "nombre modelo")
+      .populate("id_proceso", "descripcion");
     res.send(variables);
   } catch (error) {
     res.status(500).json({

@@ -1,0 +1,55 @@
+<mat-card>
+  <mat-card-header>
+    <h2>Formulario Maquina</h2>
+  </mat-card-header>
+  <mat-card-content>
+    <form
+      class="example-form"
+      [formGroup]="maquinaForm"
+      (ngSubmit)="createMaquina()"
+    >
+      <div class="flex flex-col">
+        <mat-form-field class="">
+          <mat-label>Nombre</mat-label>
+          <input matInput formControlName="nombre" />
+        </mat-form-field>
+        <mat-form-field class="">
+          <mat-label>Marca</mat-label>
+          <input matInput formControlName="marca" />
+        </mat-form-field>
+
+        <mat-form-field class="">
+          <mat-label>Tipo de maquina </mat-label>
+          <mat-select formControlName="id_tipo_maquina">
+            <mat-option value="">Elegir tipo de maquina </mat-option>
+            <mat-option *ngFor="let tipo of listTipoMaquina" [value]="tipo._id">
+              <p>{{ tipo.descripcion }}</p>
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field class="">
+          <mat-label>Modelo</mat-label>
+          <input matInput formControlName="modelo" />
+        </mat-form-field>
+        <mat-form-field class="">
+          <mat-label>Detalle</mat-label>
+          <input matInput formControlName="detalle" />
+        </mat-form-field>
+
+        <mat-form-field class="">
+          <mat-label>Linea de produccion </mat-label>
+          <mat-select formControlName="id_linea_produccion">
+            <mat-option value="">Elegir una Linea de produccion </mat-option>
+            <mat-option *ngFor="let linea of listLineas" [value]="linea._id">
+              <p>{{ linea.descripcion }}</p>
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="m-1">
+        <button class="m-3" mat-raised-button color="primary">submit</button>
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>

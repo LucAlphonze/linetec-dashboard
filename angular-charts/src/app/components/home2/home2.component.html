@@ -1,0 +1,26 @@
+<mat-stepper [linear]="isLinear" #stepper>
+  <mat-step [stepControl]="paisForm">
+    <ng-template matStepLabel>
+      <div class="text-center">
+        <mat-icon>queue_play_next</mat-icon><br /><span>País</span>
+      </div>
+    </ng-template>
+    <app-pais-form></app-pais-form>
+  </mat-step>
+  <mat-step [stepControl]="provinciaForm">
+    <ng-template matStepLabel>
+      <div class="text-center">
+        <mat-icon>queue_play_next</mat-icon><br /><span>Provincia</span>
+      </div>
+    </ng-template>
+    <app-provincia-form></app-provincia-form>
+  </mat-step>
+  <mat-step [stepControl]="localidadForm">
+    <ng-template matStepLabel>
+      <div class="text-center">
+        <mat-icon>queue_play_next</mat-icon><br /><span>Localidad</span>
+      </div>
+    </ng-template>
+    <app-localidad-form></app-localidad-form>
+  </mat-step>
+</mat-stepper>

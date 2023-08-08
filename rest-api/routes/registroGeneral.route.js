@@ -11,10 +11,12 @@ const {
   obtenerTodos,
   obtenerRegistrosGenerales,
   crearRegistroGeneral,
+  getTodos,
 } = require("../controllers/registroGeneral.controller");
 
 const router = Router();
-router.get("/", obtenerTodos);
+router.get("/:variable", obtenerTodos);
+router.get("/", getTodos);
 // router.get("/algo", renderRegistros);
 router.get("/:idVariable", obtenerRegistrosGenerales);
 router.post(

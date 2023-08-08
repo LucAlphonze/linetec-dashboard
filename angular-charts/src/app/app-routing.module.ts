@@ -1,10 +1,23 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { ListarDatosComponent } from './components/listar-datos/listar-datos.component';
+import { HomeComponent } from './components/home/home.component';
+import { RegisterComponent } from './components/register/register.component';
+import { LoginComponent } from './components/login/login.component';
+import { UserlistingComponent } from './components/userlisting/userlisting.component';
+import { authGuard } from './guard/auth.guard';
+import { Home2Component } from './components/home2/home2.component';
+import { Home3Component } from './components/home3/home3.component';
 
 const routes: Routes = [
   { path: '', component: ListarDatosComponent },
-  { path: '**', redirectTo: '', pathMatch: 'full' },
+  { path: 'home', component: HomeComponent, canActivate: [authGuard] },
+  { path: 'home2', component: Home2Component, canActivate: [authGuard] },
+  { path: 'home3', component: Home3Component, canActivate: [authGuard] },
+  { path: 'register', component: RegisterComponent },
+  { path: 'login', component: LoginComponent },
+  { path: 'user', component: UserlistingComponent, canActivate: [authGuard] },
+  { path: '**', redirectTo: 'login', pathMatch: 'full' },
 ];
 
 @NgModule({

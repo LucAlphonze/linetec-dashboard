@@ -1,7 +1,6 @@
 require("dotenv").config({ path: "./.env" });
 const mqtt = require("mqtt");
 const axios = require("axios");
-
 const servClient = mqtt.connect(`mqtt://mosquitto:1883`, {
   username: process.env.MQTT_USER,
   password: process.env.MQTT_PASSWORD,
@@ -16,27 +15,51 @@ servClient.on("connect", function () {
 });
 
 servClient.on("message", function (topic, message) {
-  var messageJSON = JSON.parse(message.toString());
+  axios.get("http://rest-api:3001/api/variables").then((response) => {
+    var listVariables = response.data;
+    var messageJSON = JSON.parse(message.toString());
 
-  for (let i = 0; i < messageJSON.length; i++) {
-    console.log("json: ", messageJSON[i], "en la posicion: ", i);
-    var pruebaJson = {
-      id_variable: messageJSON[i]?.id
-        ? messageJSON[i].id
-        : "64be9904e707de188fdd5349",
-      valor_lectura: messageJSON[i].v,
-      fecha_lectura: new Date(),
-    };
-    axios
-      .post(`http://rest-api:3001/api/registro-general`, pruebaJson)
-      .then((res) => {
-        console.log(`statusCode: ${res.status}`);
-        console.log(res.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
+    console.log("list Variables: ", listVariables);
+    for (let i = 0; i < messageJSON.length; i++) {
+      for (let j = 0; j < listVariables.length; j++) {
+        if (messageJSON[i].n != listVariables[j].nombre) {
+          console.log(
+            messageJSON[i].n,
+            "mensaje posisicion: ",
+            i,
+            listVariables[j].nombre,
+            "list variable posicion: ",
+            j
+          );
+        } else if (messageJSON[i].n == listVariables[j].nombre) {
+          var pruebaJson = {
+            id_variable: listVariables[j]?._id,
+            valor_lectura: messageJSON[i].v,
+            fecha_lectura: new Date(),
+          };
+          axios
+            .post(`http://rest-api:3001/api/registro-general`, pruebaJson)
+            .then((res) => {
+              console.log(`statusCode: ${res.status}`);
+              console.log(res.data);
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        }
+        if (j == listVariables.length) {
+          j = 0;
+        }
+      }
+      // if (messageJSON[i].n == listVariables[i].nombre) {
+      //   console.log("json: ", messageJSON[i], "en la posicion: ", i);
+
+      // } else {
+      //   console.log("Error en la posicion", i, "json: ", messageJSON[i]);
+      // }
+    }
+  });
+
   console.log("string message: ", message.toString());
 });
 

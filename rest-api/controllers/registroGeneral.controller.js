@@ -3,7 +3,27 @@ const axios = require("axios");
 
 const obtenerTodos = async (req, res) => {
   try {
-    const registrosGenerales = await RegistroGeneral.find()
+    let variable = req.params.variable;
+    const registrosGenerales = await RegistroGeneral.find({
+      id_variable: variable,
+    })
+      .limit(20)
+      .sort({ fecha_lectura: -1 })
+      .populate("id_variable", "nombre");
+    res.status(200).json({
+      ok: true,
+      datos: registrosGenerales,
+    });
+  } catch (error) {
+    res.status(500).json({
+      ok: false,
+      error,
+    });
+  }
+};
+const getTodos = async (req, res) => {
+  try {
+    const registrosGenerales = await RegistroGeneral.find({})
       .limit(20)
       .sort({ fecha_lectura: -1 })
       .populate("id_variable", "nombre");
@@ -140,5 +160,6 @@ module.exports = {
   obtenerTodos,
   obtenerRegistrosGenerales,
   crearRegistroGeneral,
+  getTodos,
   // renderRegistros,
 };

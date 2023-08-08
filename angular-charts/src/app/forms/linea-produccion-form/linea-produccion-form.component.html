@@ -1,0 +1,40 @@
+<mat-card>
+  <mat-card-header>
+    <h2>Formulario Linea de produccion</h2>
+  </mat-card-header>
+  <mat-card-content>
+    <form
+      class="example-form"
+      [formGroup]="lineaForm"
+      (ngSubmit)="createLinea()"
+    >
+      <div class="flex flex-col">
+        <mat-form-field class="">
+          <mat-label>descripcion</mat-label>
+          <input matInput formControlName="descripcion" />
+        </mat-form-field>
+        <mat-form-field class="">
+          <mat-label>observaciones</mat-label>
+          <input matInput formControlName="observaciones" />
+        </mat-form-field>
+        <mat-form-field class="">
+          <mat-label>Empresa Planta</mat-label>
+          <mat-select formControlName="id_empresa_planta">
+            <mat-option value="">Elegir una Empresa </mat-option>
+            <mat-option *ngFor="let planta of listPlantas" [value]="planta._id">
+              <p>{{ planta.nombre }}</p>
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field class="">
+          <mat-label>identificador</mat-label>
+          <input matInput formControlName="identificador" />
+        </mat-form-field>
+      </div>
+      <div class="m-1">
+        <button class="m-3" mat-raised-button color="primary">submit</button>
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>

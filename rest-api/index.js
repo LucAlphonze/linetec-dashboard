@@ -34,7 +34,30 @@ dbConnection();
 
 // rutas
 app.use("/api/variables", require("./routes/variable.route"));
+app.use("/api/users", require("./routes/users.route"));
+app.use("/api/role", require("./routes/role.route"));
+app.use("/api/paises", require("./routes/pais.route"));
+app.use("/api/provincias", require("./routes/provincia.route"));
+app.use("/api/localidad", require("./routes/localidad.route"));
+app.use("/api/empresas", require("./routes/empresa.route"));
+app.use("/api/empresa-planta", require("./routes/empresa-planta.route"));
+app.use("/api/tipo-maquina", require("./routes/tipo-maquina.route"));
+app.use("/api/maquinas", require("./routes/maquina.route"));
+app.use("/api/proceso", require("./routes/proceso.route"));
+app.use("/api/linea-produccion", require("./routes/linea-produccion.route"));
 app.use("/api/registro-general", require("./routes/registroGeneral.route"));
+app.use("/api/personal", require("./routes/personal.route"));
+app.use(
+  "/api/administracion-monitoreo",
+  require("./routes/administracionMonitoreo.route")
+);
+app.use(
+  "/api/alertas-personalizadas",
+  require("./routes/alertaPersonalizada.route")
+);
+app.use(
+  "/api/alertas-personalizadas-var",
+  require("./routes/alertaPersonalizadaVar.route")
+);
 app.use(express.static(path.join(__dirname, "public")));
-
 module.exports = app;
