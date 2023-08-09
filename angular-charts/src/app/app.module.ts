@@ -25,6 +25,7 @@ import { MaquinaFormComponent } from './forms/maquina-form/maquina-form.componen
 import { TipoMaquinaFormComponent } from './forms/tipo-maquina-form/tipo-maquina-form.component';
 import { LineaProduccionFormComponent } from './forms/linea-produccion-form/linea-produccion-form.component';
 import { Home3Component } from './components/home3/home3.component';
+import { ProcesoFormComponent } from './forms/proceso-form/proceso-form.component';
 
 @NgModule({
   declarations: [
@@ -45,6 +46,7 @@ import { Home3Component } from './components/home3/home3.component';
     TipoMaquinaFormComponent,
     LineaProduccionFormComponent,
     Home3Component,
+    ProcesoFormComponent,
   ],
   imports: [
     BrowserModule,
