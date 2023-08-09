@@ -14,4 +14,5 @@ export const environment = {
   API_URL_MAQUINA: 'http://automatismo-dev.ddns.net:3001/api/maquinas',
   API_URL_LINEA_PRODUCCION:
     'http://automatismo-dev.ddns.net:3001/api/linea-produccion',
+  API_URL_PROCESO: 'http://automatismo-dev.ddns.net:3001/api/proceso',
 };

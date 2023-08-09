@@ -15,9 +15,8 @@ export class ProcesoFormComponent implements OnInit {
     private toastr: ToastrService,
     private service: AuthService
   ) {}
-  listPaises: any;
-  apiPaises = environment.API_URL_PAISES;
-  isOptional = true;
+
+  apiProceso = environment.API_URL_PROCESO;
   procesoForm!: FormGroup;
 
   ngOnInit(): void {
@@ -25,18 +24,17 @@ export class ProcesoFormComponent implements OnInit {
       descripcion: this._formBuilder.control('', Validators.required),
     });
   }
-  urlPaises = environment.API_URL_PAISES;
 
   crearProceso() {
     if (this.procesoForm.valid) {
       console.log(this.procesoForm.value);
-      this.service.postForm(this.urlPaises, this.procesoForm.value).subscribe({
+      this.service.postForm(this.apiProceso, this.procesoForm.value).subscribe({
         next: (res: any) => {
           console.log('respuesta: ', res);
           if (res.status == 500) {
             this.toastr.warning(res.error.error);
           } else {
-            this.toastr.success('Pais registrado correctamente');
+            this.toastr.success('proceso registrado correctamente');
           }
         },
         error: (error: any) => {

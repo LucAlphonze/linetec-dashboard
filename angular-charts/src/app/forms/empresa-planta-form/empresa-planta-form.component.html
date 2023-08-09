@@ -23,7 +23,7 @@
         </mat-form-field>
         <mat-form-field class="">
           <mat-label>Empresa</mat-label>
-          <mat-select formControlName="id_empresa">
+          <mat-select (click)="GetAllEmpresas()" formControlName="id_empresa">
             <mat-option value="">Elegir una Empresa </mat-option>
             <mat-option
               *ngFor="let empresa of listEmpresas"

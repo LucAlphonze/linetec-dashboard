@@ -12,4 +12,5 @@ export const environment = {
   API_URL_TIPO_MAQUINA: 'http://localhost:3001/api/tipo-maquina',
   API_URL_MAQUINA: 'http://localhost:3001/api/maquinas',
   API_URL_LINEA_PRODUCCION: 'http://localhost:3001/api/linea-produccion',
+  API_URL_PROCESO: 'http://localhost:3001/api/proceso',
 };

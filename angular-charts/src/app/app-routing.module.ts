@@ -8,12 +8,14 @@ import { UserlistingComponent } from './components/userlisting/userlisting.compo
 import { authGuard } from './guard/auth.guard';
 import { Home2Component } from './components/home2/home2.component';
 import { Home3Component } from './components/home3/home3.component';
+import { Home4Component } from './components/home4/home4.component';
 
 const routes: Routes = [
-  { path: '', component: ListarDatosComponent },
+  { path: '', component: ListarDatosComponent, canActivate: [authGuard] },
   { path: 'home', component: HomeComponent, canActivate: [authGuard] },
   { path: 'home2', component: Home2Component, canActivate: [authGuard] },
   { path: 'home3', component: Home3Component, canActivate: [authGuard] },
+  { path: 'home4', component: Home4Component, canActivate: [authGuard] },
   { path: 'register', component: RegisterComponent },
   { path: 'login', component: LoginComponent },
   { path: 'user', component: UserlistingComponent, canActivate: [authGuard] },

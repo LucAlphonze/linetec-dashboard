@@ -11,7 +11,10 @@
       <div class="flex flex-col">
         <mat-form-field class="">
           <mat-label>Provincia</mat-label>
-          <mat-select formControlName="id_provincia">
+          <mat-select
+            (click)="GetAllProvincias()"
+            formControlName="id_provincia"
+          >
             <mat-option value="">Elegir una provincia </mat-option>
             <mat-option
               *ngFor="let provincia of listProvincias"

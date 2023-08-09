@@ -35,6 +35,7 @@ export class LoginComponent {
           sessionStorage.setItem('userrole', this.userData.role.name);
           this.router.navigate(['']);
           this.toastr.success('acceso concedido');
+          console.log(sessionStorage.getItem('userrole')?.toString());
         } else {
           this.toastr.error('Contactar con administrador', 'usuario inactivo');
         }

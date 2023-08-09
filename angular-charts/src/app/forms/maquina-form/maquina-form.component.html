@@ -20,7 +20,7 @@
 
         <mat-form-field class="">
           <mat-label>Tipo de maquina </mat-label>
-          <mat-select formControlName="id_tipo_maquina">
+          <mat-select (click)="GetAllTipos()" formControlName="id_tipo_maquina">
             <mat-option value="">Elegir tipo de maquina </mat-option>
             <mat-option *ngFor="let tipo of listTipoMaquina" [value]="tipo._id">
               <p>{{ tipo.descripcion }}</p>
@@ -39,7 +39,10 @@
 
         <mat-form-field class="">
           <mat-label>Linea de produccion </mat-label>
-          <mat-select formControlName="id_linea_produccion">
+          <mat-select
+            (click)="GetAllLineas()"
+            formControlName="id_linea_produccion"
+          >
             <mat-option value="">Elegir una Linea de produccion </mat-option>
             <mat-option *ngFor="let linea of listLineas" [value]="linea._id">
               <p>{{ linea.descripcion }}</p>

@@ -26,6 +26,8 @@ import { TipoMaquinaFormComponent } from './forms/tipo-maquina-form/tipo-maquina
 import { LineaProduccionFormComponent } from './forms/linea-produccion-form/linea-produccion-form.component';
 import { Home3Component } from './components/home3/home3.component';
 import { ProcesoFormComponent } from './forms/proceso-form/proceso-form.component';
+import { Home4Component } from './components/home4/home4.component';
+import { VariableFormComponent } from './forms/variable-form/variable-form.component';
 
 @NgModule({
   declarations: [
@@ -47,6 +49,8 @@ import { ProcesoFormComponent } from './forms/proceso-form/proceso-form.componen
     LineaProduccionFormComponent,
     Home3Component,
     ProcesoFormComponent,
+    Home4Component,
+    VariableFormComponent,
   ],
   imports: [
     BrowserModule,

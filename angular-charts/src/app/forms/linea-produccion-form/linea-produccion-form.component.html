@@ -19,7 +19,10 @@
         </mat-form-field>
         <mat-form-field class="">
           <mat-label>Empresa Planta</mat-label>
-          <mat-select formControlName="id_empresa_planta">
+          <mat-select
+            (click)="GetAllPlantas()"
+            formControlName="id_empresa_planta"
+          >
             <mat-option value="">Elegir una Empresa </mat-option>
             <mat-option *ngFor="let planta of listPlantas" [value]="planta._id">
               <p>{{ planta.nombre }}</p>
