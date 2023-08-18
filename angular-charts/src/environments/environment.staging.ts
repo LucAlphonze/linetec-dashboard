@@ -15,4 +15,5 @@ export const environment = {
   API_URL_LINEA_PRODUCCION:
     'http://automatismo-dev.ddns.net:3001/api/linea-produccion',
   API_URL_PROCESO: 'http://automatismo-dev.ddns.net:3001/api/proceso',
+  API_URL_TRIGGER: 'http:///automatismo-dev.ddns.net:3001/api/trigger',
 };

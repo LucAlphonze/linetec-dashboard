@@ -22,13 +22,15 @@ export class VariableFormComponent implements OnInit {
   variableForm!: FormGroup;
   listProcesos: any;
   listMaquina: any;
+  listTrigger: any;
 
   ngOnInit(): void {
     this.variableForm = this._formBuilder.group({
       nombre: this._formBuilder.control('', Validators.required),
-      es_automatica: this._formBuilder.control('', Validators.required),
       id_maquina: this._formBuilder.control('', Validators.required),
       id_proceso: this._formBuilder.control('', Validators.required),
+      id_trigger: this._formBuilder.control('', Validators.required),
+      trigger_valor: this._formBuilder.control(''),
     });
   }
 
@@ -42,6 +44,12 @@ export class VariableFormComponent implements OnInit {
     this.service.getForm(this.apiMaquinas).subscribe((res: any) => {
       console.log(res);
       this.listMaquina = res['datos'];
+    });
+  }
+  GetAllTriggers() {
+    this.service.getForm(this.apiMaquinas).subscribe((res: any) => {
+      console.log(res);
+      this.listTrigger = res;
     });
   }
 

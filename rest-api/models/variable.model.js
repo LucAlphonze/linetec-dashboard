@@ -15,8 +15,13 @@ const VariableSchema = Schema({
     ref: "Proceso",
     required: true,
   },
-  es_automatica: {
-    type: Boolean,
+  id_trigger: {
+    type: Schema.Types.ObjectId,
+    ref: "Trigger",
+    required: true,
+  },
+  trigger_valor: {
+    type: String,
   },
 });
 

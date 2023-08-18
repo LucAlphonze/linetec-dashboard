@@ -13,4 +13,5 @@ export const environment = {
   API_URL_MAQUINA: 'http://3.139.132.46:3001/api/maquinas',
   API_URL_LINEA_PRODUCCION: 'http://3.139.132.46:3001/api/linea-produccion',
   API_URL_PROCESO: 'http://3.139.132.46:3001/api/proceso',
+  API_URL_TRIGGER: 'http://3.139.132.46:3001/api/trigger',
 };

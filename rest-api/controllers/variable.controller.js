@@ -4,7 +4,25 @@ const obtenerVariables = async (req, res) => {
   try {
     const variables = await Variable.find()
       .populate("id_maquina", "nombre modelo")
-      .populate("id_proceso", "descripcion");
+      .populate("id_proceso", "descripcion")
+      .populate("id_trigger", "nombre descripcion");
+    res.send(variables);
+  } catch (error) {
+    res.status(500).json({
+      ok: false,
+      error,
+    });
+  }
+};
+const obtenerVariableById = async (req, res) => {
+  let id = req.params.id;
+  try {
+    const variables = await Variable.find({
+      _id: id,
+    })
+      .populate("id_maquina", "nombre modelo")
+      .populate("id_proceso", "descripcion")
+      .populate("id_trigger", "nombre descripcion");
     res.send(variables);
   } catch (error) {
     res.status(500).json({
@@ -35,4 +53,5 @@ const crearVariable = async (req, res) => {
 module.exports = {
   obtenerVariables,
   crearVariable,
+  obtenerVariableById,
 };

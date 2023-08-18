@@ -13,6 +13,13 @@ const RegistroGeneralSchema = Schema({
     type: Number,
     required: true,
   },
+  modo: {
+    type: String,
+    default: "automatica",
+  },
+  time_stamp: {
+    type: Date,
+  },
 });
 
 module.exports = model("RegistroGeneral", RegistroGeneralSchema);

@@ -21,6 +21,10 @@ const UserSchema = Schema({
     type: Schema.Types.ObjectId,
     ref: "Role",
   },
+  id_empresa_planta: {
+    type: Schema.Types.ObjectId,
+    ref: "EmpresaPlanta",
+  },
   isActive: {
     type: Boolean,
     default: false,

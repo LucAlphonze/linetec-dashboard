@@ -41,11 +41,21 @@
         </mat-form-field>
 
         <mat-form-field class="">
-          <mat-label>Es automatica?</mat-label>
-          <mat-select formControlName="es_automatica">
-            <mat-option value="true">SI</mat-option>
-            <mat-option value="false">NO</mat-option>
+          <mat-label>Trigger</mat-label>
+          <mat-select (click)="GetAllTriggers()" formControlName="id_trigger">
+            <mat-option value="">Elegir un trigger </mat-option>
+            <mat-option
+              *ngFor="let trigger of listTrigger"
+              [value]="trigger._id"
+            >
+              <p>{{ trigger.nombre }}</p>
+            </mat-option>
           </mat-select>
+        </mat-form-field>
+
+        <mat-form-field class="">
+          <mat-label>valor del trigger </mat-label>
+          <input matInput formControlName="trigger_valor" />
         </mat-form-field>
       </div>
 

@@ -13,20 +13,13 @@ const {
   crearRegistroGeneral,
   getTodos,
 } = require("../controllers/registroGeneral.controller");
+const { verifyToken } = require("../controllers/auth.controller");
 
 const router = Router();
-router.get("/:variable", obtenerTodos);
-router.get("/", getTodos);
+router.get("/all/:variable", obtenerTodos);
+router.get("/", verifyToken, getTodos);
 // router.get("/algo", renderRegistros);
 router.get("/:idVariable", obtenerRegistrosGenerales);
-router.post(
-  "/",
-  [
-    // check("id_variable", "La variable es obligatorio").not().isEmpty(),
-    check("fecha_lectura", "La fecha de lectura es necesario").not().isEmpty(),
-    validarCampos,
-  ],
-  crearRegistroGeneral
-);
+router.post("/", verifyToken, crearRegistroGeneral);
 
 module.exports = router;

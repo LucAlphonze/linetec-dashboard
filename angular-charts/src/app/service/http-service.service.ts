@@ -12,7 +12,7 @@ export class HttpServiceService {
   constructor(private http: HttpClient) {}
 
   getValores(variable: string): Observable<any> {
-    return this.http.get(this.registroGeneral + variable);
+    return this.http.get(this.registroGeneral + 'all/' + variable);
   }
   getVariables(): Observable<any> {
     return this.http.get(this.variables);

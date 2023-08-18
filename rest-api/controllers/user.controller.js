@@ -1,4 +1,5 @@
 const User = require("../models/users.model");
+const authSerivce = require("./auth.controller");
 
 const obtenerUsers = async (req, res) => {
   try {
@@ -64,9 +65,37 @@ const updateUser = async (req, res) => {
   }
 };
 
+const login = async (req, res) => {
+  var username = req.body.username,
+    password = req.body.password;
+  const usuario = { name: username };
+
+  if (!username || !password) {
+    return res.status(400).send("Error: Bad request!");
+  }
+
+  var doc = User.findOne({ username: username, password: password });
+  doc
+    .then(function (user) {
+      if (!user) {
+        res.status(403).send("Error: Usuario y/o password incorrecto.");
+      } else {
+        res.status(200).json({
+          datos: user,
+          token: authSerivce.genTokens(usuario).accessToken,
+          rtoken: authSerivce.genTokens(usuario).refreshToken,
+        });
+      }
+    })
+    .catch(function (error) {
+      res.status(500).send(`Login Error: ${error.message}`);
+    });
+};
+
 module.exports = {
   obtenerUsers,
   obtenerUserByUserName,
   crearUser,
   updateUser,
+  login,
 };

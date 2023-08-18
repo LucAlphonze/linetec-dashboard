@@ -1,5 +1,6 @@
 const RegistroGeneral = require("../models/registroGeneral.model");
-const axios = require("axios");
+const Variable = require("../models/variable.model");
+const { filtradoPost } = require("./middleware.controller");
 
 const obtenerTodos = async (req, res) => {
   try {
@@ -38,18 +39,6 @@ const getTodos = async (req, res) => {
     });
   }
 };
-
-// const renderRegistros = (req, res) => {
-//   var registroGeneral = [];
-//   setInterval(() => {
-//     axios.get("http://3.12.146.60:3001/api/registro-general").then((data) => {
-//       registroGeneral = data.data.datos;
-//     });
-//   }, 10000);
-//   return res.render("index", {
-//     registrosGenerales: registroGeneral,
-//   });
-// };
 
 const obtenerRegistrosGenerales = async (req, res) => {
   try {
@@ -140,19 +129,47 @@ const obtenerRegistrosGenerales = async (req, res) => {
 
 const crearRegistroGeneral = async (req, res) => {
   const registroGeneral = new RegistroGeneral(req.body);
+  const id_variable = registroGeneral.id_variable;
 
   try {
-    await registroGeneral.save();
+    const variable = await Variable.findOne({
+      _id: id_variable,
+    })
+      .populate("id_maquina", "nombre modelo")
+      .populate("id_proceso", "descripcion")
+      .populate("id_trigger", "nombre descripcion");
 
+    const ultimoRegistro = await RegistroGeneral.findOne({
+      id_variable: id_variable,
+    }).sort({ fecha_lectura: -1 });
+    console.log(
+      "ultimo registro : ",
+      ultimoRegistro,
+      "variable: ",
+      variable,
+      "registro nuevo: ",
+      registroGeneral
+    );
+
+    let filtrado = await filtradoPost(
+      variable,
+      registroGeneral,
+      ultimoRegistro
+    );
+    console.log("respuesta ", filtrado);
+
+    await filtrado.save();
     res.status(200).json({
       ok: true,
-      datos: registroGeneral,
+      datos: filtrado,
     });
   } catch (error) {
+    console.log("registro general post error: ", error);
     res.status(500).json({
       ok: false,
-      error,
+      datos: error,
     });
+    return;
   }
 };
 
