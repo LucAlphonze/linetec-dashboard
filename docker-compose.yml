@@ -13,6 +13,7 @@ services:
       - 27018:27017
     volumes:
       - ./tmp/mongodb:/data/db
+    command: --repair
 
   mosquitto:
     image: eclipse-mosquitto
