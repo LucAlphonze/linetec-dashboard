@@ -312,7 +312,7 @@
   <a routerLink="/register">Register</a>
   <a *ngIf="isAdminUser" routerLink="/user">Users</a>
   <div class="spacer"></div>
-  <a routerLink="/login">Logout</a>
+  <a style="cursor: pointer" (click)="logOut()">Logout</a>
 </div>
 
 <div class="content" style="width: 100%; display: block" role="main">

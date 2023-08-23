@@ -7,11 +7,12 @@ const {
   obtenerAdministracionesMonitoreos,
   crearAdministracionMonitoreo,
 } = require("../controllers/administracionMonitoreo.controller");
+const { verifyToken } = require("../controllers/auth.controller");
 
 const router = Router();
 
-router.get("/", obtenerAdministracionesMonitoreos);
+router.get("/", verifyToken, obtenerAdministracionesMonitoreos);
 
-router.post("/", crearAdministracionMonitoreo);
+router.post("/", verifyToken, crearAdministracionMonitoreo);
 
 module.exports = router;

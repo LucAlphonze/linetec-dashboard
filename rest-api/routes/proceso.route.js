@@ -8,11 +8,12 @@ const {
   obtenerProcesos,
   crearProceso,
 } = require("../controllers/proceso.controller");
+const { verifyToken } = require("../controllers/auth.controller");
 
 const router = Router();
 
-router.get("/", obtenerProcesos);
+router.get("/", verifyToken, obtenerProcesos);
 
-router.post("/", crearProceso);
+router.post("/", verifyToken, crearProceso);
 
 module.exports = router;

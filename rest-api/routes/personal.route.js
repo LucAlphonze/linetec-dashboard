@@ -8,11 +8,12 @@ const {
   obtenerPersonal,
   crearPersonal,
 } = require("../controllers/personal.controller");
+const { verifyToken } = require("../controllers/auth.controller");
 
 const router = Router();
 
-router.get("/", obtenerPersonal);
+router.get("/", verifyToken, obtenerPersonal);
 
-router.post("/", crearPersonal);
+router.post("/", verifyToken, crearPersonal);
 
 module.exports = router;

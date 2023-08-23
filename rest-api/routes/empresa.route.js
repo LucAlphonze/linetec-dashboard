@@ -9,13 +9,14 @@ const {
   empresaPorLocalidad,
   crearEmpresa,
 } = require("../controllers/empresa.controller");
+const { verifyToken } = require("../controllers/auth.controller");
 
 const router = Router();
 
-router.get("/", obtenerEmpresas);
-router.get("/:idRubroEmpresa", obtenerEmpresa);
-router.get("/localidad/:idLocalidad", empresaPorLocalidad);
+router.get("/", verifyToken, obtenerEmpresas);
+router.get("/:idRubroEmpresa", verifyToken, obtenerEmpresa);
+router.get("/localidad/:idLocalidad", verifyToken, empresaPorLocalidad);
 
-router.post("/", crearEmpresa);
+router.post("/", verifyToken, crearEmpresa);
 
 module.exports = router;

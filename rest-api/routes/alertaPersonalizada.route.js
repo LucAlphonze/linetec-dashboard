@@ -9,11 +9,12 @@ const {
   obtenerAlertasPersonalizadas,
   crearAlertaPersonalizada,
 } = require("../controllers/alertaPersonalizada.controller");
+const { verifyToken } = require("../controllers/auth.controller");
 
 const router = Router();
 
-router.get("/", obtenerAlertasPersonalizadas);
+router.get("/", verifyToken, obtenerAlertasPersonalizadas);
 
-router.post("/", crearAlertaPersonalizada);
+router.post("/", verifyToken, crearAlertaPersonalizada);
 
 module.exports = router;

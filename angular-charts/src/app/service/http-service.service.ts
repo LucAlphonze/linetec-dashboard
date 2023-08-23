@@ -9,12 +9,21 @@ import { environment } from 'src/environments/environment';
 export class HttpServiceService {
   registroGeneral = environment.API_URL_RGENERAL;
   variables = environment.API_URL_VARIABLES;
+  token = sessionStorage.getItem('token')?.toString();
   constructor(private http: HttpClient) {}
 
   getValores(variable: string): Observable<any> {
-    return this.http.get(this.registroGeneral + 'all/' + variable);
+    return this.http.get(this.registroGeneral + 'all/' + variable, {
+      headers: {
+        Authorization: `Bearer ${this.token}`,
+      },
+    });
   }
   getVariables(): Observable<any> {
-    return this.http.get(this.variables);
+    return this.http.get(this.variables, {
+      headers: {
+        Authorization: `Bearer ${this.token}`,
+      },
+    });
   }
 }

@@ -26,22 +26,65 @@ export class LoginComponent {
   userData: any;
 
   proceedLogin() {
-    this.service.GetById(this.loginForm.value.username).subscribe((res) => {
+    this.service.LogIn(this.loginForm.value).subscribe((res) => {
       this.userData = res;
+      console.log(this.userData.status);
       console.log(this.userData);
-      if (this.userData.password === this.loginForm.value.password) {
-        if (this.userData.isActive) {
-          sessionStorage.setItem('username', this.userData.username);
-          sessionStorage.setItem('userrole', this.userData.role.name);
-          this.router.navigate(['']);
-          this.toastr.success('acceso concedido');
-          console.log(sessionStorage.getItem('userrole')?.toString());
-        } else {
-          this.toastr.error('Contactar con administrador', 'usuario inactivo');
-        }
-      } else {
-        this.toastr.error('Credenciales invalidas', 'contraseña incorrecta');
+      switch (this.userData.status) {
+        case 200:
+          if (this.userData['datos'].isActive) {
+            sessionStorage.setItem('token', this.userData.token);
+            sessionStorage.setItem('username', this.userData['datos'].username);
+            sessionStorage.setItem(
+              'userrole',
+              this.userData['datos'].role.name
+            );
+            this.router.navigate(['']);
+            this.toastr.success('acceso concedido');
+            console.log(sessionStorage.getItem('userrole')?.toString());
+          } else {
+            this.toastr.error(
+              'Contactar con administrador',
+              'usuario inactivo'
+            );
+          }
+          break;
+        case 403:
+          this.toastr.error(
+            'Credenciales invalidas',
+            'usuario o contraseña incorrecta'
+          );
+          break;
+
+        default:
+          this.toastr.error(
+            'Credenciales invalidas',
+            'usuario o contraseña incorrecta'
+          );
+          break;
       }
     });
   }
 }
+
+// if (
+//   this.userData['datos'].username === this.loginForm.value.username &&
+//   this.userData['datos'].password === this.loginForm.value.password
+// ) {
+//   if (this.userData['datos'].isActive) {
+//     sessionStorage.setItem('token', this.userData.token);
+//     sessionStorage.setItem('username', this.userData['datos'].username);
+//     sessionStorage.setItem('userrole', this.userData['datos'].role.name);
+//     this.router.navigate(['']);
+//     this.toastr.success('acceso concedido');
+//     console.log(sessionStorage.getItem('userrole')?.toString());
+//   } else {
+//     this.toastr.error('Contactar con administrador', 'usuario inactivo');
+//   }
+// } else if (this.userData.status == 403) {
+//   console.log('else if');
+//   this.toastr.error(
+//     'Credenciales invalidas',
+//     'usuario o contraseña incorrecta'
+//   );
+// }

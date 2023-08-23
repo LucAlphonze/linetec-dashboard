@@ -25,6 +25,15 @@ export class AuthService {
   GetById(id: any) {
     return this.http.get(this.apiUrl + '/' + id);
   }
+
+  LogIn(body: any) {
+    return this.http.post(this.apiUrl + '/login', body).pipe(
+      catchError(async (error) => {
+        console.log(error.message);
+        return error;
+      })
+    );
+  }
   IsLoggedIn() {
     return sessionStorage.getItem('username') != null;
   }

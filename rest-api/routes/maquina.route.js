@@ -8,11 +8,12 @@ const {
   maquinasPorLinea,
   crearMaquina,
 } = require("../controllers/maquina.controller");
+const { verifyToken } = require("../controllers/auth.controller");
 
 const router = Router();
 
-router.get("/", obtenerMaquinas);
-router.get("/:idLineaProduccion", maquinasPorLinea);
-router.post("/", crearMaquina);
+router.get("/", verifyToken, obtenerMaquinas);
+router.get("/:idLineaProduccion", verifyToken, maquinasPorLinea);
+router.post("/", verifyToken, crearMaquina);
 
 module.exports = router;

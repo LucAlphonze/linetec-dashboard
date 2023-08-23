@@ -7,11 +7,12 @@ const {
   obtenerTiposMaquinas,
   crearTipoMaquina,
 } = require("../controllers/tipo-maquina.controller");
+const { verifyToken } = require("../controllers/auth.controller");
 
 const router = Router();
 
-router.get("/", obtenerTiposMaquinas);
+router.get("/", verifyToken, obtenerTiposMaquinas);
 
-router.post("/", crearTipoMaquina);
+router.post("/", verifyToken, crearTipoMaquina);
 
 module.exports = router;

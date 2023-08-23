@@ -74,7 +74,10 @@ const login = async (req, res) => {
     return res.status(400).send("Error: Bad request!");
   }
 
-  var doc = User.findOne({ username: username, password: password });
+  var doc = User.findOne({ username: username, password: password }).populate(
+    "role",
+    "name"
+  );
   doc
     .then(function (user) {
       if (!user) {
@@ -84,6 +87,7 @@ const login = async (req, res) => {
           datos: user,
           token: authSerivce.genTokens(usuario).accessToken,
           rtoken: authSerivce.genTokens(usuario).refreshToken,
+          status: 200,
         });
       }
     })

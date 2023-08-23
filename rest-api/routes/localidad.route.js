@@ -9,11 +9,12 @@ const {
   localidadPorProvincia,
   crearLocalidad,
 } = require("../controllers/localidad.controller");
+const { verifyToken } = require("../controllers/auth.controller");
 
 const router = Router();
 
-router.get("/", obtenerLocalidades);
-router.get("/:idProvincia", localidadPorProvincia);
-router.post("/", crearLocalidad);
+router.get("/", verifyToken, obtenerLocalidades);
+router.get("/:idProvincia", verifyToken, localidadPorProvincia);
+router.post("/", verifyToken, crearLocalidad);
 
 module.exports = router;

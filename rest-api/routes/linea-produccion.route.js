@@ -7,11 +7,12 @@ const {
   obtenerLineasProducciones,
   crearLineaProduccion,
 } = require("../controllers/linea-produccion.controller");
+const { verifyToken } = require("../controllers/auth.controller");
 
 const router = Router();
 
-router.get("/", obtenerLineasProducciones);
+router.get("/", verifyToken, obtenerLineasProducciones);
 
-router.post("/", crearLineaProduccion);
+router.post("/", verifyToken, crearLineaProduccion);
 
 module.exports = router;

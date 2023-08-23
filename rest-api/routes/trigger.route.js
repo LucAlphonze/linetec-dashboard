@@ -8,11 +8,12 @@ const {
   obtenerTrigger,
   crearTrigger,
 } = require("../controllers/trigger.controller");
+const { verifyToken } = require("../controllers/auth.controller");
 
 const router = Router();
 
-router.get("/", obtenerTrigger);
+router.get("/", verifyToken, obtenerTrigger);
 
-router.post("/", crearTrigger);
+router.post("/", verifyToken, crearTrigger);
 
 module.exports = router;

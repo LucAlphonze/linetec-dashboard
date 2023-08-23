@@ -9,12 +9,13 @@ const {
   plantaPorEmpresa,
   crearEmpresaPlanta,
 } = require("../controllers/empresa-planta.controller");
+const { verifyToken } = require("../controllers/auth.controller");
 
 const router = Router();
 
-router.get("/", obtenerEmpresasPlantas);
-router.get("/:idEmpresa", plantaPorEmpresa);
+router.get("/", verifyToken, obtenerEmpresasPlantas);
+router.get("/:idEmpresa", verifyToken, plantaPorEmpresa);
 
-router.post("/", crearEmpresaPlanta);
+router.post("/", verifyToken, crearEmpresaPlanta);
 
 module.exports = router;

@@ -25,4 +25,8 @@ export class AppComponent implements DoCheck {
       this.isAdminUser = false;
     }
   }
+  logOut() {
+    sessionStorage.clear();
+    this.router.navigate(['/login']);
+  }
 }
