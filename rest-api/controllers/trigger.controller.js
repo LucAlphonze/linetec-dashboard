@@ -38,7 +38,7 @@ const borrarTrigger = async (req, res) => {
       id_trigger: triggerId,
     });
 
-    if (existeVariable) {
+    if (existeVariable.length > 0) {
       return res.status(500).json({
         ok: false,
         status: 500,

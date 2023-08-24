@@ -83,7 +83,7 @@ const borrarEmpresa = async (req, res) => {
       id_empresa: empresaId,
     });
 
-    if (existePlanta) {
+    if (existePlanta.length > 0) {
       return res.status(500).json({
         ok: false,
         status: 500,

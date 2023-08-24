@@ -68,7 +68,7 @@ const borrarProvincia = async (req, res) => {
       id_provincia: provinciaId,
     });
 
-    if (existeLocalidad) {
+    if (existeLocalidad.length > 0) {
       return res.status(500).json({
         ok: false,
         status: 500,

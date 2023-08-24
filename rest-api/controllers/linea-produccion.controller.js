@@ -45,7 +45,7 @@ const borrarLinea = async (req, res) => {
       id_linea_produccion: lineaId,
     });
 
-    if (existeMaquina) {
+    if (existeMaquina.length > 0) {
       return res.status(500).json({
         ok: false,
         status: 500,

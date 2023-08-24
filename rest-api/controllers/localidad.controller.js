@@ -61,7 +61,7 @@ const borrarLocalidad = async (req, res) => {
       id_localidad: localidadId,
     });
 
-    if (existeEmpresa) {
+    if (existeEmpresa.length > 0) {
       return res.status(500).json({
         ok: false,
         status: 500,

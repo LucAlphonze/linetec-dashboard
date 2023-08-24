@@ -59,7 +59,7 @@ const borrarMaquina = async (req, res) => {
       id_maquina: maquinaId,
     });
 
-    if (existeVariable) {
+    if (existeVariable.length > 0) {
       return res.status(500).json({
         ok: false,
         status: 500,

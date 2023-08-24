@@ -54,7 +54,7 @@ const borrarPais = async (req, res) => {
       id_pais: paisId,
     });
 
-    if (existeProvincia) {
+    if (existeProvincia.length > 0) {
       return res.status(500).json({
         ok: false,
         status: 500,
