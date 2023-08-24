@@ -56,7 +56,7 @@ const borrarLinea = async (req, res) => {
 
     const linea = await LineaProduccion.deleteOne({ _id: lineaId });
 
-    res.json({
+    res.status(204).json({
       ok: true,
       datos: linea,
       status: 204,

@@ -54,7 +54,7 @@ const borrarProceso = async (req, res) => {
 
     const proceso = await Proceso.deleteOne({ _id: procesoId });
 
-    res.json({
+    res.status(204).json({
       ok: true,
       datos: proceso,
       status: 204,

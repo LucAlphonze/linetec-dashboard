@@ -49,7 +49,7 @@ const borrarTrigger = async (req, res) => {
 
     const trigger = await Trigger.deleteOne({ _id: triggerId });
 
-    res.json({
+    res.status(204).json({
       ok: true,
       datos: trigger,
       status: 204,

@@ -72,7 +72,7 @@ const borrarPlanta = async (req, res) => {
     }
     const planta = await EmpresaPlanta.deleteOne({ _id: plantaId });
 
-    res.json({
+    res.status(204).json({
       ok: true,
       datos: planta,
       status: 204,

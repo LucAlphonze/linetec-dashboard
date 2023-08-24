@@ -72,7 +72,7 @@ const borrarLocalidad = async (req, res) => {
 
     const localidad = await Localidad.deleteOne({ _id: localidadId });
 
-    res.json({
+    res.status(204).json({
       ok: true,
       datos: localidad,
       status: 204,

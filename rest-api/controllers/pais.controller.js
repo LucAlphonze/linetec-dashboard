@@ -65,7 +65,7 @@ const borrarPais = async (req, res) => {
 
     const pais = await Pais.deleteOne({ _id: paisId });
 
-    res.json({
+    res.status(204).json({
       ok: true,
       datos: pais,
       status: 204,

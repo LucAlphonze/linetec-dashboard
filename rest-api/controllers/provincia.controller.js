@@ -79,7 +79,7 @@ const borrarProvincia = async (req, res) => {
 
     const provincia = await Provincia.deleteOne({ _id: provinciaId });
 
-    res.json({
+    res.status(204).json({
       ok: true,
       datos: provincia,
       status: 204,

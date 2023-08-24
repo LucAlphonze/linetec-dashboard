@@ -18,7 +18,7 @@ const crearRol = async (req, res) => {
   try {
     await role.save();
 
-    res.json({
+    res.status(204).json({
       ok: true,
       datos: role,
     });

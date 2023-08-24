@@ -70,7 +70,7 @@ const borrarMaquina = async (req, res) => {
 
     const maquina = await Maquina.deleteOne({ _id: maquinaId });
 
-    res.json({
+    res.status(204).json({
       ok: true,
       datos: maquina,
       status: 204,
