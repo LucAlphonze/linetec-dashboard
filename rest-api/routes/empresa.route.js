@@ -8,6 +8,7 @@ const {
   obtenerEmpresa,
   empresaPorLocalidad,
   crearEmpresa,
+  borrarEmpresa,
 } = require("../controllers/empresa.controller");
 const { verifyToken } = require("../controllers/auth.controller");
 
@@ -18,5 +19,6 @@ router.get("/:idRubroEmpresa", verifyToken, obtenerEmpresa);
 router.get("/localidad/:idLocalidad", verifyToken, empresaPorLocalidad);
 
 router.post("/", verifyToken, crearEmpresa);
+router.delete("/delete/:empresaId", verifyToken, borrarEmpresa);
 
 module.exports = router;

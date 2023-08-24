@@ -1,4 +1,5 @@
 const Maquina = require("../models/maquina.model");
+const Variable = require("../models/variable.model");
 
 const obtenerMaquinas = async (req, res) => {
   try {
@@ -51,8 +52,40 @@ const crearMaquina = async (req, res) => {
   }
 };
 
+const borrarMaquina = async (req, res) => {
+  const maquinaId = req.params.maquinaId;
+  try {
+    const existeVariable = await Variable.find({
+      id_maquina: maquinaId,
+    });
+
+    if (existeVariable) {
+      return res.status(500).json({
+        ok: false,
+        status: 500,
+        error: "La maquina  tiene variables relacionadas",
+        lineas: existeVariable,
+      });
+    }
+
+    const maquina = await Maquina.deleteOne({ _id: maquinaId });
+
+    res.json({
+      ok: true,
+      datos: maquina,
+      status: 204,
+    });
+  } catch (err) {
+    res.status(500).json({
+      ok: false,
+      error: err,
+    });
+  }
+};
+
 module.exports = {
   obtenerMaquinas,
   maquinasPorLinea,
   crearMaquina,
+  borrarMaquina,
 };

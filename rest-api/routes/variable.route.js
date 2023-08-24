@@ -10,6 +10,7 @@ const {
   obtenerVariables,
   crearVariable,
   obtenerVariableById,
+  borrarVariable,
 } = require("../controllers/variable.controller");
 const { verifyToken } = require("../controllers/auth.controller");
 
@@ -19,5 +20,6 @@ router.get("/", verifyToken, obtenerVariables);
 router.get("/:id", obtenerVariableById);
 
 router.post("/", verifyToken, crearVariable);
+router.delete("/delete/:variableId", verifyToken, borrarVariable);
 
 module.exports = router;

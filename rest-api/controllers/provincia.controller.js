@@ -1,4 +1,5 @@
 const Provincia = require("../models/provincia.model");
+const Localidad = require("../models/localidad.model");
 
 const obtenerProvincias = async (req, res) => {
   try {
@@ -60,8 +61,40 @@ const crearProvincia = async (req, res) => {
   }
 };
 
+const borrarProvincia = async (req, res) => {
+  const provinciaId = req.params.provinciaId;
+  try {
+    const existeLocalidad = await Localidad.find({
+      id_provincia: provinciaId,
+    });
+
+    if (existeLocalidad) {
+      return res.status(500).json({
+        ok: false,
+        status: 500,
+        error: "La provincia tiene localidades relacionadas",
+        localidades: existeLocalidad,
+      });
+    }
+
+    const provincia = await Provincia.deleteOne({ _id: provinciaId });
+
+    res.json({
+      ok: true,
+      datos: provincia,
+      status: 204,
+    });
+  } catch (err) {
+    res.status(500).json({
+      ok: false,
+      error: err,
+    });
+  }
+};
+
 module.exports = {
   obtenerProvincias,
   provinciasPorPais,
   crearProvincia,
+  borrarProvincia,
 };

@@ -50,8 +50,26 @@ const crearVariable = async (req, res) => {
   }
 };
 
+const borrarVariable = async (req, res) => {
+  const variableId = req.params.variableId;
+  try {
+    const variable = await Variable.deleteOne({ _id: variableId });
+
+    res.json({
+      ok: true,
+      datos: variable,
+      status: 204,
+    });
+  } catch (err) {
+    res.status(500).json({
+      ok: false,
+      error: err,
+    });
+  }
+};
 module.exports = {
   obtenerVariables,
   crearVariable,
   obtenerVariableById,
+  borrarVariable,
 };

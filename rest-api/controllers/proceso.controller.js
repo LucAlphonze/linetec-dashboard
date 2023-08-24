@@ -1,4 +1,5 @@
 const Proceso = require("../models/proceso.model");
+const Variable = require("../models/variable.model");
 
 const obtenerProcesos = async (req, res) => {
   try {
@@ -35,7 +36,39 @@ const crearProceso = async (req, res) => {
   }
 };
 
+const borrarProceso = async (req, res) => {
+  const procesoId = req.params.procesoId;
+  try {
+    const existeVariable = await Variable.find({
+      id_proceso: procesoId,
+    });
+
+    if (existeVariable) {
+      return res.status(500).json({
+        ok: false,
+        status: 500,
+        error: "El proceso tiene variables relacionadas",
+        lineas: existeVariable,
+      });
+    }
+
+    const proceso = await Proceso.deleteOne({ _id: procesoId });
+
+    res.json({
+      ok: true,
+      datos: proceso,
+      status: 204,
+    });
+  } catch (err) {
+    res.status(500).json({
+      ok: false,
+      error: err,
+    });
+  }
+};
+
 module.exports = {
   obtenerProcesos,
   crearProceso,
+  borrarProceso,
 };

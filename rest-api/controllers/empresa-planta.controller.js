@@ -1,4 +1,5 @@
 const EmpresaPlanta = require("../models/empresa-planta.model");
+const LineaProduccion = require("../models/linea-produccion.model");
 
 const obtenerEmpresasPlantas = async (req, res) => {
   try {
@@ -54,8 +55,39 @@ const crearEmpresaPlanta = async (req, res) => {
   }
 };
 
+const borrarPlanta = async (req, res) => {
+  const plantaId = req.params.plantaId;
+  try {
+    const existeLinea = await LineaProduccion.find({
+      id_empresa_planta: plantaId,
+    });
+
+    if (existeLinea) {
+      return res.status(500).json({
+        ok: false,
+        status: 500,
+        error: "La Planta tiene lineas de produccion relacionadas",
+        lineas: existeLinea,
+      });
+    }
+    const planta = await EmpresaPlanta.deleteOne({ _id: plantaId });
+
+    res.json({
+      ok: true,
+      datos: planta,
+      status: 204,
+    });
+  } catch (err) {
+    res.status(500).json({
+      ok: false,
+      error: err,
+    });
+  }
+};
+
 module.exports = {
   obtenerEmpresasPlantas,
   plantaPorEmpresa,
   crearEmpresaPlanta,
+  borrarPlanta,
 };
