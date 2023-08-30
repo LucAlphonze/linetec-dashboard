@@ -37,9 +37,21 @@ const localidadPorProvincia = async (req, res) => {
 };
 
 const crearLocalidad = async (req, res) => {
-  const localidad = new Localidad(req.body);
-
   try {
+    const existeLocalidad = await Localidad.findOne({
+      nombre: { $regex: new RegExp(req.body.nombre, "i") },
+      id_provincia: req.body.id_provincia,
+    });
+
+    if (existeLocalidad) {
+      return res.status(500).json({
+        ok: false,
+        status: 500,
+        error: "La Localidad ingresada ya está registrada",
+      });
+    }
+    const localidad = new Localidad(req.body);
+
     await localidad.save();
 
     res.json({

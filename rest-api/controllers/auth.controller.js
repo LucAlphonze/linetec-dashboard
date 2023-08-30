@@ -5,7 +5,7 @@ let refreshTokens = [];
 
 function genTokens(User) {
   // token expiracion 12h- refreshtoken expiracion 13h
-  var token = jwt.sign(User, process.env.SECRET, { expiresIn: "10m" });
+  var token = jwt.sign(User, process.env.SECRET, { expiresIn: "5m" });
   var rToken = jwt.sign(User, process.env.RTSECRET, { expiresIn: "10m" });
   refreshTokens.push(rToken);
   return { accessToken: token, refreshToken: rToken };
@@ -25,7 +25,9 @@ function verifyToken(req, res, next) {
 
 const handleRefreshTokens = (req, res) => {
   const rtoken = req.body.token;
-
+  const User = {
+    name: req.body.user,
+  };
   if (rtoken == null) {
     return res.sendStatus(401);
   }
@@ -34,13 +36,13 @@ const handleRefreshTokens = (req, res) => {
     return res.sendStatus(403);
   }
 
-  jwt.verify(rtoken, process.env.RTSECRET, (err, User) => {
+  jwt.verify(rtoken, process.env.RTSECRET, (err) => {
     if (err) {
       return res.sendStatus(403);
     }
-    const accessToken = jwt.sign(User, process.env.SECRET);
-    res.json({ accessToken: accessToken });
   });
+  const accessToken = jwt.sign(User, process.env.SECRET, { expiresIn: "5m" });
+  res.json({ accessToken: accessToken });
 };
 
 const handleDelete = (req, res) => {

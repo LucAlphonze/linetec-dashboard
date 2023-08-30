@@ -37,7 +37,8 @@ const provinciasPorPais = async (req, res) => {
 const crearProvincia = async (req, res) => {
   try {
     const existeProvincia = await Provincia.findOne({
-      nombre: req.body.nombre,
+      nombre: { $regex: new RegExp(req.body.nombre, "i") },
+      id_pais: req.body.id_pais,
     });
 
     if (existeProvincia) {
