@@ -1,5 +1,7 @@
 const EmpresaPlanta = require("../models/empresa-planta.model");
 const LineaProduccion = require("../models/linea-produccion.model");
+const Localidad = require("../models/localidad.model");
+const Empresa = require("../models/empresa.model");
 
 const obtenerEmpresasPlantas = async (req, res) => {
   try {
@@ -38,9 +40,37 @@ const plantaPorEmpresa = async (req, res) => {
 };
 
 const crearEmpresaPlanta = async (req, res) => {
-  const empresaPlanta = new EmpresaPlanta(req.body);
-
   try {
+    const existeLocalidad = await Localidad.findOne({
+      _id: req.body.id_localidad,
+    });
+    const existeEmpresa = await Empresa.findOne({
+      _id: req.body.id_empresa,
+    });
+    if (existeLocalidad && existeEmpresa) {
+      const existePlanta = await EmpresaPlanta.findOne({
+        nombre: { $regex: new RegExp(req.body.nombre, "i") },
+        id_localidad: req.body.id_localidad,
+        id_empresa: req.body.id_empresa,
+      });
+
+      if (existePlanta) {
+        return res.status(500).json({
+          ok: false,
+          status: 500,
+          error: "La planta ingresada ya está registrada",
+        });
+      }
+    } else {
+      let localidadTexto = existeLocalidad ? " " : "La localiad no existe";
+      let empresaTexto = existeEmpresa ? " " : "La empresa no existe";
+      return res.status(500).json({
+        ok: false,
+        error: `${localidadTexto} ${empresaTexto}`,
+      });
+    }
+
+    const empresaPlanta = new EmpresaPlanta(req.body);
     await empresaPlanta.save();
 
     res.status(200).json({

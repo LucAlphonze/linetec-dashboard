@@ -1,4 +1,7 @@
 const Variable = require("../models/variable.model");
+const Maquina = require("../models/maquina.model");
+const Proceso = require("../models/proceso.model");
+const Trigger = require("../models/trigger.model");
 
 const obtenerVariables = async (req, res) => {
   try {
@@ -33,9 +36,40 @@ const obtenerVariableById = async (req, res) => {
 };
 
 const crearVariable = async (req, res) => {
-  const variable = new Variable(req.body);
-
   try {
+    const existeMaquina = await Maquina.findOne({
+      _id: req.body.id_maquina,
+    });
+    const existeProceso = await Proceso.findOne({
+      _id: req.body.id_proceso,
+    });
+    const existeTrigger = await Trigger.findOne({
+      _id: req.body.id_trigger,
+    });
+    if (existeMaquina && existeProceso && existeTrigger) {
+      const existeVariable = await Variable.findOne({
+        nombre: { $regex: new RegExp(req.body.nombre, "i") },
+        id_maquina: req.body.id_maquina,
+        id_proceso: req.body.id_proceso,
+        id_trigger: req.body.id_trigger,
+      });
+
+      if (existeVariable) {
+        return res.status(500).json({
+          ok: false,
+          error: "La variable ingresada ya está registrada",
+        });
+      }
+    } else {
+      let maquinaTexto = existeMaquina ? " " : "La maquina no existe";
+      let procesoTexto = existeProceso ? " " : "El proceso no existe";
+      let triggerTexto = existeTrigger ? " " : "El trigger no existe";
+      return res.status(500).json({
+        ok: false,
+        error: `${maquinaTexto} ${procesoTexto} ${triggerTexto}`,
+      });
+    }
+    const variable = new Variable(req.body);
     await variable.save();
 
     res.json({

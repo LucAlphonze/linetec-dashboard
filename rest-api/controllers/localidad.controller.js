@@ -1,5 +1,6 @@
 const Localidad = require("../models/localidad.model");
 const Empresa = require("../models/empresa.model");
+const Provincia = require("../models/provincia.model");
 
 const obtenerLocalidades = async (req, res) => {
   try {
@@ -38,16 +39,26 @@ const localidadPorProvincia = async (req, res) => {
 
 const crearLocalidad = async (req, res) => {
   try {
-    const existeLocalidad = await Localidad.findOne({
-      nombre: { $regex: new RegExp(req.body.nombre, "i") },
-      id_provincia: req.body.id_provincia,
+    const existeProvincia = await Provincia.findOne({
+      _id: req.body.id_provincia,
     });
+    if (existeProvincia) {
+      const existeLocalidad = await Localidad.findOne({
+        nombre: { $regex: new RegExp(req.body.nombre, "i") },
+        id_provincia: req.body.id_provincia,
+      });
 
-    if (existeLocalidad) {
+      if (existeLocalidad) {
+        return res.status(500).json({
+          ok: false,
+          status: 500,
+          error: "La Localidad ingresada ya está registrada",
+        });
+      }
+    } else {
       return res.status(500).json({
         ok: false,
-        status: 500,
-        error: "La Localidad ingresada ya está registrada",
+        error: "La provincia no existe",
       });
     }
     const localidad = new Localidad(req.body);

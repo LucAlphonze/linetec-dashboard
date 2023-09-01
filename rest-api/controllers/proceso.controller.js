@@ -18,9 +18,17 @@ const obtenerProcesos = async (req, res) => {
 };
 
 const crearProceso = async (req, res) => {
-  const proceso = new Proceso(req.body);
-
   try {
+    const existeProceso = await Proceso.findOne({
+      nombre: { $regex: new RegExp(req.body.nombre, "i") },
+    });
+    if (existeProceso) {
+      return res.status(500).json({
+        ok: false,
+        error: "El proceso ingresado ya está registrado",
+      });
+    }
+    const proceso = new Proceso(req.body);
     await proceso.save();
 
     res.status(200).json({

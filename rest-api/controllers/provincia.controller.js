@@ -1,5 +1,6 @@
 const Provincia = require("../models/provincia.model");
 const Localidad = require("../models/localidad.model");
+const Pais = require("../models/pais.model");
 
 const obtenerProvincias = async (req, res) => {
   try {
@@ -36,17 +37,28 @@ const provinciasPorPais = async (req, res) => {
 
 const crearProvincia = async (req, res) => {
   try {
-    const existeProvincia = await Provincia.findOne({
-      nombre: { $regex: new RegExp(req.body.nombre, "i") },
-      id_pais: req.body.id_pais,
+    const existePais = await Pais.findOne({
+      _id: req.body.id_pais,
     });
+    if (existePais) {
+      const existeProvincia = await Provincia.findOne({
+        nombre: { $regex: new RegExp(req.body.nombre, "i") },
+        id_pais: req.body.id_pais,
+      });
 
-    if (existeProvincia) {
+      if (existeProvincia) {
+        return res.status(500).json({
+          ok: false,
+          error: "La provincia ingresada ya está registrado",
+        });
+      }
+    } else {
       return res.status(500).json({
         ok: false,
-        error: "La provincia ingresada ya está registrado",
+        error: "El pais de la provincia no existe",
       });
     }
+
     const provincia = new Provincia(req.body);
     await provincia.save();
 

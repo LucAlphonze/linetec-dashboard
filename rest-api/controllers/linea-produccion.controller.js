@@ -1,5 +1,6 @@
 const LineaProduccion = require("../models/linea-produccion.model");
 const Maquina = require("../models/maquina.model");
+const EmpresaPlanta = require("../models/empresa-planta.model");
 
 const obtenerLineasProducciones = async (req, res) => {
   try {
@@ -21,9 +22,29 @@ const obtenerLineasProducciones = async (req, res) => {
 };
 
 const crearLineaProduccion = async (req, res) => {
-  const lineaProduccion = new LineaProduccion(req.body);
-
   try {
+    const existeEmpresaPlanta = await EmpresaPlanta.findOne({
+      _id: req.body.id_empresa_planta,
+    });
+    if (existeEmpresaPlanta) {
+      const existeLineaDeProduccion = await LineaProduccion.findOne({
+        nombre: { $regex: new RegExp(req.body.nombre, "i") },
+        id_empresa_planta: req.body.id_empresa_planta,
+      });
+      if (existeLineaDeProduccion) {
+        return res.status(500).json({
+          ok: false,
+          error: "La linea de produccion ingresada ya está registrada",
+        });
+      }
+    } else {
+      return res.status(500).json({
+        ok: false,
+        error: "La planta no existe",
+      });
+    }
+
+    const lineaProduccion = new LineaProduccion(req.body);
     await lineaProduccion.save();
 
     res.json({
