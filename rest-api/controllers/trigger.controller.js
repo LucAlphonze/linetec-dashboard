@@ -14,9 +14,17 @@ const obtenerTrigger = async (req, res) => {
 };
 
 const crearTrigger = async (req, res) => {
-  const trigger = new Trigger(req.body);
-
   try {
+    const existeTrigger = await Trigger.findOne({
+      nombre: { $regex: new RegExp(req.body.nombre, "i") },
+    });
+    if (existeTrigger) {
+      return res.status(500).json({
+        ok: false,
+        error: "El trigger ingresado ya está registrado",
+      });
+    }
+    const trigger = new Trigger(req.body);
     await trigger.save();
 
     res.json({
