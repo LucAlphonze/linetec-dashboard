@@ -81,19 +81,17 @@ const crearLocalidad = async (req, res) => {
 const borrarLocalidad = async (req, res) => {
   const localidadId = req.params.localidadId;
   try {
-    const existeEmpresa = await Empresa.find({
+    const existeEmpresa = await Empresa.findOne({
       id_localidad: localidadId,
     });
 
-    const existeEmpresaPlanta = await EmpresaPlanta.find({
+    const existeEmpresaPlanta = await EmpresaPlanta.findOne({
       id_localidad: localidadId,
     });
 
-    if (existeEmpresa.length > 0 && existeEmpresaPlanta.length > 0) {
-      let plantaTexto =
-        existeEmpresaPlanta.length > 0 ? " " : "plantas relacionadas";
-      let empresaTexto =
-        existeEmpresa.length > 0 ? " " : "empresas relacionadas";
+    if (existeEmpresa || existeEmpresaPlanta) {
+      let plantaTexto = existeEmpresaPlanta ? " " : "plantas relacionadas";
+      let empresaTexto = existeEmpresa ? " " : "empresas relacionadas";
       return res.status(500).json({
         ok: false,
         status: 500,
