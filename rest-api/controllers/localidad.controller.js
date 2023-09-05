@@ -1,5 +1,6 @@
 const Localidad = require("../models/localidad.model");
 const Empresa = require("../models/empresa.model");
+const EmpresaPlanta = require("../models/empresa-planta.model");
 const Provincia = require("../models/provincia.model");
 
 const obtenerLocalidades = async (req, res) => {
@@ -84,11 +85,19 @@ const borrarLocalidad = async (req, res) => {
       id_localidad: localidadId,
     });
 
-    if (existeEmpresa.length > 0) {
+    const existeEmpresaPlanta = await EmpresaPlanta.find({
+      id_localidad: localidadId,
+    });
+
+    if (existeEmpresa.length > 0 && existeEmpresaPlanta.length > 0) {
+      let plantaTexto =
+        existeEmpresaPlanta.length > 0 ? " " : "plantas relacionadas";
+      let empresaTexto =
+        existeEmpresa.length > 0 ? " " : "empresas relacionadas";
       return res.status(500).json({
         ok: false,
         status: 500,
-        error: "La Localidad tiene empresas relacionadas",
+        error: `La Localidad tiene ${plantaTexto} ${empresaTexto}`,
         empresas: existeEmpresa,
       });
     }
