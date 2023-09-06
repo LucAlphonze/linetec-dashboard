@@ -1,11 +1,11 @@
 const { Schema, model } = require("mongoose");
 
 const TipoMaquinaSchema = Schema({
-  descripcion: {
+  nombre: {
     type: String,
     required: true,
   },
-  observaciones: {
+  descripcion: {
     type: String,
     required: false,
   },

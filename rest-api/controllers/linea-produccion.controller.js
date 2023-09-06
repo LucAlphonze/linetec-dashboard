@@ -20,6 +20,22 @@ const obtenerLineasProducciones = async (req, res) => {
     });
   }
 };
+const lineaProduccionPorPlanta = async (req, res) => {
+  var medidas = req.params.idPlanta;
+  try {
+    const lineas = await LineaProduccion.find({
+      id_empresa_planta: medidas,
+    }).populate("id_empresa_planta", "nombre");
+
+    res.status(200).send(lineas);
+  } catch (error) {
+    res.status(500).json({
+      ok: false,
+      error,
+    });
+    console.log(error);
+  }
+};
 
 const crearLineaProduccion = async (req, res) => {
   try {
@@ -94,4 +110,5 @@ module.exports = {
   obtenerLineasProducciones,
   crearLineaProduccion,
   borrarLinea,
+  lineaProduccionPorPlanta,
 };

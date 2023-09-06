@@ -1,11 +1,11 @@
 const { Schema, model } = require("mongoose");
 
 const LineaProduccionSchema = Schema({
-  descripcion: {
+  nombre: {
     type: String,
     required: true,
   },
-  observaciones: {
+  descripcion: {
     type: String,
   },
   id_empresa_planta: {

@@ -6,7 +6,7 @@ const TipoMaquina = require("../models/tipo-maquina.model");
 const obtenerMaquinas = async (req, res) => {
   try {
     const maquinas = await Maquina.find()
-      .populate("id_tipo_maquina", "descripcion observaciones")
+      .populate("id_tipo_maquina", "nombre descripcion")
       .populate("id_linea_produccion", "descripcion");
 
     res.json({

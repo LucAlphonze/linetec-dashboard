@@ -67,7 +67,7 @@ const crearEmpresa = async (req, res) => {
     if (existeLocalidad) {
       const existeEmpresa = await Empresa.findOne({
         razon_social: { $regex: new RegExp(req.body.razon_social, "i") },
-        id_localidad: req.body.localidad,
+        id_localidad: req.body.id_localidad,
       });
       if (existeEmpresa) {
         return res.status(500).json({
