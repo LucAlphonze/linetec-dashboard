@@ -89,10 +89,9 @@ const borrarVariable = async (req, res) => {
   try {
     const variable = await Variable.deleteOne({ _id: variableId });
 
-    res.json({
+    res.status(204).json({
       ok: true,
       datos: variable,
-      status: 204,
     });
   } catch (err) {
     res.status(500).json({
