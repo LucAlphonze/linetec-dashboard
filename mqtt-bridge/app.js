@@ -8,6 +8,7 @@ var usuario = {
   username: "Admin",
   password: "Admin123$",
 };
+var pruebaJson = {};
 
 const servClient = mqtt.connect(`mqtt://mosquitto:1883`, {
   username: process.env.MQTT_USER,
@@ -63,15 +64,24 @@ servClient.on("message", function (topic, message) {
               j
             );
           } else if (messageJSON[i].n == listVariables[j].nombre) {
-            var ts = dateSlicer(messageJSON[i].ts);
-
-            var pruebaJson = {
+            var ts = "";
+            if (messageJSON[i].ts) {
+              ts = dateSlicer(messageJSON[i].ts);
+              pruebaJson = {
+                id_variable: listVariables[j]?._id,
+                valor_lectura: messageJSON[i].v,
+                modo: messageJSON[i]?.m,
+                time_stamp: ts,
+                fecha_lectura: new Date(),
+              };
+            }
+            pruebaJson = {
               id_variable: listVariables[j]?._id,
               valor_lectura: messageJSON[i].v,
               modo: messageJSON[i]?.m,
-              time_stamp: ts,
               fecha_lectura: new Date(),
             };
+
             await axios
               .post(`http://rest-api:3001/api/registro-general`, pruebaJson, {
                 headers: {
@@ -108,6 +118,24 @@ servClient.on("message", function (topic, message) {
             .then((response) => {
               token = response.data.accessToken;
               console.log("token refrescado exitoso");
+            });
+          await axios
+            .post(`http://rest-api:3001/api/registro-general`, pruebaJson, {
+              headers: {
+                Authorization: `Bearer ${token}`,
+                "content-type": "application/json",
+              },
+            })
+            .then((res) => {
+              console.log(`statusCode: ${res.status}`);
+              console.log(res.data);
+            })
+            .catch((error) => {
+              /*
+                hay que revisar esta parte y ver que pasa cuando mandamos un mensaje y justo el token se expira
+                actualmente el token tiene 10m de duracion
+                  */
+              console.log("error post: ", error.response.data);
             });
           console.log("prueba json en status 403: ", pruebaJson);
           return error;
