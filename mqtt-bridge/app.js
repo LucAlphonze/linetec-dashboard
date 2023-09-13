@@ -8,8 +8,6 @@ var usuario = {
   username: "Admin",
   password: "Admin123$",
 };
-var pruebaJson = {};
-
 const servClient = mqtt.connect(`mqtt://mosquitto:1883`, {
   username: process.env.MQTT_USER,
   password: process.env.MQTT_PASSWORD,
@@ -65,23 +63,16 @@ servClient.on("message", function (topic, message) {
             );
           } else if (messageJSON[i].n == listVariables[j].nombre) {
             var ts = "";
-            pruebaJson = {
+
+            ts = dateSlicer(messageJSON[i]?.ts);
+            var pruebaJson = {
               id_variable: listVariables[j]?._id,
               valor_lectura: messageJSON[i].v,
               modo: messageJSON[i]?.m,
+              time_stamp: ts,
               fecha_lectura: new Date(),
             };
 
-            if (messageJSON[i].ts) {
-              ts = dateSlicer(messageJSON[i].ts);
-              pruebaJson = {
-                id_variable: listVariables[j]?._id,
-                valor_lectura: messageJSON[i].v,
-                modo: messageJSON[i]?.m,
-                time_stamp: ts,
-                fecha_lectura: new Date(),
-              };
-            }
             await axios
               .post(`http://rest-api:3001/api/registro-general`, pruebaJson, {
                 headers: {
