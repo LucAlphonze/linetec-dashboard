@@ -65,6 +65,13 @@ servClient.on("message", function (topic, message) {
             );
           } else if (messageJSON[i].n == listVariables[j].nombre) {
             var ts = "";
+            pruebaJson = {
+              id_variable: listVariables[j]?._id,
+              valor_lectura: messageJSON[i].v,
+              modo: messageJSON[i]?.m,
+              fecha_lectura: new Date(),
+            };
+
             if (messageJSON[i].ts) {
               ts = dateSlicer(messageJSON[i].ts);
               pruebaJson = {
@@ -75,13 +82,6 @@ servClient.on("message", function (topic, message) {
                 fecha_lectura: new Date(),
               };
             }
-            pruebaJson = {
-              id_variable: listVariables[j]?._id,
-              valor_lectura: messageJSON[i].v,
-              modo: messageJSON[i]?.m,
-              fecha_lectura: new Date(),
-            };
-
             await axios
               .post(`http://rest-api:3001/api/registro-general`, pruebaJson, {
                 headers: {
