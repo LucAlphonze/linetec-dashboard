@@ -8,6 +8,7 @@ var usuario = {
   username: "Admin",
   password: "Admin123$",
 };
+var json403 = {};
 const servClient = mqtt.connect(`mqtt://mosquitto:1883`, {
   username: process.env.MQTT_USER,
   password: process.env.MQTT_PASSWORD,
@@ -65,14 +66,14 @@ servClient.on("message", function (topic, message) {
             var ts = "";
 
             ts = dateSlicer(messageJSON[i]?.ts);
-            var pruebaJson = {
+            pruebaJson = {
               id_variable: listVariables[j]?._id,
               valor_lectura: messageJSON[i].v,
               modo: messageJSON[i]?.m,
               time_stamp: ts,
               fecha_lectura: new Date(),
             };
-
+            json403 = pruebaJson;
             await axios
               .post(`http://rest-api:3001/api/registro-general`, pruebaJson, {
                 headers: {
@@ -111,7 +112,7 @@ servClient.on("message", function (topic, message) {
               console.log("token refrescado exitoso");
             });
           await axios
-            .post(`http://rest-api:3001/api/registro-general`, pruebaJson, {
+            .post(`http://rest-api:3001/api/registro-general`, json403, {
               headers: {
                 Authorization: `Bearer ${token}`,
                 "content-type": "application/json",
