@@ -59,6 +59,29 @@
         </mat-form-field>
       </div>
 
+      <div>
+        <mat-accordion>
+          <mat-expansion-panel (click)="GetAllVariables()" hideToggle>
+            <mat-expansion-panel-header>
+              <mat-panel-title> Listado de variables</mat-panel-title>
+            </mat-expansion-panel-header>
+            <mat-list role="list" *ngFor="let variable of listaVariables">
+              <mat-list-item role="listitem">
+                {{ variable.nombre }}
+                <a
+                  (click)="borrarVariable(variable._id)"
+                  class="m-3"
+                  mat-raised-button
+                  color="warn"
+                >
+                  eliminar
+                </a>
+              </mat-list-item>
+            </mat-list>
+          </mat-expansion-panel>
+        </mat-accordion>
+      </div>
+
       <div class="m-1">
         <button class="m-3" mat-raised-button color="primary">submit</button>
         <button mat-button matStepperNext>Next</button>

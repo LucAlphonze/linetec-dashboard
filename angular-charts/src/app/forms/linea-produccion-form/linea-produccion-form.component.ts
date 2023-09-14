@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+import { Subscription } from 'rxjs';
 import { AuthService } from 'src/app/service/auth.service';
 import { environment } from 'src/environments/environment';
 
@@ -16,19 +17,32 @@ export class LineaProduccionFormComponent implements OnInit {
     private service: AuthService
   ) {}
   listPlantas: any;
+  listLineas: any;
+  message: any;
+  id_empresa_planta!: string;
   apiPlanta = environment.API_URL_PLANTA;
   apiLinea = environment.API_URL_LINEA_PRODUCCION;
+  apiMaquina = environment.API_URL_MAQUINA;
   isOptional = true;
   lineaForm!: FormGroup;
+  subscription!: Subscription;
 
   ngOnInit(): void {
     this.GetAllPlantas();
     this.lineaForm = this.builder.group({
+      nombre: this.builder.control('', Validators.required),
       descripcion: this.builder.control('', Validators.required),
-      observaciones: this.builder.control('', Validators.required),
-      id_empresa_planta: this.builder.control('', Validators.required),
       identificador: this.builder.control('', Validators.required),
     });
+    this.subscription = this.service.currentMessage.subscribe(
+      (message) => (this.message = message)
+    );
+    this.subscription = this.service.listLineas.subscribe(
+      (message) => (this.listLineas = message)
+    );
+    this.subscription = this.service.plantaSelected.subscribe(
+      (message) => (this.id_empresa_planta = message)
+    );
   }
 
   GetAllPlantas() {
@@ -37,11 +51,23 @@ export class LineaProduccionFormComponent implements OnInit {
       this.listPlantas = res['datos'];
     });
   }
+  GetAllLineas() {
+    this.service.getForm(this.apiLinea).subscribe((res: any) => {
+      console.log(res);
+      this.listLineas = res['datos'];
+    });
+  }
 
   createLinea() {
     if (this.lineaForm.valid) {
       console.log(this.lineaForm.value);
-      this.service.postForm(this.apiLinea, this.lineaForm.value).subscribe({
+      let body = {
+        id_empresa_planta: this.id_empresa_planta,
+        nombre: this.lineaForm.value.nombre,
+        descripcion: this.lineaForm.value.descripcion,
+        identificador: this.lineaForm.value.identificador,
+      };
+      this.service.postForm(this.apiLinea, body).subscribe({
         next: (res: any) => {
           console.log('respuesta: ', res);
           if (res.status == 500) {
@@ -58,5 +84,37 @@ export class LineaProduccionFormComponent implements OnInit {
     } else {
       this.toastr.warning('Por favor entre datos validos');
     }
+  }
+  borrarLineaProduccion(id: string) {
+    console.log(this.apiLinea + id);
+    this.service.deleteForm(this.apiLinea, id).subscribe({
+      next: (res: any) => {
+        console.log('respuesta: ', res);
+        if (res.status == 500) {
+          this.toastr.warning(res.error.error);
+        } else {
+          this.toastr.success('Linea de produccion borrada correctamente');
+          this.GetAllLineas();
+        }
+      },
+      error: (error: any) => {
+        this.toastr.error(error);
+        console.log(error);
+      },
+    });
+  }
+
+  setLinea(id: any, nombre: any) {
+    console.log('set linea', id, 'nombre', nombre);
+    this.service.changeMessage(id);
+  }
+
+  GetMaquinaByLinea(linea_id: string) {
+    this.service
+      .getForm(this.apiMaquina + this.message)
+      .subscribe((res: any) => {
+        console.log('linea get maquinas', res, linea_id);
+        this.service.streamMaquinas_LineaSelected(res, linea_id);
+      });
   }
 }

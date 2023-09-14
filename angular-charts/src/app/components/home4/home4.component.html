@@ -8,6 +8,15 @@
     <app-proceso-form></app-proceso-form>
   </mat-step>
 
+  <mat-step [stepControl]="triggerForm">
+    <ng-template matStepLabel>
+      <div class="text-center">
+        <mat-icon>queue_play_next</mat-icon><br /><span>Trigger</span>
+      </div>
+    </ng-template>
+    <app-trigger-form></app-trigger-form>
+  </mat-step>
+
   <mat-step [stepControl]="variableForm">
     <ng-template matStepLabel>
       <div class="text-center">

@@ -36,19 +36,30 @@ export class RegisterComponent {
       '',
       Validators.compose([Validators.required, Validators.email])
     ),
-    role: this.builder.control(''),
+    role: this.builder.control('64f1f60e918724a5f931d909'),
     isActive: this.builder.control(false),
   });
 
   proceedRegistration() {
     if (this.registerform.valid) {
       console.log(this.registerform.value);
-      this.service.Proceedregister(this.registerform.value).subscribe((res) => {
-        this.toastr.success(
-          'Solicitar acceso con el administrador ',
-          'Registro exitoso'
-        );
-        this.router.navigate(['login']);
+      this.service.Proceedregister(this.registerform.value).subscribe({
+        next: (res) => {
+          console.log(res);
+          if (res.status == 500) {
+            this.toastr.warning(res.error.error.message);
+          } else if (res.status == 200) {
+            this.toastr.success(
+              'Solicitar acceso con el administrador ',
+              'Registro exitoso'
+            );
+            this.router.navigate(['login']);
+          }
+        },
+        error: (error) => {
+          this.toastr.warning('error', error);
+          console.log(error);
+        },
       });
     } else {
       this.toastr.warning('Por favor entre datos validos');

@@ -5,46 +5,46 @@ import { AuthService } from 'src/app/service/auth.service';
 import { environment } from 'src/environments/environment';
 
 @Component({
-  selector: 'app-proceso-form',
-  templateUrl: './proceso-form.component.html',
-  styleUrls: ['./proceso-form.component.css'],
+  selector: 'app-trigger-form',
+  templateUrl: './trigger-form.component.html',
+  styleUrls: ['./trigger-form.component.css'],
 })
-export class ProcesoFormComponent implements OnInit {
+export class TriggerFormComponent implements OnInit {
   constructor(
     private _formBuilder: FormBuilder,
     private toastr: ToastrService,
     private service: AuthService
   ) {}
 
-  apiProceso = environment.API_URL_PROCESO;
-  procesoForm!: FormGroup;
-  listProceso: any;
+  apiTrigger = environment.API_URL_TRIGGER;
+  triggerForm!: FormGroup;
+  listTriggers: any;
 
   ngOnInit(): void {
-    this.GetAllProcesos();
-    this.procesoForm = this._formBuilder.group({
+    this.GetAllTriggers();
+    this.triggerForm = this._formBuilder.group({
       nombre: this._formBuilder.control('', Validators.required),
       descripcion: this._formBuilder.control('', Validators.required),
     });
   }
 
-  GetAllProcesos() {
-    this.service.getForm(this.apiProceso).subscribe((res: any) => {
+  GetAllTriggers() {
+    this.service.getForm(this.apiTrigger).subscribe((res: any) => {
       console.log(res);
-      this.listProceso = res['datos'];
+      this.listTriggers = res;
     });
   }
 
-  crearProceso() {
-    if (this.procesoForm.valid) {
-      console.log(this.procesoForm.value);
-      this.service.postForm(this.apiProceso, this.procesoForm.value).subscribe({
+  crearTrigger() {
+    if (this.triggerForm.valid) {
+      console.log(this.triggerForm.value);
+      this.service.postForm(this.apiTrigger, this.triggerForm.value).subscribe({
         next: (res: any) => {
           console.log('respuesta: ', res);
           if (res.status == 500) {
             this.toastr.warning(res.error.error);
           } else {
-            this.toastr.success('proceso registrado correctamente');
+            this.toastr.success('Trigger registrado correctamente');
           }
         },
         error: (error: any) => {
@@ -57,16 +57,16 @@ export class ProcesoFormComponent implements OnInit {
     }
   }
 
-  borrarProcesos(id: string) {
-    console.log(this.apiProceso + id);
-    this.service.deleteForm(this.apiProceso, id).subscribe({
+  borrarTrigger(id: string) {
+    console.log(this.apiTrigger + id);
+    this.service.deleteForm(this.apiTrigger, id).subscribe({
       next: (res: any) => {
         console.log('respuesta: ', res);
         if (res.status == 500) {
           this.toastr.warning(res.error.error);
         } else {
-          this.toastr.success('Proceso borrado correctamente');
-          this.GetAllProcesos();
+          this.toastr.success('Trigger borrado correctamente');
+          this.GetAllTriggers();
         }
       },
       error: (error: any) => {
@@ -75,12 +75,12 @@ export class ProcesoFormComponent implements OnInit {
       },
     });
   }
-  setProceso(id: any, nombre: any) {
+  setTrigger(id: any, nombre: any) {
     console.log('set tipo', id, 'nombre', nombre);
     this.service.changeMessage(id);
   }
 
-  StreamProcesoSelected(proceso_id: string) {
-    this.service.streamProcesoSelected(proceso_id);
+  StreamTriggerSelected(trigger_id: string) {
+    this.service.streamTriggerSelected(trigger_id);
   }
 }

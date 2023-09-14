@@ -1,15 +1,95 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError } from 'rxjs';
+import {
+  Subscription,
+  catchError,
+  delay,
+  Observable,
+  BehaviorSubject,
+  Subject,
+  of,
+} from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { JwtHelperService } from '@auth0/angular-jwt';
+import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { DialogOverviewExampleDialog } from '../dialog.component';
+import { ToastrService } from 'ngx-toastr';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private jwtHelper: JwtHelperService,
+    private router: Router,
+    public dialog: MatDialog,
+    private toastr: ToastrService
+  ) {}
   apiUrl = environment.API_URL_USERS;
   apiRole = environment.API_URL_ROLES;
+  authToken: any;
+  user: any;
+  tokenSubscription = new Subscription();
+  tokenSubscription2 = new Subscription();
+  timeout?: any;
+
+  private messageSource = new BehaviorSubject('default message');
+  //observables que recogen la respuesta de la llamada a la api
+  private provinciasSource = new BehaviorSubject('');
+  private localidadesSource = new BehaviorSubject('');
+  private empresasSource = new BehaviorSubject('');
+  private plantasSource = new BehaviorSubject('');
+  private lineaSource = new BehaviorSubject('');
+  private maquinaSource = new BehaviorSubject('');
+
+  //observables que recogen la opcion seleccionada
+  private paisSelectedSource = new BehaviorSubject('');
+  private provinciaSelectedSource = new BehaviorSubject('');
+  private localidadSelectedSource = new BehaviorSubject('');
+  private empresaSelectedSource = new BehaviorSubject('');
+  private plantaSelectedSource = new BehaviorSubject('');
+  private lineaSelectedSource = new BehaviorSubject('');
+  private tipoMaquinaSelectedSource = new BehaviorSubject('');
+  private maquinaSelectedSource = new BehaviorSubject('');
+  private procesoSelectedSource = new BehaviorSubject('');
+  private triggerSelectedSource = new BehaviorSubject('');
+
+  currentMessage = this.messageSource.asObservable();
+
+  // guardamos la respuesta en listas que son accesibles desde los componentes
+  listProvincias = this.provinciasSource.asObservable();
+  listLocalidades = this.localidadesSource.asObservable();
+  listEmpresas = this.empresasSource.asObservable();
+  listPlantas = this.plantasSource.asObservable();
+  listLineas = this.lineaSource.asObservable();
+  listMaquinas = this.maquinaSource.asObservable();
+
+  // guardamos la opcion seleccionada para que sea accesible a los componentes
+  paisSelected = this.paisSelectedSource.asObservable();
+  provinciaSelected = this.provinciaSelectedSource.asObservable();
+  localidadSelected = this.localidadSelectedSource.asObservable();
+  empresaSelected = this.empresaSelectedSource.asObservable();
+  plantaSelected = this.plantaSelectedSource.asObservable();
+  lineaSelected = this.lineaSelectedSource.asObservable();
+  tipoMaquinaSelected = this.tipoMaquinaSelectedSource.asObservable();
+  maquinaSelected = this.maquinaSelectedSource.asObservable();
+  procesoSelected = this.procesoSelectedSource.asObservable();
+  triggerSelected = this.triggerSelectedSource.asObservable();
+
+  openDialog(): void {
+    const dialogRef = this.dialog.open(DialogOverviewExampleDialog, {
+      enterAnimationDuration: '500ms',
+      exitAnimationDuration: '500ms',
+      width: '50%',
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      console.log('The dialog was closed');
+    });
+  }
+
   // get
 
   GetAll() {
@@ -27,13 +107,63 @@ export class AuthService {
   }
 
   LogIn(body: any) {
-    return this.http.post(this.apiUrl + '/login', body).pipe(
+    return this.http.post(this.apiUrl + 'login', body).pipe(
       catchError(async (error) => {
         console.log(error.message);
         return error;
       })
     );
   }
+  storeUserData(token: any, user: any, rtoken: any) {
+    console.log('storeUserData, user: ', user, 'token: ', token);
+    this.timeout =
+      this.jwtHelper.getTokenExpirationDate(token)!.valueOf() -
+      new Date().valueOf();
+    sessionStorage.setItem('token', token);
+    sessionStorage.setItem('rtoken', rtoken);
+    sessionStorage.setItem('username', user.name);
+    sessionStorage.setItem('userrole', user.role.name);
+    this.authToken = token;
+    this.user = user;
+    // this.expirationCounter(this.timeout);
+    this.router.navigate(['']);
+  }
+
+  expirationCounter(timeout: any) {
+    console.log('timeout: ', timeout);
+    this.tokenSubscription.unsubscribe();
+    this.tokenSubscription = of(null)
+      .pipe(delay(timeout))
+      .subscribe((expired) => {
+        console.log('EXPIRED!!');
+        this.dialog.closeAll();
+        this.logout();
+        this.toastr.error('sesion expirada', 'vuelva a iniciar sesion');
+      });
+    this.pre_expirationCounter(timeout);
+  }
+
+  pre_expirationCounter(timeout: any) {
+    let timeNow = new Date();
+    console.log('time now: ', timeNow);
+    this.tokenSubscription2.unsubscribe();
+    this.tokenSubscription2 = of(null)
+      .pipe(delay(timeout - 120000))
+      .subscribe(() => {
+        this.openDialog();
+        console.log('about to expire !!');
+      });
+  }
+  logout() {
+    this.tokenSubscription.unsubscribe();
+    this.authToken = null;
+    this.user = null;
+    sessionStorage.clear();
+    this.router.navigate(['/login']);
+    sessionStorage.setItem('token', '');
+    console.log(sessionStorage.getItem('token')?.toString());
+  }
+
   IsLoggedIn() {
     return sessionStorage.getItem('username') != null;
   }
@@ -44,7 +174,19 @@ export class AuthService {
   }
   // post
   Proceedregister(inputdata: any) {
-    return this.http.post(this.apiUrl, inputdata);
+    return this.http
+      .post(this.apiUrl, inputdata, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        observe: 'response',
+      })
+      .pipe(
+        catchError(async (error) => {
+          console.log(error.message);
+          return error;
+        })
+      );
   }
   UpdateUser(id: any, inputdata: any) {
     return this.http.post(this.apiUrl + '/' + id, inputdata);
@@ -52,20 +194,115 @@ export class AuthService {
 
   // get formularios
   getForm(url: string) {
-    return this.http.get(url).pipe(
-      catchError(async (error) => {
-        console.log(error.message);
-        return error;
+    return this.http
+      .get(url, {
+        headers: {
+          Authorization:
+            'Bearer ' + sessionStorage.getItem('token')?.toString(),
+        },
       })
-    );
+      .pipe(
+        catchError(async (error) => {
+          if (error.status == 403) {
+            this.router.navigate(['/login']);
+          }
+          console.log(error.message);
+          return error;
+        })
+      );
   }
 
   postForm(url: string, formData: any) {
-    return this.http.post(url, formData).pipe(
-      catchError(async (error) => {
-        console.log(error.message);
-        return error;
+    return this.http
+      .post(url, formData, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization:
+            'Bearer ' + sessionStorage.getItem('token')?.toString(),
+        },
+        observe: 'response',
       })
-    );
+      .pipe(
+        catchError(async (error) => {
+          console.log(error.message);
+          return error;
+        })
+      );
+  }
+  deleteForm(url: string, id: string) {
+    return this.http
+      .delete(url + 'delete/' + id, {
+        headers: {
+          Authorization:
+            'Bearer ' + sessionStorage.getItem('token')?.toString(),
+        },
+        observe: 'response',
+      })
+      .pipe(
+        catchError(async (error) => {
+          console.log(error.message);
+          return error;
+        })
+      );
+  }
+
+  changeMessage(message: string) {
+    console.log('change message: ', message);
+    this.messageSource.next(message);
+  }
+  streamProvincias_PaisSelected(provincias: string, paisSelected: string) {
+    console.log('change message: ', provincias, paisSelected);
+    this.provinciasSource.next(provincias);
+    this.paisSelectedSource.next(paisSelected);
+  }
+
+  streamLocalides_ProvinciaSelected(
+    localidades: string,
+    provinciaSelected: string
+  ) {
+    console.log('change message: ', localidades);
+    this.localidadesSource.next(localidades);
+    this.provinciaSelectedSource.next(provinciaSelected);
+  }
+
+  streamEmpresas_LocalidadSelected(
+    empresas: string,
+    localidadSelected: string
+  ) {
+    console.log('change message: ', empresas);
+    this.empresasSource.next(empresas);
+    this.localidadSelectedSource.next(localidadSelected);
+  }
+  streamPlantas_EmpresaSelected(plantas: string, empresaSelected: string) {
+    console.log('change message: ', plantas);
+    this.plantasSource.next(plantas);
+    this.empresaSelectedSource.next(empresaSelected);
+  }
+
+  streamLinea_PlantaSelected(linea: string, plantaSelected: string) {
+    console.log('change message: ', linea);
+    this.lineaSource.next(linea);
+    this.plantaSelectedSource.next(plantaSelected);
+  }
+  streamMaquinas_LineaSelected(Maquinas: string, LineaSelected: string) {
+    console.log('change message: ', Maquinas);
+    this.maquinaSource.next(Maquinas);
+    this.lineaSelectedSource.next(LineaSelected);
+  }
+  streamTipoSelected(TipoMaquina: string) {
+    console.log('tipo maquina selected: ', TipoMaquina);
+    this.tipoMaquinaSelectedSource.next(TipoMaquina);
+  }
+  streamMaquinaSelected(Maquina: string) {
+    console.log('maquina selected: ', Maquina);
+    this.maquinaSelectedSource.next(Maquina);
+  }
+  streamProcesoSelected(proceso: string) {
+    console.log('Proceso selected: ', proceso);
+    this.procesoSelectedSource.next(proceso);
+  }
+  streamTriggerSelected(trigger: string) {
+    console.log('Trigger selected: ', trigger);
+    this.triggerSelectedSource.next(trigger);
   }
 }

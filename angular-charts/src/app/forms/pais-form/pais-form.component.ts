@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+import { Subscription } from 'rxjs';
 import { AuthService } from 'src/app/service/auth.service';
 import { environment } from 'src/environments/environment';
 
@@ -17,14 +18,23 @@ export class PaisFormComponent implements OnInit {
   ) {}
   listPaises: any;
   apiPaises = environment.API_URL_PAISES;
+  apiProvincia = environment.API_URL_PROVINCIAS;
   isOptional = true;
   paisForm!: FormGroup;
+  message!: string;
+  message2!: any;
+  subscription!: Subscription;
+  subscription2!: Subscription;
+  completed: boolean = false;
 
   ngOnInit(): void {
     this.GetAllPaises();
     this.paisForm = this._formBuilder.group({
       nombre: this._formBuilder.control('', Validators.required),
     });
+    this.subscription = this.service.currentMessage.subscribe(
+      (message) => (this.message = message)
+    );
   }
   urlPaises = environment.API_URL_PAISES;
 
@@ -44,6 +54,7 @@ export class PaisFormComponent implements OnInit {
             this.toastr.warning(res.error.error);
           } else {
             this.toastr.success('Pais registrado correctamente');
+            this.GetAllPaises();
           }
         },
         error: (error: any) => {
@@ -54,5 +65,39 @@ export class PaisFormComponent implements OnInit {
     } else {
       this.toastr.warning('Por favor entre datos validos');
     }
+  }
+  borrarPais(id: string) {
+    console.log(this.urlPaises + id);
+    this.service.deleteForm(this.urlPaises, id).subscribe({
+      next: (res: any) => {
+        console.log('respuesta: ', res);
+        if (res.status == 500) {
+          this.toastr.warning(res.error.error);
+        } else {
+          this.toastr.success('Pais borrado correctamente');
+          this.GetAllPaises();
+        }
+      },
+      error: (error: any) => {
+        this.toastr.error(error);
+        console.log(error);
+      },
+    });
+  }
+
+  setPais(id: any, nombre: any) {
+    console.log('set pais', id, 'nombre', nombre);
+    this.service.changeMessage(id);
+  }
+
+  GetProvinciasByPais(pais_id: string) {
+    console.log('pais nombre', this.message);
+
+    this.service
+      .getForm(this.apiProvincia + this.message)
+      .subscribe((res: any) => {
+        console.log('pais form get provincias', res);
+        this.service.streamProvincias_PaisSelected(res, pais_id);
+      });
   }
 }

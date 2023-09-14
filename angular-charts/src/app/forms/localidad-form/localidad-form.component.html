@@ -3,36 +3,51 @@
     <h2>Formulario de Localidad</h2>
   </mat-card-header>
   <mat-card-content>
-    <form
-      class="example-form"
-      [formGroup]="localidadForm"
-      (ngSubmit)="createLocalidad()"
-    >
-      <div class="flex flex-col">
-        <mat-form-field class="">
-          <mat-label>Provincia</mat-label>
-          <mat-select
-            (click)="GetAllProvincias()"
-            formControlName="id_provincia"
+    <div class="flex flex-col p-3">
+      <mat-accordion>
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>Formulario de Localidades</mat-panel-title>
+          </mat-expansion-panel-header>
+          <form
+            class="example-form"
+            [formGroup]="localidadForm"
+            (ngSubmit)="createLocalidad()"
           >
-            <mat-option value="">Elegir una provincia </mat-option>
-            <mat-option
-              *ngFor="let provincia of listProvincias"
-              [value]="provincia._id"
-            >
-              <p>{{ provincia.nombre }}</p>
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
+            <mat-form-field class="">
+              <mat-label>Nombre de Localidad</mat-label>
+              <input matInput formControlName="nombre" />
+            </mat-form-field>
 
-        <mat-form-field class="">
-          <mat-label>Nombre de Localidad</mat-label>
-          <input matInput formControlName="nombre" />
-        </mat-form-field>
-      </div>
-      <div class="m-1">
-        <button class="m-3" mat-raised-button color="primary">submit</button>
-      </div>
-    </form>
+            <div class="m-1">
+              <button class="m-3" mat-raised-button color="primary">
+                submit
+              </button>
+            </div>
+          </form>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </div>
+
+    <div class="flex flex-col p-3">
+      <mat-form-field>
+        <mat-label> Elegir una Localidad </mat-label>
+        <mat-select>
+          <mat-option
+            *ngFor="let localidad of listLocalidades"
+            [value]="localidad._id"
+            (click)="
+              [
+                setLocalidad(localidad._id, localidad.nombre),
+                GetEmpresasByLocalidad(localidad._id)
+              ]
+            "
+          >
+            <p>{{ localidad.nombre }}</p>
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <button mat-button matStepperNext type="button">Next</button>
   </mat-card-content>
 </mat-card>

@@ -3,21 +3,75 @@
     <h2>Formulario de proceso</h2>
   </mat-card-header>
   <mat-card-content>
-    <form
-      class="example-form"
-      [formGroup]="procesoForm"
-      (ngSubmit)="crearProceso()"
-    >
-      <div class="flex flex-col">
-        <mat-form-field class="">
-          <mat-label>descripcion del proceso</mat-label>
-          <input matInput formControlName="descripcion" />
-        </mat-form-field>
-      </div>
-      <div class="m-1">
-        <button class="m-3" mat-raised-button color="primary">submit</button>
-        <button mat-button matStepperNext>Next</button>
-      </div>
-    </form>
+    <div class="flex flex-col">
+      <mat-accordion>
+        <mat-expansion-panel hideToggle>
+          <mat-expansion-panel-header>
+            <mat-panel-title>Formulario de Proceso</mat-panel-title>
+          </mat-expansion-panel-header>
+          <form
+            class="example-form"
+            [formGroup]="procesoForm"
+            (ngSubmit)="crearProceso()"
+          >
+            <mat-form-field class="">
+              <mat-label>Nombre del proceso</mat-label>
+              <input matInput formControlName="nombre" />
+            </mat-form-field>
+            <mat-form-field class="">
+              <mat-label>Descripcion del proceso</mat-label>
+              <input matInput formControlName="descripcion" />
+            </mat-form-field>
+
+            <div class="m-1">
+              <button class="m-3" mat-raised-button color="primary">
+                submit
+              </button>
+            </div>
+          </form>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </div>
+    <div class="flex flex-col p-3">
+      <mat-form-field>
+        <mat-label>Elegir un proceso</mat-label>
+        <mat-select>
+          <mat-option
+            *ngFor="let proceso of listProceso"
+            [value]="proceso._id"
+            (click)="
+              [
+                setProceso(proceso._id, proceso.nombre),
+                StreamProcesoSelected(proceso._id)
+              ]
+            "
+          >
+            <p>{{ proceso.nombre }}</p>
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <button mat-button matStepperNext>Next</button>
   </mat-card-content>
 </mat-card>
+
+<!-- <mat-accordion>
+  <mat-expansion-panel (click)="GetAllProcesos()" hideToggle>
+    <mat-expansion-panel-header>
+      <mat-panel-title> Listado de procesos </mat-panel-title>
+    </mat-expansion-panel-header>
+    <mat-list role="list" *ngFor="let proceso of listProceso">
+      <mat-list-item role="listitem">
+        {{ proceso.descripcion }}
+        <a
+          (click)="borrarProcesos(proceso._id)"
+          class="m-3"
+          mat-raised-button
+          color="warn"
+        >
+          eliminar
+        </a>
+      </mat-list-item>
+    </mat-list>
+  </mat-expansion-panel>
+</mat-accordion> -->

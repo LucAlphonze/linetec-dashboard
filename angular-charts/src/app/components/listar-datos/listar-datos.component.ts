@@ -2,6 +2,8 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Datos } from 'src/app/models/datos.model';
 import { HttpServiceService } from 'src/app/service/http-service.service';
 import { Chart, registerables } from 'node_modules/chart.js';
+import { AuthService } from 'src/app/service/auth.service';
+import { JwtHelperService } from '@auth0/angular-jwt';
 Chart.register(...registerables);
 
 @Component({
@@ -19,7 +21,13 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
   id: any = 0;
   chart: any;
   title: string = 'Prueba angular';
-  constructor(private _httpService: HttpServiceService) {
+  timeout: any;
+  token: any;
+  constructor(
+    private _httpService: HttpServiceService,
+    private authService: AuthService,
+    private jwtHelper: JwtHelperService
+  ) {
     // Preparing the chart data
   }
 
@@ -39,6 +47,7 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
         },
       },
     });
+    this.expirationCheck();
   }
 
   ngOnDestroy(): void {
@@ -132,5 +141,13 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
         };
       }
     });
+  }
+
+  expirationCheck(): void {
+    this.token = sessionStorage.getItem('token')?.toString();
+    this.timeout =
+      this.jwtHelper.getTokenExpirationDate(this.token)!.valueOf() -
+      new Date().valueOf();
+    this.authService.expirationCounter(this.timeout);
   }
 }

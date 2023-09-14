@@ -26,7 +26,6 @@ export class AppComponent implements DoCheck {
     }
   }
   logOut() {
-    sessionStorage.clear();
-    this.router.navigate(['/login']);
+    this.service.logout();
   }
 }

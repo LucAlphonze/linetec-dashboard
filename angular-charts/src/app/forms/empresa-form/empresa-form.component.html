@@ -3,60 +3,89 @@
     <h2>Formulario de Empresa</h2>
   </mat-card-header>
   <mat-card-content>
-    <form
-      class="example-form"
-      [formGroup]="empresaForm"
-      (ngSubmit)="createEmpresa()"
-    >
-      <div class="flex flex-col">
-        <mat-form-field class="">
-          <mat-label>Localidad</mat-label>
-          <mat-select
-            (click)="GetAllLocalidades()"
-            formControlName="id_localidad"
+    <div class="flex flex-col">
+      <mat-accordion>
+        <mat-expansion-panel hideToggle>
+          <mat-expansion-panel-header>
+            <mat-panel-title> Lista de Empresas </mat-panel-title>
+          </mat-expansion-panel-header>
+          <form
+            class="example-form"
+            [formGroup]="empresaForm"
+            (ngSubmit)="createEmpresa()"
+            (submit)="empresaForm.reset()"
           >
-            <mat-option value="">Elegir una localidad </mat-option>
-            <mat-option
-              *ngFor="let localidad of listLocalidades"
-              [value]="localidad._id"
-            >
-              <p>{{ localidad.nombre }}</p>
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
+            <mat-form-field class="">
+              <mat-label>Razon Social</mat-label>
+              <input matInput formControlName="razon_social" />
+            </mat-form-field>
+            <mat-form-field class="">
+              <mat-label>Nombre Fantasia</mat-label>
+              <input matInput formControlName="nombre_fantasia" />
+            </mat-form-field>
+            <mat-form-field class="">
+              <mat-label>Calle</mat-label>
+              <input matInput formControlName="calle" />
+            </mat-form-field>
+            <mat-form-field class="">
+              <mat-label>Altura</mat-label>
+              <input matInput formControlName="altura" />
+            </mat-form-field>
+            <mat-form-field class="">
+              <mat-label>Piso</mat-label>
+              <input matInput formControlName="piso" />
+            </mat-form-field>
+            <mat-form-field class="">
+              <mat-label>Deptartamento</mat-label>
+              <input matInput formControlName="deptartamento" />
+            </mat-form-field>
+            <mat-form-field class="">
+              <mat-label>Rubro</mat-label>
+              <input matInput formControlName="rubro" />
+            </mat-form-field>
 
-        <mat-form-field class="">
-          <mat-label>Razon Social</mat-label>
-          <input matInput formControlName="razon_social" />
-        </mat-form-field>
-        <mat-form-field class="">
-          <mat-label>Nombre Fantasia</mat-label>
-          <input matInput formControlName="nombre_fantasia" />
-        </mat-form-field>
-        <mat-form-field class="">
-          <mat-label>Calle</mat-label>
-          <input matInput formControlName="calle" />
-        </mat-form-field>
-        <mat-form-field class="">
-          <mat-label>Altura</mat-label>
-          <input matInput formControlName="altura" />
-        </mat-form-field>
-        <mat-form-field class="">
-          <mat-label>Piso</mat-label>
-          <input matInput formControlName="piso" />
-        </mat-form-field>
-        <mat-form-field class="">
-          <mat-label>Deptartamento</mat-label>
-          <input matInput formControlName="deptartamento" />
-        </mat-form-field>
-        <mat-form-field class="">
-          <mat-label>Rubro</mat-label>
-          <input matInput formControlName="rubro" />
-        </mat-form-field>
-      </div>
-      <div class="m-1">
-        <button class="m-3" mat-raised-button color="primary">submit</button>
-      </div>
-    </form>
+            <div class="m-1">
+              <button class="m-3" mat-raised-button color="primary">
+                submit
+              </button>
+            </div>
+          </form>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </div>
+    <div class="flex flex-col p-3">
+      <mat-form-field>
+        <mat-label>Elegir una Empresa </mat-label>
+        <mat-select>
+          <mat-option
+            *ngFor="let empresa of listEmpresas"
+            [value]="empresa._id"
+            (click)="
+              [
+                setEmpresa(empresa._id, empresa.razon_social),
+                GetPlantasByEmpresas(empresa._id)
+              ]
+            "
+          >
+            <p>{{ empresa.razon_social }}</p>
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <button mat-button matStepperNext type="button">Next</button>
   </mat-card-content>
 </mat-card>
+
+<!-- <mat-list role="list" *ngFor="let empresa of listEmpresas">
+              <mat-list-item role="listitem">
+                {{ empresa.nombre_fantasia }}
+                <a
+                  (click)="borrarEmpresa(empresa._id)"
+                  class="m-3"
+                  mat-raised-button
+                  color="warn"
+                >
+                  eliminar
+                </a>
+              </mat-list-item>
+            </mat-list> -->

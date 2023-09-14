@@ -1,0 +1,15 @@
+<h1 mat-dialog-title>Sesion a punto de exipirar</h1>
+<div mat-dialog-content>
+  <p>Desea continuar con su sesion?</p>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">No Thanks</button>
+  <button
+    mat-button
+    (click)="refreshToken()"
+    [mat-dialog-close]
+    cdkFocusInitial
+  >
+    Ok
+  </button>
+</div>

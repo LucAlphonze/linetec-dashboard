@@ -28,6 +28,13 @@ import { Home3Component } from './components/home3/home3.component';
 import { ProcesoFormComponent } from './forms/proceso-form/proceso-form.component';
 import { Home4Component } from './components/home4/home4.component';
 import { VariableFormComponent } from './forms/variable-form/variable-form.component';
+import { JwtModule } from '@auth0/angular-jwt';
+import { TriggerFormComponent } from './forms/trigger-form/trigger-form.component';
+import { Home5Component } from './components/home5/home5.component';
+
+export function tokenGetter() {
+  return localStorage.getItem('token');
+}
 
 @NgModule({
   declarations: [
@@ -51,11 +58,19 @@ import { VariableFormComponent } from './forms/variable-form/variable-form.compo
     ProcesoFormComponent,
     Home4Component,
     VariableFormComponent,
+    TriggerFormComponent,
+    Home5Component,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
+    JwtModule.forRoot({
+      config: {
+        tokenGetter: tokenGetter,
+        allowedDomains: ['localhost'],
+      },
+    }),
     FormsModule,
     BrowserAnimationsModule,
     ReactiveFormsModule,

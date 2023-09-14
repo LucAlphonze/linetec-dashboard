@@ -1,33 +1,28 @@
 <mat-card>
   <mat-card-header>
-    <h2>Formulario Linea de produccion</h2>
+    <h2>Formulario de Trigger</h2>
   </mat-card-header>
   <mat-card-content>
     <div class="flex flex-col">
       <mat-accordion>
         <mat-expansion-panel hideToggle>
           <mat-expansion-panel-header>
-            <mat-panel-title>
-              Formulario de Linea de produccion
-            </mat-panel-title>
+            <mat-panel-title>Formulario de Trigger</mat-panel-title>
           </mat-expansion-panel-header>
           <form
             class="example-form"
-            [formGroup]="lineaForm"
-            (ngSubmit)="createLinea()"
+            [formGroup]="triggerForm"
+            (ngSubmit)="crearTrigger()"
           >
             <mat-form-field class="">
-              <mat-label>nombre</mat-label>
+              <mat-label>Nombre del trigger</mat-label>
               <input matInput formControlName="nombre" />
             </mat-form-field>
             <mat-form-field class="">
-              <mat-label>descripcion</mat-label>
+              <mat-label>Descripcion del trigger</mat-label>
               <input matInput formControlName="descripcion" />
             </mat-form-field>
-            <mat-form-field class="">
-              <mat-label>identificador</mat-label>
-              <input matInput formControlName="identificador" />
-            </mat-form-field>
+
             <div class="m-1">
               <button class="m-3" mat-raised-button color="primary">
                 submit
@@ -37,37 +32,39 @@
         </mat-expansion-panel>
       </mat-accordion>
     </div>
-
     <div class="flex flex-col p-3">
       <mat-form-field>
-        <mat-label>Elegir una Linea</mat-label>
+        <mat-label>Elegir un Trigger</mat-label>
         <mat-select>
           <mat-option
-            *ngFor="let linea of listLineas"
-            [value]="linea._id"
+            *ngFor="let trigger of listTriggers"
+            [value]="trigger._id"
             (click)="
-              [setLinea(linea._id, linea.nombre), GetMaquinaByLinea(linea._id)]
+              [
+                setTrigger(trigger._id, trigger.nombre),
+                StreamTriggerSelected(trigger._id)
+              ]
             "
           >
-            <p>{{ linea.nombre }}</p>
+            <p>{{ trigger.nombre }}</p>
           </mat-option>
         </mat-select>
       </mat-form-field>
     </div>
-    <button mat-button matStepperNext type="button">next</button>
+    <button mat-button matStepperNext>Next</button>
   </mat-card-content>
 </mat-card>
 
 <!-- <mat-accordion>
-  <mat-expansion-panel (click)="GetAllLineas()" hideToggle>
+  <mat-expansion-panel (click)="GetAllTriggers()" hideToggle>
     <mat-expansion-panel-header>
-      <mat-panel-title> Lista de Lineas de produccion </mat-panel-title>
+      <mat-panel-title> Listado de triggers</mat-panel-title>
     </mat-expansion-panel-header>
-    <mat-list role="list" *ngFor="let linea of listLineas">
+    <mat-list role="list" *ngFor="let trigger of listTriggers">
       <mat-list-item role="listitem">
-        {{ linea.descripcion }}
+        {{ trigger.nombre }}
         <a
-          (click)="borrarLineaProduccion(linea._id)"
+          (click)="borrarTrigger(trigger._id)"
           class="m-3"
           mat-raised-button
           color="warn"

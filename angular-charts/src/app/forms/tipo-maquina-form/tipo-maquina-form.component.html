@@ -3,25 +3,74 @@
     <h2>Formulario Tipo Maquina</h2>
   </mat-card-header>
   <mat-card-content>
-    <form
-      class="example-form"
-      [formGroup]="tipoMaquinaForm"
-      (ngSubmit)="createTipoMaquina()"
-    >
-      <div class="flex flex-col">
-        <mat-form-field class="">
-          <mat-label>Nombre</mat-label>
-          <input matInput formControlName="descripcion" />
-        </mat-form-field>
+    <div class="flex flex-col">
+      <mat-accordion>
+        <mat-expansion-panel hideToggle>
+          <mat-expansion-panel-header>
+            <mat-panel-title> Formulario de Tipo de maquina </mat-panel-title>
+          </mat-expansion-panel-header>
+          <form
+            class="example-form"
+            [formGroup]="tipoMaquinaForm"
+            (ngSubmit)="createTipoMaquina()"
+            (submit)="tipoMaquinaForm.reset()"
+          >
+            <mat-form-field class="">
+              <mat-label>Nombre</mat-label>
+              <input matInput formControlName="nombre" />
+            </mat-form-field>
 
-        <mat-form-field class="">
-          <mat-label>Observaciones</mat-label>
-          <input matInput formControlName="observaciones" />
-        </mat-form-field>
-      </div>
-      <div class="m-1">
-        <button class="m-3" mat-raised-button color="primary">submit</button>
-      </div>
-    </form>
+            <mat-form-field class="">
+              <mat-label>descripcion</mat-label>
+              <input matInput formControlName="descripcion" />
+            </mat-form-field>
+            <div class="m-1">
+              <button class="m-3" mat-raised-button color="primary">
+                submit
+              </button>
+            </div>
+          </form>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </div>
+
+    <div class="flex flex-col p-3">
+      <mat-form-field>
+        <mat-label>Elegir un Tipo de maquina</mat-label>
+        <mat-select>
+          <mat-option
+            *ngFor="let tipo of listTipoMaquina"
+            [value]="tipo._id"
+            (click)="
+              [setTipo(tipo._id, tipo.nombre), StreamTipoSelected(tipo._id)]
+            "
+          >
+            <p>{{ tipo.nombre }}</p>
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <button mat-button matStepperNext type="button">next</button>
   </mat-card-content>
 </mat-card>
+
+<!-- <mat-accordion>
+  <mat-expansion-panel (click)="GetAllTiposMaquina()" hideToggle>
+    <mat-expansion-panel-header>
+      <mat-panel-title> Lista de tipos de maquina </mat-panel-title>
+    </mat-expansion-panel-header>
+    <mat-list role="list" *ngFor="let tipoMaquina of listTipoMaquina">
+      <mat-list-item role="listitem">
+        {{ tipoMaquina.descripcion }}
+        <a
+          (click)="borrarTipoMaquina(tipoMaquina._id)"
+          class="m-3"
+          mat-raised-button
+          color="warn"
+        >
+          eliminar
+        </a>
+      </mat-list-item>
+    </mat-list>
+  </mat-expansion-panel>
+</mat-accordion> -->

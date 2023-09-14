@@ -11,10 +11,12 @@ export class Home4Component {
 
   procesoForm!: FormGroup;
   variableForm!: FormGroup;
+  triggerForm!: FormGroup;
   constructor(private _formBuilder: FormBuilder) {}
 
   ngOnInit() {
     this.procesoForm = this._formBuilder.group({});
     this.variableForm = this._formBuilder.group({});
+    this.triggerForm = this._formBuilder.group({});
   }
 }

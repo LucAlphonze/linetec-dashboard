@@ -33,15 +33,19 @@ export class LoginComponent {
       switch (this.userData.status) {
         case 200:
           if (this.userData['datos'].isActive) {
-            sessionStorage.setItem('token', this.userData.token);
-            sessionStorage.setItem('username', this.userData['datos'].username);
-            sessionStorage.setItem(
-              'userrole',
-              this.userData['datos'].role.name
-            );
-            this.router.navigate(['']);
+            // sessionStorage.setItem('token', this.userData.token);
+            // sessionStorage.setItem('username', this.userData['datos'].username);
+            // sessionStorage.setItem(
+            //   'userrole',
+            //   this.userData['datos'].role.name
+            // );
+            // console.log(sessionStorage.getItem('userrole')?.toString());
             this.toastr.success('acceso concedido');
-            console.log(sessionStorage.getItem('userrole')?.toString());
+            this.service.storeUserData(
+              this.userData.token,
+              this.userData['datos'],
+              this.userData.rtoken
+            );
           } else {
             this.toastr.error(
               'Contactar con administrador',

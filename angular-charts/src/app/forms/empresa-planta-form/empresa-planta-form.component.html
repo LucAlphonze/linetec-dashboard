@@ -3,54 +3,60 @@
     <h2>Formulario de Empresa</h2>
   </mat-card-header>
   <mat-card-content>
-    <form
-      class="example-form"
-      [formGroup]="plantaForm"
-      (ngSubmit)="createPlanta()"
-    >
-      <div class="flex flex-col">
-        <mat-form-field class="">
-          <mat-label>Localidad</mat-label>
-          <mat-select formControlName="id_localidad">
-            <mat-option value="">Elegir una localidad </mat-option>
-            <mat-option
-              *ngFor="let localidad of listLocalidades"
-              [value]="localidad._id"
-            >
-              <p>{{ localidad.nombre }}</p>
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-        <mat-form-field class="">
-          <mat-label>Empresa</mat-label>
-          <mat-select (click)="GetAllEmpresas()" formControlName="id_empresa">
-            <mat-option value="">Elegir una Empresa </mat-option>
-            <mat-option
-              *ngFor="let empresa of listEmpresas"
-              [value]="empresa._id"
-            >
-              <p>{{ empresa.razon_social }}</p>
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
+    <div class="flex flex-col">
+      <mat-accordion>
+        <mat-expansion-panel hideToggle>
+          <mat-expansion-panel-header>
+            <mat-panel-title>Formulario de Plantas de empresa</mat-panel-title>
+          </mat-expansion-panel-header>
+          <form
+            class="example-form"
+            [formGroup]="plantaForm"
+            (ngSubmit)="createPlanta()"
+            (submit)="plantaForm.reset()"
+          >
+            <mat-form-field class="">
+              <mat-label>Nombre</mat-label>
+              <input matInput formControlName="nombre" />
+            </mat-form-field>
 
-        <mat-form-field class="">
-          <mat-label>Nombre</mat-label>
-          <input matInput formControlName="nombre" />
-        </mat-form-field>
+            <mat-form-field class="">
+              <mat-label>Calle</mat-label>
+              <input matInput formControlName="calle" />
+            </mat-form-field>
+            <mat-form-field class="">
+              <mat-label>Altura</mat-label>
+              <input matInput formControlName="altura" />
+            </mat-form-field>
+            <div class="m-1">
+              <button class="m-3" mat-raised-button color="primary">
+                submit
+              </button>
+            </div>
+          </form>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </div>
 
-        <mat-form-field class="">
-          <mat-label>Calle</mat-label>
-          <input matInput formControlName="calle" />
-        </mat-form-field>
-        <mat-form-field class="">
-          <mat-label>Altura</mat-label>
-          <input matInput formControlName="altura" />
-        </mat-form-field>
-      </div>
-      <div class="m-1">
-        <button class="m-3" mat-raised-button color="primary">submit</button>
-      </div>
-    </form>
+    <div class="flex flex-col p-3">
+      <mat-form-field>
+        <mat-label>Elegir una planta</mat-label>
+        <mat-select>
+          <mat-option
+            *ngFor="let planta of listPlantas"
+            [value]="planta._id"
+            (click)="
+              [
+                setPlanta(planta._id, planta.nombre),
+                GetLineaByPlanta(planta._id)
+              ]
+            "
+          >
+            <p>{{ planta.nombre }}</p>
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <button mat-button matStepperNext type="button">next</button>
   </mat-card-content>
 </mat-card>
