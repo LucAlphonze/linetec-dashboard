@@ -4,11 +4,15 @@ const axios = require("axios");
 
 var token;
 var rtoken;
+var decoded;
 var usuario = {
   username: "Admin",
   password: "Admin123$",
 };
-var json403 = {};
+function parseJwt(token) {
+  return JSON.parse(Buffer.from(token.split(".")[1], "base64").toString());
+}
+
 const servClient = mqtt.connect(`mqtt://mosquitto:1883`, {
   username: process.env.MQTT_USER,
   password: process.env.MQTT_PASSWORD,
@@ -24,7 +28,10 @@ servClient.on("connect", function () {
       .then((response) => {
         token = response.data.token;
         rtoken = response.data.rtoken;
-        console.log("logeo exitoso: ", token);
+        console.log("logeo exitoso: ", token, "refresh token: ", rtoken);
+
+        decoded = parseJwt(token);
+        console.log("token decoded", decoded.exp);
       });
   });
 });
@@ -64,16 +71,34 @@ servClient.on("message", function (topic, message) {
             );
           } else if (messageJSON[i].n == listVariables[j].nombre) {
             var ts = "";
-
-            ts = dateSlicer(messageJSON[i]?.ts);
-            pruebaJson = {
+            let timeNow = new Date();
+            if (messageJSON[i].ts) {
+              ts = dateSlicer(messageJSON[i]?.ts);
+            }
+            var pruebaJson = {
               id_variable: listVariables[j]?._id,
               valor_lectura: messageJSON[i].v,
               modo: messageJSON[i]?.m,
               time_stamp: ts,
               fecha_lectura: new Date(),
             };
-            json403 = pruebaJson;
+            if (timeNow.getTime() > decoded.exp - 120000) {
+              console.log("refrescando el token...");
+              await axios
+                .post("http://rest-api:3001/api/refresh", { token: rtoken })
+                .then((response) => {
+                  token = response.data.accessToken;
+                  rtoken = response.data.refreshToken;
+                  decoded = parseJwt(token);
+
+                  console.log(
+                    "token refrescado exitosamente: ",
+                    token,
+                    "refresh token: ",
+                    rtoken
+                  );
+                });
+            }
             await axios
               .post(`http://rest-api:3001/api/registro-general`, pruebaJson, {
                 headers: {
@@ -109,27 +134,71 @@ servClient.on("message", function (topic, message) {
             .post("http://rest-api:3001/api/refresh", { token: rtoken })
             .then((response) => {
               token = response.data.accessToken;
-              console.log("token refrescado exitoso");
+              rtoken = response.data.refreshToken;
+              decoded = parseJwt(token);
+              console.log(
+                "token refrescado exitosamente: ",
+                token,
+                "refresh token: ",
+                rtoken
+              );
             });
           await axios
-            .post(`http://rest-api:3001/api/registro-general`, json403, {
-              headers: {
-                Authorization: `Bearer ${token}`,
-                "content-type": "application/json",
-              },
+            .get("http://rest-api:3001/api/variables", {
+              headers: { Authorization: `Bearer ${token}` },
             })
-            .then((res) => {
-              console.log(`statusCode: ${res.status}`);
-              console.log(res.data);
-            })
-            .catch((error) => {
-              /*
-                hay que revisar esta parte y ver que pasa cuando mandamos un mensaje y justo el token se expira
-                actualmente el token tiene 10m de duracion
-                  */
-              console.log("error post: ", error.response.data);
+            .then(async (response) => {
+              console.log(response.status);
+              var listVariables = response.data;
+              var messageJSON = JSON.parse(message.toString());
+              for (let i = 0; i < messageJSON.length; i++) {
+                for (let j = 0; j < listVariables.length; j++) {
+                  if (messageJSON[i].n != listVariables[j].nombre) {
+                    console.log(
+                      messageJSON[i].n,
+                      "mensaje posisicion: ",
+                      i,
+                      listVariables[j].nombre,
+                      "list variable posicion: ",
+                      j
+                    );
+                  } else if (messageJSON[i].n == listVariables[j].nombre) {
+                    var ts = "";
+                    if (messageJSON[i].ts) {
+                      ts = dateSlicer(messageJSON[i]?.ts);
+                    }
+                    var pruebaJson = {
+                      id_variable: listVariables[j]?._id,
+                      valor_lectura: messageJSON[i].v,
+                      modo: messageJSON[i]?.m,
+                      time_stamp: ts,
+                      fecha_lectura: new Date(),
+                    };
+                    await axios
+                      .post(
+                        `http://rest-api:3001/api/registro-general`,
+                        pruebaJson,
+                        {
+                          headers: {
+                            Authorization: `Bearer ${token}`,
+                            "content-type": "application/json",
+                          },
+                        }
+                      )
+                      .then((res) => {
+                        console.log(`statusCode: ${res.status}`);
+                        console.log(res.data);
+                      })
+                      .catch((error) => {
+                        console.log("error post: ", error.response.data);
+                      });
+                  }
+                  if (j == listVariables.length) {
+                    j = 0;
+                  }
+                }
+              }
             });
-          console.log("prueba json en status 403: ", pruebaJson);
           return error;
         }
         return error;

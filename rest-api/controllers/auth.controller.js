@@ -12,7 +12,7 @@ function genTokens(User) {
 }
 
 function verifyToken(req, res, next) {
-  console.log("verify token handler: ", req.body, req.headers);
+  console.log("verify token handler: ", req.body);
   const authHeader = req.headers["authorization"];
   const token = authHeader && authHeader.split(" ")[1];
   if (token == null) return res.sendStatus(401);
@@ -42,7 +42,10 @@ const handleRefreshTokens = (req, res) => {
     }
   });
   const accessToken = jwt.sign(User, process.env.SECRET, { expiresIn: "5m" });
-  res.json({ accessToken: accessToken });
+  const refreshToken = jwt.sign(User, process.env.RTSECRET, {
+    expiresIn: "10m",
+  });
+  res.json({ accessToken: accessToken, refreshToken: refreshToken });
 };
 
 const handleDelete = (req, res) => {

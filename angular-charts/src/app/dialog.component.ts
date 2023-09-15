@@ -55,6 +55,7 @@ export class DialogOverviewExampleDialog {
       console.log('status code: ', res.status);
       this.token = this.resData.accessToken;
       sessionStorage.setItem('token', this.resData.accessToken);
+      sessionStorage.setItem('rtoken', this.resData.refreshToken);
       this.timeout =
         this.jwtHelper.getTokenExpirationDate(this.token)!.valueOf() -
         new Date().valueOf();
