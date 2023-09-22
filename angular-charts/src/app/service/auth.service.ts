@@ -126,7 +126,11 @@ export class AuthService {
     this.authToken = token;
     this.user = user;
     // this.expirationCounter(this.timeout);
-    this.router.navigate(['']);
+    if (sessionStorage.getItem('userrole') == 'admin') {
+      this.router.navigate(['home5']);
+    } else {
+      this.router.navigate(['']);
+    }
   }
 
   expirationCounter(timeout: any) {

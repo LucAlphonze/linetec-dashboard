@@ -1,25 +1,23 @@
-<div class="row">
-  <!-- <div class="">
-    <select name="" id="" (change)="getRegistros($event)">
-      <option *ngFor="let variable of listVariables" value="{{ variable._id }}">
-        {{ variable.nombre }}
-      </option>
-    </select>  
-  </div> -->
+<div class="grid gap-4 grid-cols-2">
+  <div>
+    <div class="grid grid-cols-2">
+      <mat-chip-listbox *ngFor="let variable of listVariables">
+        <mat-chip-option
+          (selectionChange)="makeCheckboxArray($event)"
+          value="{{ variable | json }}"
+        >
+          {{ variable.nombre }}
+        </mat-chip-option>
+      </mat-chip-listbox>
+      <button type="submit" (click)="getRegistros($event)">submit</button>
+    </div>
 
-  <mat-chip-listbox *ngFor="let variable of listVariables">
-    <mat-chip-option
-      (selectionChange)="makeCheckboxArray($event)"
-      value="{{ variable | json }}"
-    >
-      {{ variable.nombre }}
-    </mat-chip-option>
-  </mat-chip-listbox>
-
-  <button type="submit" (click)="getRegistros($event)">submit</button>
-
-  <div class="col-lg 6">
     <h2>Line chart</h2>
     <canvas id="myChart"></canvas>
+  </div>
+
+  <div class="">
+    <h2>bar chart</h2>
+    <canvas id="myChart2"></canvas>
   </div>
 </div>

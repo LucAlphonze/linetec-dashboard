@@ -20,6 +20,7 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
   pulsador: string = 'Pulsador';
   id: any = 0;
   chart: any;
+  chart2: any;
   title: string = 'Prueba angular';
   timeout: any;
   token: any;
@@ -38,6 +39,23 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
       data: {
         labels: [],
         datasets: [],
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true,
+          },
+        },
+      },
+    });
+    this.chart2 = new Chart('myChart2', {
+      type: 'bar',
+      data: {
+        labels: [[new Date('2023-09-21')], [new Date('2023-09-22')]],
+        datasets: [
+          { data: [500], label: 'dato de prueba' },
+          { data: [0, 800], label: 'dato de prueba2' },
+        ],
       },
       options: {
         scales: {
