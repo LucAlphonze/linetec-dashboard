@@ -2863,8 +2863,7 @@ class LocalidadFormComponent {
   ngOnInit() {
     this.GetAllProvincias();
     this.localidadForm = this.builder.group({
-      nombre: this.builder.control('', _angular_forms__WEBPACK_IMPORTED_MODULE_3__.Validators.required),
-      id_provincia: this.builder.control('', _angular_forms__WEBPACK_IMPORTED_MODULE_3__.Validators.required)
+      nombre: this.builder.control('', _angular_forms__WEBPACK_IMPORTED_MODULE_3__.Validators.required)
     });
     this.subscription = this.service.currentMessage.subscribe(message => this.message = message);
     this.subscription2 = this.service.listLocalidades.subscribe(message => this.listLocalidades = message);

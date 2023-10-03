@@ -32,7 +32,6 @@ export class LocalidadFormComponent implements OnInit {
     this.GetAllProvincias();
     this.localidadForm = this.builder.group({
       nombre: this.builder.control('', Validators.required),
-      id_provincia: this.builder.control('', Validators.required),
     });
     this.subscription = this.service.currentMessage.subscribe(
       (message) => (this.message = message)
