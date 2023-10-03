@@ -1,9 +1,20 @@
+require("dotenv").config({ path: "./.env" });
+
 const mongoose = require("mongoose");
+
 const dbConnection = async () => {
-  // var atlas = 'mongodb://52.15.124.164:27018/monitor'
-  var db = "mongodb://mongo:27017/mqtt";
+  console.log(
+    "user: ",
+    process.env.MONGO_INITDB_ROOT_USERNAME,
+    "pass: ",
+    process.env.MONGO_INITDB_ROOT_PASSWORD
+  );
+  var adminConn = `mongodb://${process.env.MONGO_INITDB_ROOT_USERNAME}:${process.env.MONGO_INITDB_ROOT_PASSWORD}@mongo:27017/mqtt?authMechanism=DEFAULT&authSource=admin`;
+
+  // var db = `mongodb://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@mongo:27017/mqtt?authMechanism=DEFAULT&authSource=mqtt`;
   try {
-    await mongoose.connect(db);
+    // await mongoose.connect(db);
+    await mongoose.connect(adminConn);
     console.log("BD Online");
   } catch (error) {
     console.log(error);

@@ -1,2 +1,2 @@
 #!/bin/sh
-sleep 10; npm install; npm start
+sleep 30; npm install; npm start
