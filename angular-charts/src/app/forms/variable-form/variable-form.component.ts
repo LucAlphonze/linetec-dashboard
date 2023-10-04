@@ -93,6 +93,7 @@ export class VariableFormComponent implements OnInit {
             this.toastr.warning(res.error.error);
           } else {
             this.toastr.success('Variable registrada correctamente');
+            this.GetAllVariables();
           }
         },
         error: (error: any) => {

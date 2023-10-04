@@ -73,6 +73,11 @@ export class ProvinciaFormComponent {
           console.log('respuesta: ', res);
           if (res.status == 200) {
             this.toastr.success('provincia registrada correctamente');
+            this.service
+              .getForm(this.apiProvincia + this.message)
+              .subscribe((res: any) => {
+                this.listProvincias = res;
+              });
           } else if (res.status == 403) {
             this.toastr.warning('acceso denegado, token expirado');
           } else {

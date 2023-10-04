@@ -45,6 +45,7 @@ export class TriggerFormComponent implements OnInit {
             this.toastr.warning(res.error.error);
           } else {
             this.toastr.success('Trigger registrado correctamente');
+            this.GetAllTriggers();
           }
         },
         error: (error: any) => {

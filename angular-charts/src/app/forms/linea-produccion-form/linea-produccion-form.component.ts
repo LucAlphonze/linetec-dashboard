@@ -74,6 +74,11 @@ export class LineaProduccionFormComponent implements OnInit {
             this.toastr.warning(res.error.error);
           } else {
             this.toastr.success('Linea de produccion registrada corectamente');
+            this.service
+              .getForm(this.apiLinea + this.message)
+              .subscribe((res: any) => {
+                this.listLineas = res;
+              });
           }
         },
         error: (error: any) => {

@@ -45,6 +45,7 @@ export class ProcesoFormComponent implements OnInit {
             this.toastr.warning(res.error.error);
           } else {
             this.toastr.success('proceso registrado correctamente');
+            this.GetAllProcesos();
           }
         },
         error: (error: any) => {

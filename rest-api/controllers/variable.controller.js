@@ -24,7 +24,7 @@ const obtenerVariableById = async (req, res) => {
       _id: id,
     })
       .populate("id_maquina", "nombre modelo")
-      .populate("id_proceso", "descripcion")
+      .populate("id_proceso", "nombre descripcion")
       .populate("id_trigger", "nombre descripcion");
     res.send(variables);
   } catch (error) {

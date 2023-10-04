@@ -15,45 +15,6 @@
         </mat-form-field>
 
         <mat-form-field class="">
-          <mat-label>Proceso</mat-label>
-          <mat-select (click)="GetAllProcesos()" formControlName="id_proceso">
-            <mat-option value="">Elegir un proceso </mat-option>
-            <mat-option
-              *ngFor="let proceso of listProcesos"
-              [value]="proceso._id"
-            >
-              <p>{{ proceso.descripcion }}</p>
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-
-        <mat-form-field class="">
-          <mat-label>Maquina</mat-label>
-          <mat-select (click)="GetAllMaquinas()" formControlName="id_maquina">
-            <mat-option value="">Elegir una maquina </mat-option>
-            <mat-option
-              *ngFor="let maquina of listMaquina"
-              [value]="maquina._id"
-            >
-              <p>{{ maquina.nombre }}</p>
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-
-        <mat-form-field class="">
-          <mat-label>Trigger</mat-label>
-          <mat-select (click)="GetAllTriggers()" formControlName="id_trigger">
-            <mat-option value="">Elegir un trigger </mat-option>
-            <mat-option
-              *ngFor="let trigger of listTrigger"
-              [value]="trigger._id"
-            >
-              <p>{{ trigger.nombre }}</p>
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-
-        <mat-form-field class="">
           <mat-label>valor del trigger </mat-label>
           <input matInput formControlName="trigger_valor" />
         </mat-form-field>

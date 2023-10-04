@@ -69,6 +69,11 @@ export class LocalidadFormComponent implements OnInit {
             this.toastr.warning(res.error.error);
           } else {
             this.toastr.success('Localidad registrada correctamente');
+            this.service
+              .getForm(this.apiLocalidad + this.message)
+              .subscribe((res: any) => {
+                this.listLocalidades = res;
+              });
           }
         },
         error: (error: any) => {

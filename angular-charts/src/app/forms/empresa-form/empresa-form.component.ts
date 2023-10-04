@@ -78,6 +78,12 @@ export class EmpresaFormComponent implements OnInit {
             this.toastr.warning(res.error.error);
           } else {
             this.toastr.success('Empresa registrada corectamente');
+            this.service
+              .getForm(this.apiEmpresas + 'localidad/' + this.message)
+              .subscribe((res: any) => {
+                console.log('empresas res after crear: ', res);
+                this.listEmpresas = res;
+              });
           }
         },
         error: (error: any) => {

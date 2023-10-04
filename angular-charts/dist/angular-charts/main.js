@@ -2232,6 +2232,10 @@ class EmpresaFormComponent {
             this.toastr.warning(res.error.error);
           } else {
             this.toastr.success('Empresa registrada corectamente');
+            this.service.getForm(this.apiEmpresas + 'localidad/' + this.message).subscribe(res => {
+              console.log('empresas res after crear: ', res);
+              this.listEmpresas = res;
+            });
           }
         },
         error: error => {
@@ -2475,6 +2479,9 @@ class EmpresaPlantaFormComponent {
             this.toastr.warning(res.error.error.message);
           } else {
             this.toastr.success('Planta registrada corectamente');
+            this.service.getForm(this.apiPlanta + this.message).subscribe(res => {
+              this.listPlantas = res;
+            });
           }
         },
         error: error => {
@@ -2688,6 +2695,9 @@ class LineaProduccionFormComponent {
             this.toastr.warning(res.error.error);
           } else {
             this.toastr.success('Linea de produccion registrada corectamente');
+            this.service.getForm(this.apiLinea + this.message).subscribe(res => {
+              this.listLineas = res;
+            });
           }
         },
         error: error => {
@@ -2895,6 +2905,9 @@ class LocalidadFormComponent {
             this.toastr.warning(res.error.error);
           } else {
             this.toastr.success('Localidad registrada correctamente');
+            this.service.getForm(this.apiLocalidad + this.message).subscribe(res => {
+              this.listLocalidades = res;
+            });
           }
         },
         error: error => {
@@ -3107,6 +3120,10 @@ class MaquinaFormComponent {
             this.toastr.warning(res.error.error);
           } else {
             this.toastr.success('Maquina registrada corectamente');
+            this.service.getForm(this.apiMaquina + this.id_linea_produccion).subscribe(res => {
+              console.log('res maquina: ', res);
+              this.listMaquinas = res;
+            });
           }
         },
         error: error => {
@@ -3498,6 +3515,7 @@ class ProcesoFormComponent {
             this.toastr.warning(res.error.error);
           } else {
             this.toastr.success('proceso registrado correctamente');
+            this.GetAllProcesos();
           }
         },
         error: error => {
@@ -3701,6 +3719,9 @@ class ProvinciaFormComponent {
           console.log('respuesta: ', res);
           if (res.status == 200) {
             this.toastr.success('provincia registrada correctamente');
+            this.service.getForm(this.apiProvincia + this.message).subscribe(res => {
+              this.listProvincias = res;
+            });
           } else if (res.status == 403) {
             this.toastr.warning('acceso denegado, token expirado');
           } else {
@@ -3884,6 +3905,7 @@ class TipoMaquinaFormComponent {
             this.toastr.warning(res.error.error);
           } else {
             this.toastr.success('Tipo de maquina registrada correctamente');
+            this.GetAllTiposMaquina();
           }
         },
         error: error => {
@@ -4076,6 +4098,7 @@ class TriggerFormComponent {
             this.toastr.warning(res.error.error);
           } else {
             this.toastr.success('Trigger registrado correctamente');
+            this.GetAllTriggers();
           }
         },
         error: error => {
@@ -4188,13 +4211,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @angular/common */ 6575);
 /* harmony import */ var _angular_material_input__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @angular/material/input */ 26);
 /* harmony import */ var _angular_material_form_field__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @angular/material/form-field */ 1333);
-/* harmony import */ var _angular_material_select__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @angular/material/select */ 6355);
-/* harmony import */ var _angular_material_core__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @angular/material/core */ 5309);
-/* harmony import */ var _angular_material_card__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @angular/material/card */ 8497);
-/* harmony import */ var _angular_material_button__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @angular/material/button */ 895);
-/* harmony import */ var _angular_material_expansion__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @angular/material/expansion */ 8060);
-/* harmony import */ var _angular_material_stepper__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! @angular/material/stepper */ 6272);
-/* harmony import */ var _angular_material_list__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! @angular/material/list */ 3228);
+/* harmony import */ var _angular_material_card__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @angular/material/card */ 8497);
+/* harmony import */ var _angular_material_button__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @angular/material/button */ 895);
+/* harmony import */ var _angular_material_expansion__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @angular/material/expansion */ 8060);
+/* harmony import */ var _angular_material_stepper__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @angular/material/stepper */ 6272);
+/* harmony import */ var _angular_material_list__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @angular/material/list */ 3228);
 
 
 
@@ -4209,66 +4230,25 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-
-
-function VariableFormComponent_mat_option_17_Template(rf, ctx) {
+function VariableFormComponent_mat_list_21_Template(rf, ctx) {
   if (rf & 1) {
-    _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementStart"](0, "mat-option", 15)(1, "p");
+    const _r3 = _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵgetCurrentView"]();
+    _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementStart"](0, "mat-list", 10)(1, "mat-list-item", 11);
     _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵtext"](2);
-    _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementEnd"]()();
-  }
-  if (rf & 2) {
-    const proceso_r4 = ctx.$implicit;
-    _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵproperty"]("value", proceso_r4._id);
-    _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵadvance"](2);
-    _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵtextInterpolate"](proceso_r4.descripcion);
-  }
-}
-function VariableFormComponent_mat_option_24_Template(rf, ctx) {
-  if (rf & 1) {
-    _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementStart"](0, "mat-option", 15)(1, "p");
-    _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵtext"](2);
-    _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementEnd"]()();
-  }
-  if (rf & 2) {
-    const maquina_r5 = ctx.$implicit;
-    _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵproperty"]("value", maquina_r5._id);
-    _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵadvance"](2);
-    _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵtextInterpolate"](maquina_r5.nombre);
-  }
-}
-function VariableFormComponent_mat_option_31_Template(rf, ctx) {
-  if (rf & 1) {
-    _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementStart"](0, "mat-option", 15)(1, "p");
-    _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵtext"](2);
-    _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementEnd"]()();
-  }
-  if (rf & 2) {
-    const trigger_r6 = ctx.$implicit;
-    _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵproperty"]("value", trigger_r6._id);
-    _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵadvance"](2);
-    _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵtextInterpolate"](trigger_r6.nombre);
-  }
-}
-function VariableFormComponent_mat_list_42_Template(rf, ctx) {
-  if (rf & 1) {
-    const _r9 = _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵgetCurrentView"]();
-    _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementStart"](0, "mat-list", 16)(1, "mat-list-item", 17);
-    _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵtext"](2);
-    _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementStart"](3, "a", 18);
-    _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵlistener"]("click", function VariableFormComponent_mat_list_42_Template_a_click_3_listener() {
-      const restoredCtx = _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵrestoreView"](_r9);
-      const variable_r7 = restoredCtx.$implicit;
-      const ctx_r8 = _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵnextContext"]();
-      return _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵresetView"](ctx_r8.borrarVariable(variable_r7._id));
+    _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementStart"](3, "a", 12);
+    _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵlistener"]("click", function VariableFormComponent_mat_list_21_Template_a_click_3_listener() {
+      const restoredCtx = _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵrestoreView"](_r3);
+      const variable_r1 = restoredCtx.$implicit;
+      const ctx_r2 = _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵnextContext"]();
+      return _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵresetView"](ctx_r2.borrarVariable(variable_r1._id));
     });
     _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵtext"](4, " eliminar ");
     _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementEnd"]()()();
   }
   if (rf & 2) {
-    const variable_r7 = ctx.$implicit;
+    const variable_r1 = ctx.$implicit;
     _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵadvance"](2);
-    _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵtextInterpolate1"](" ", variable_r7.nombre, " ");
+    _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵtextInterpolate1"](" ", variable_r1.nombre, " ");
   }
 }
 class VariableFormComponent {
@@ -4335,6 +4315,7 @@ class VariableFormComponent {
             this.toastr.warning(res.error.error);
           } else {
             this.toastr.success('Variable registrada correctamente');
+            this.GetAllVariables();
           }
         },
         error: error => {
@@ -4371,9 +4352,9 @@ VariableFormComponent.ɵfac = function VariableFormComponent_Factory(t) {
 VariableFormComponent.ɵcmp = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵdefineComponent"]({
   type: VariableFormComponent,
   selectors: [["app-variable-form"]],
-  decls: 48,
-  vars: 5,
-  consts: [[1, "example-form", 3, "formGroup", "ngSubmit"], [1, "flex", "flex-col"], [1, ""], ["matInput", "", "formControlName", "nombre"], ["formControlName", "id_proceso", 3, "click"], ["value", ""], [3, "value", 4, "ngFor", "ngForOf"], ["formControlName", "id_maquina", 3, "click"], ["formControlName", "id_trigger", 3, "click"], ["matInput", "", "formControlName", "trigger_valor"], ["hideToggle", "", 3, "click"], ["role", "list", 4, "ngFor", "ngForOf"], [1, "m-1"], ["mat-raised-button", "", "color", "primary", 1, "m-3"], ["mat-button", "", "matStepperNext", ""], [3, "value"], ["role", "list"], ["role", "listitem"], ["mat-raised-button", "", "color", "warn", 1, "m-3", 3, "click"]],
+  decls: 27,
+  vars: 2,
+  consts: [[1, "example-form", 3, "formGroup", "ngSubmit"], [1, "flex", "flex-col"], [1, ""], ["matInput", "", "formControlName", "nombre"], ["matInput", "", "formControlName", "trigger_valor"], ["hideToggle", "", 3, "click"], ["role", "list", 4, "ngFor", "ngForOf"], [1, "m-1"], ["mat-raised-button", "", "color", "primary", 1, "m-3"], ["mat-button", "", "matStepperNext", ""], ["role", "list"], ["role", "listitem"], ["mat-raised-button", "", "color", "warn", 1, "m-3", 3, "click"]],
   template: function VariableFormComponent_Template(rf, ctx) {
     if (rf & 1) {
       _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementStart"](0, "mat-card")(1, "mat-card-header")(2, "h2");
@@ -4389,76 +4370,34 @@ VariableFormComponent.ɵcmp = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODUL
       _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelement"](10, "input", 3);
       _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementEnd"]();
       _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementStart"](11, "mat-form-field", 2)(12, "mat-label");
-      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵtext"](13, "Proceso");
+      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵtext"](13, "valor del trigger ");
       _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementEnd"]();
-      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementStart"](14, "mat-select", 4);
-      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵlistener"]("click", function VariableFormComponent_Template_mat_select_click_14_listener() {
-        return ctx.GetAllProcesos();
-      });
-      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementStart"](15, "mat-option", 5);
-      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵtext"](16, "Elegir un proceso ");
-      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementEnd"]();
-      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵtemplate"](17, VariableFormComponent_mat_option_17_Template, 3, 2, "mat-option", 6);
+      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelement"](14, "input", 4);
       _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementEnd"]()();
-      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementStart"](18, "mat-form-field", 2)(19, "mat-label");
-      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵtext"](20, "Maquina");
-      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementEnd"]();
-      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementStart"](21, "mat-select", 7);
-      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵlistener"]("click", function VariableFormComponent_Template_mat_select_click_21_listener() {
-        return ctx.GetAllMaquinas();
-      });
-      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementStart"](22, "mat-option", 5);
-      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵtext"](23, "Elegir una maquina ");
-      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementEnd"]();
-      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵtemplate"](24, VariableFormComponent_mat_option_24_Template, 3, 2, "mat-option", 6);
-      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementEnd"]()();
-      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementStart"](25, "mat-form-field", 2)(26, "mat-label");
-      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵtext"](27, "Trigger");
-      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementEnd"]();
-      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementStart"](28, "mat-select", 8);
-      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵlistener"]("click", function VariableFormComponent_Template_mat_select_click_28_listener() {
-        return ctx.GetAllTriggers();
-      });
-      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementStart"](29, "mat-option", 5);
-      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵtext"](30, "Elegir un trigger ");
-      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementEnd"]();
-      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵtemplate"](31, VariableFormComponent_mat_option_31_Template, 3, 2, "mat-option", 6);
-      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementEnd"]()();
-      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementStart"](32, "mat-form-field", 2)(33, "mat-label");
-      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵtext"](34, "valor del trigger ");
-      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementEnd"]();
-      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelement"](35, "input", 9);
-      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementEnd"]()();
-      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementStart"](36, "div")(37, "mat-accordion")(38, "mat-expansion-panel", 10);
-      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵlistener"]("click", function VariableFormComponent_Template_mat_expansion_panel_click_38_listener() {
+      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementStart"](15, "div")(16, "mat-accordion")(17, "mat-expansion-panel", 5);
+      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵlistener"]("click", function VariableFormComponent_Template_mat_expansion_panel_click_17_listener() {
         return ctx.GetAllVariables();
       });
-      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementStart"](39, "mat-expansion-panel-header")(40, "mat-panel-title");
-      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵtext"](41, " Listado de variables");
+      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementStart"](18, "mat-expansion-panel-header")(19, "mat-panel-title");
+      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵtext"](20, " Listado de variables");
       _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementEnd"]()();
-      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵtemplate"](42, VariableFormComponent_mat_list_42_Template, 5, 1, "mat-list", 11);
+      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵtemplate"](21, VariableFormComponent_mat_list_21_Template, 5, 1, "mat-list", 6);
       _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementEnd"]()()();
-      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementStart"](43, "div", 12)(44, "button", 13);
-      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵtext"](45, "submit");
+      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementStart"](22, "div", 7)(23, "button", 8);
+      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵtext"](24, "submit");
       _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementEnd"]();
-      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementStart"](46, "button", 14);
-      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵtext"](47, "Next");
+      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementStart"](25, "button", 9);
+      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵtext"](26, "Next");
       _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementEnd"]()()()()();
     }
     if (rf & 2) {
       _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵadvance"](5);
       _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵproperty"]("formGroup", ctx.variableForm);
-      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵadvance"](12);
-      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵproperty"]("ngForOf", ctx.listProcesos);
-      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵadvance"](7);
-      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵproperty"]("ngForOf", ctx.listMaquina);
-      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵadvance"](7);
-      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵproperty"]("ngForOf", ctx.listTrigger);
-      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵadvance"](11);
+      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵadvance"](16);
       _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵproperty"]("ngForOf", ctx.listaVariables);
     }
   },
-  dependencies: [_angular_common__WEBPACK_IMPORTED_MODULE_5__.NgForOf, _angular_forms__WEBPACK_IMPORTED_MODULE_3__["ɵNgNoValidate"], _angular_forms__WEBPACK_IMPORTED_MODULE_3__.DefaultValueAccessor, _angular_forms__WEBPACK_IMPORTED_MODULE_3__.NgControlStatus, _angular_forms__WEBPACK_IMPORTED_MODULE_3__.NgControlStatusGroup, _angular_forms__WEBPACK_IMPORTED_MODULE_3__.FormGroupDirective, _angular_forms__WEBPACK_IMPORTED_MODULE_3__.FormControlName, _angular_material_input__WEBPACK_IMPORTED_MODULE_6__.MatInput, _angular_material_form_field__WEBPACK_IMPORTED_MODULE_7__.MatFormField, _angular_material_form_field__WEBPACK_IMPORTED_MODULE_7__.MatLabel, _angular_material_select__WEBPACK_IMPORTED_MODULE_8__.MatSelect, _angular_material_core__WEBPACK_IMPORTED_MODULE_9__.MatOption, _angular_material_card__WEBPACK_IMPORTED_MODULE_10__.MatCard, _angular_material_card__WEBPACK_IMPORTED_MODULE_10__.MatCardContent, _angular_material_card__WEBPACK_IMPORTED_MODULE_10__.MatCardHeader, _angular_material_button__WEBPACK_IMPORTED_MODULE_11__.MatAnchor, _angular_material_button__WEBPACK_IMPORTED_MODULE_11__.MatButton, _angular_material_expansion__WEBPACK_IMPORTED_MODULE_12__.MatAccordion, _angular_material_expansion__WEBPACK_IMPORTED_MODULE_12__.MatExpansionPanel, _angular_material_expansion__WEBPACK_IMPORTED_MODULE_12__.MatExpansionPanelHeader, _angular_material_expansion__WEBPACK_IMPORTED_MODULE_12__.MatExpansionPanelTitle, _angular_material_stepper__WEBPACK_IMPORTED_MODULE_13__.MatStepperNext, _angular_material_list__WEBPACK_IMPORTED_MODULE_14__.MatList, _angular_material_list__WEBPACK_IMPORTED_MODULE_14__.MatListItem],
+  dependencies: [_angular_common__WEBPACK_IMPORTED_MODULE_5__.NgForOf, _angular_forms__WEBPACK_IMPORTED_MODULE_3__["ɵNgNoValidate"], _angular_forms__WEBPACK_IMPORTED_MODULE_3__.DefaultValueAccessor, _angular_forms__WEBPACK_IMPORTED_MODULE_3__.NgControlStatus, _angular_forms__WEBPACK_IMPORTED_MODULE_3__.NgControlStatusGroup, _angular_forms__WEBPACK_IMPORTED_MODULE_3__.FormGroupDirective, _angular_forms__WEBPACK_IMPORTED_MODULE_3__.FormControlName, _angular_material_input__WEBPACK_IMPORTED_MODULE_6__.MatInput, _angular_material_form_field__WEBPACK_IMPORTED_MODULE_7__.MatFormField, _angular_material_form_field__WEBPACK_IMPORTED_MODULE_7__.MatLabel, _angular_material_card__WEBPACK_IMPORTED_MODULE_8__.MatCard, _angular_material_card__WEBPACK_IMPORTED_MODULE_8__.MatCardContent, _angular_material_card__WEBPACK_IMPORTED_MODULE_8__.MatCardHeader, _angular_material_button__WEBPACK_IMPORTED_MODULE_9__.MatAnchor, _angular_material_button__WEBPACK_IMPORTED_MODULE_9__.MatButton, _angular_material_expansion__WEBPACK_IMPORTED_MODULE_10__.MatAccordion, _angular_material_expansion__WEBPACK_IMPORTED_MODULE_10__.MatExpansionPanel, _angular_material_expansion__WEBPACK_IMPORTED_MODULE_10__.MatExpansionPanelHeader, _angular_material_expansion__WEBPACK_IMPORTED_MODULE_10__.MatExpansionPanelTitle, _angular_material_stepper__WEBPACK_IMPORTED_MODULE_11__.MatStepperNext, _angular_material_list__WEBPACK_IMPORTED_MODULE_12__.MatList, _angular_material_list__WEBPACK_IMPORTED_MODULE_12__.MatListItem],
   styles: ["/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiJ2YXJpYWJsZS1mb3JtLmNvbXBvbmVudC5jc3MifQ== */\n/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8uL3NyYy9hcHAvZm9ybXMvdmFyaWFibGUtZm9ybS92YXJpYWJsZS1mb3JtLmNvbXBvbmVudC5jc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IjtBQUNBLDRLQUE0SyIsInNvdXJjZVJvb3QiOiIifQ== */"]
 });
 

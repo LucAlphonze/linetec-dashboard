@@ -90,6 +90,11 @@ export class EmpresaPlantaFormComponent implements OnInit {
             this.toastr.warning(res.error.error.message);
           } else {
             this.toastr.success('Planta registrada corectamente');
+            this.service
+              .getForm(this.apiPlanta + this.message)
+              .subscribe((res: any) => {
+                this.listPlantas = res;
+              });
           }
         },
         error: (error: any) => {
