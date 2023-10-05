@@ -126,11 +126,29 @@ const borrarEmpresa = async (req, res) => {
     });
   }
 };
+const editarEmpresa = async (req, res) => {
+  const empresaId = req.params.empresaId;
+  const body = req.body;
+  try {
+    const empresa = await Empresa.findByIdAndUpdate(empresaId, body);
 
+    res.status(204).json({
+      ok: true,
+      datos: empresa,
+      status: 204,
+    });
+  } catch (err) {
+    res.status(500).json({
+      ok: false,
+      error: err,
+    });
+  }
+};
 module.exports = {
   obtenerEmpresas,
   obtenerEmpresa,
   empresaPorLocalidad,
   crearEmpresa,
   borrarEmpresa,
+  editarEmpresa,
 };

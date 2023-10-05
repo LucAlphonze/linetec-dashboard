@@ -64,9 +64,31 @@ const borrarTipoMaquina = async (req, res) => {
     });
   }
 };
+const editarTipoMaquina = async (req, res) => {
+  const tipoMaquinaId = req.params.tipoMaquinaId;
+  const body = req.body;
+  try {
+    const tipoMaquina = await TipoMaquina.findByIdAndUpdate(
+      tipoMaquinaId,
+      body
+    );
+
+    res.status(204).json({
+      ok: true,
+      datos: tipoMaquina,
+      status: 204,
+    });
+  } catch (err) {
+    res.status(500).json({
+      ok: false,
+      error: err,
+    });
+  }
+};
 
 module.exports = {
   obtenerTiposMaquinas,
   crearTipoMaquina,
   borrarTipoMaquina,
+  editarTipoMaquina,
 };

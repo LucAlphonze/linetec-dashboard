@@ -74,9 +74,28 @@ const borrarProceso = async (req, res) => {
     });
   }
 };
+const editarProceso = async (req, res) => {
+  const procesoId = req.params.procesoId;
+  const body = req.body;
+  try {
+    const proceso = await Proceso.findByIdAndUpdate(procesoId, body);
+
+    res.status(204).json({
+      ok: true,
+      datos: proceso,
+      status: 204,
+    });
+  } catch (err) {
+    res.status(500).json({
+      ok: false,
+      error: err,
+    });
+  }
+};
 
 module.exports = {
   obtenerProcesos,
   crearProceso,
   borrarProceso,
+  editarProceso,
 };

@@ -105,9 +105,29 @@ const borrarProvincia = async (req, res) => {
   }
 };
 
+const editarProvincia = async (req, res) => {
+  const provinciaId = req.params.provinciaId;
+  const body = req.body;
+  try {
+    const provincia = await Provincia.findByIdAndUpdate(provinciaId, body);
+
+    res.status(204).json({
+      ok: true,
+      datos: provincia,
+      status: 204,
+    });
+  } catch (err) {
+    res.status(500).json({
+      ok: false,
+      error: err,
+    });
+  }
+};
+
 module.exports = {
   obtenerProvincias,
   provinciasPorPais,
   crearProvincia,
   borrarProvincia,
+  editarProvincia,
 };

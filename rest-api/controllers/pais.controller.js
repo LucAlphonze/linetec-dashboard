@@ -77,9 +77,27 @@ const borrarPais = async (req, res) => {
     });
   }
 };
+const editarPais = async (req, res) => {
+  const paisId = req.params.paisId;
+  const body = req.body;
+  try {
+    const pais = await Pais.findByIdAndUpdate(paisId, body);
 
+    res.status(204).json({
+      ok: true,
+      datos: pais,
+      status: 204,
+    });
+  } catch (err) {
+    res.status(500).json({
+      ok: false,
+      error: err,
+    });
+  }
+};
 module.exports = {
   obtenerPaises,
   crearPais,
   borrarPais,
+  editarPais,
 };

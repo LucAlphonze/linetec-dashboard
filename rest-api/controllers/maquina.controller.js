@@ -117,9 +117,29 @@ const borrarMaquina = async (req, res) => {
   }
 };
 
+const editarMaquina = async (req, res) => {
+  const maquinaId = req.params.maquinaId;
+  const body = req.body;
+  try {
+    const maquina = await Maquina.findByIdAndUpdate(maquinaId, body);
+
+    res.status(204).json({
+      ok: true,
+      datos: maquina,
+      status: 204,
+    });
+  } catch (err) {
+    res.status(500).json({
+      ok: false,
+      error: err,
+    });
+  }
+};
+
 module.exports = {
   obtenerMaquinas,
   maquinasPorLinea,
   crearMaquina,
   borrarMaquina,
+  editarMaquina,
 };

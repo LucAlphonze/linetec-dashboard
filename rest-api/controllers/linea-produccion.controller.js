@@ -105,10 +105,29 @@ const borrarLinea = async (req, res) => {
     });
   }
 };
+const editarLinea = async (req, res) => {
+  const lineaId = req.params.lineaId;
+  const body = req.body;
+  try {
+    const linea = await LineaProduccion.findByIdAndUpdate(lineaId, body);
+
+    res.status(204).json({
+      ok: true,
+      datos: linea,
+      status: 204,
+    });
+  } catch (err) {
+    res.status(500).json({
+      ok: false,
+      error: err,
+    });
+  }
+};
 
 module.exports = {
   obtenerLineasProducciones,
   crearLineaProduccion,
   borrarLinea,
   lineaProduccionPorPlanta,
+  editarLinea,
 };

@@ -114,10 +114,28 @@ const borrarLocalidad = async (req, res) => {
     });
   }
 };
+const editarLocalidad = async (req, res) => {
+  const localidadId = req.params.localidadId;
+  const body = req.body;
+  try {
+    const localidad = await Localidad.findByIdAndUpdate(localidadId, body);
 
+    res.status(204).json({
+      ok: true,
+      datos: localidad,
+      status: 204,
+    });
+  } catch (err) {
+    res.status(500).json({
+      ok: false,
+      error: err,
+    });
+  }
+};
 module.exports = {
   obtenerLocalidades,
   localidadPorProvincia,
   crearLocalidad,
   borrarLocalidad,
+  editarLocalidad,
 };

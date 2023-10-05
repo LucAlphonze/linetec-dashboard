@@ -69,9 +69,28 @@ const borrarTrigger = async (req, res) => {
     });
   }
 };
+const editarTrigger = async (req, res) => {
+  const triggerId = req.params.triggerId;
+  const body = req.body;
+  try {
+    const trigger = await Trigger.findByIdAndUpdate(triggerId, body);
+
+    res.status(204).json({
+      ok: true,
+      datos: trigger,
+      status: 204,
+    });
+  } catch (err) {
+    res.status(500).json({
+      ok: false,
+      error: err,
+    });
+  }
+};
 
 module.exports = {
   obtenerTrigger,
   crearTrigger,
   borrarTrigger,
+  editarTrigger,
 };

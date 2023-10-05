@@ -114,10 +114,28 @@ const borrarPlanta = async (req, res) => {
     });
   }
 };
+const editarPlanta = async (req, res) => {
+  const plataId = req.params.plataId;
+  const body = req.body;
+  try {
+    const planta = await Planta.findByIdAndUpdate(plataId, body);
 
+    res.status(204).json({
+      ok: true,
+      datos: planta,
+      status: 204,
+    });
+  } catch (err) {
+    res.status(500).json({
+      ok: false,
+      error: err,
+    });
+  }
+};
 module.exports = {
   obtenerEmpresasPlantas,
   plantaPorEmpresa,
   crearEmpresaPlanta,
   borrarPlanta,
+  editarPlanta,
 };
