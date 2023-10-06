@@ -81,7 +81,7 @@ export class ProvinciaFormComponent {
             this.service
               .getForm(this.apiProvincia + this.id_pais)
               .subscribe((res: any) => {
-                this.listProvincias = res;
+                this.listProvinciasPais = res;
               });
           } else if (res.status == 403) {
             this.toastr.warning('acceso denegado, token expirado');

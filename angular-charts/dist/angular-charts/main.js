@@ -645,9 +645,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @angular/core */ 1699);
 /* harmony import */ var src_app_service_auth_service__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! src/app/service/auth.service */ 9692);
-/* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! @angular/common */ 6575);
-/* harmony import */ var _angular_material_stepper__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! @angular/material/stepper */ 6272);
-/* harmony import */ var _angular_material_icon__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! @angular/material/icon */ 6515);
+/* harmony import */ var _auth0_angular_jwt__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! @auth0/angular-jwt */ 2401);
+/* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! @angular/common */ 6575);
+/* harmony import */ var _angular_material_stepper__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! @angular/material/stepper */ 6272);
+/* harmony import */ var _angular_material_icon__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! @angular/material/icon */ 6515);
 /* harmony import */ var _forms_pais_form_pais_form_component__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../forms/pais-form/pais-form.component */ 1674);
 /* harmony import */ var _forms_provincia_form_provincia_form_component__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../forms/provincia-form/provincia-form.component */ 9092);
 /* harmony import */ var _forms_localidad_form_localidad_form_component__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../forms/localidad-form/localidad-form.component */ 4048);
@@ -659,6 +660,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _forms_proceso_form_proceso_form_component__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../forms/proceso-form/proceso-form.component */ 9343);
 /* harmony import */ var _forms_variable_form_variable_form_component__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../../forms/variable-form/variable-form.component */ 9);
 /* harmony import */ var _forms_trigger_form_trigger_form_component__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../../forms/trigger-form/trigger-form.component */ 8579);
+
 
 
 
@@ -918,8 +920,9 @@ function Home5Component_mat_step_14_Template(rf, ctx) {
   }
 }
 class Home5Component {
-  constructor(service) {
+  constructor(service, jwtHelper) {
     this.service = service;
+    this.jwtHelper = jwtHelper;
     this.isLinear = true;
     this.isTrue = false;
     this.isPaisCompleted = false;
@@ -934,6 +937,7 @@ class Home5Component {
     this.isTriggerCompleted = false;
   }
   ngOnInit() {
+    this.expirationCheck();
     this.subscription = this.service.paisSelected.subscribe(message => {
       if (message != '') {
         this.isPaisCompleted = true;
@@ -1005,9 +1009,14 @@ class Home5Component {
       }
     });
   }
+  expirationCheck() {
+    this.token = sessionStorage.getItem('token')?.toString();
+    this.timeout = this.jwtHelper.getTokenExpirationDate(this.token).valueOf() - new Date().valueOf();
+    this.service.expirationCounter(this.timeout);
+  }
 }
 Home5Component.ɵfac = function Home5Component_Factory(t) {
-  return new (t || Home5Component)(_angular_core__WEBPACK_IMPORTED_MODULE_12__["ɵɵdirectiveInject"](src_app_service_auth_service__WEBPACK_IMPORTED_MODULE_0__.AuthService));
+  return new (t || Home5Component)(_angular_core__WEBPACK_IMPORTED_MODULE_12__["ɵɵdirectiveInject"](src_app_service_auth_service__WEBPACK_IMPORTED_MODULE_0__.AuthService), _angular_core__WEBPACK_IMPORTED_MODULE_12__["ɵɵdirectiveInject"](_auth0_angular_jwt__WEBPACK_IMPORTED_MODULE_13__.JwtHelperService));
 };
 Home5Component.ɵcmp = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_12__["ɵɵdefineComponent"]({
   type: Home5Component,
@@ -1068,7 +1077,7 @@ Home5Component.ɵcmp = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_12__[
       _angular_core__WEBPACK_IMPORTED_MODULE_12__["ɵɵproperty"]("ngIf", ctx.isTriggerCompleted);
     }
   },
-  dependencies: [_angular_common__WEBPACK_IMPORTED_MODULE_13__.NgIf, _angular_material_stepper__WEBPACK_IMPORTED_MODULE_14__.MatStep, _angular_material_stepper__WEBPACK_IMPORTED_MODULE_14__.MatStepLabel, _angular_material_stepper__WEBPACK_IMPORTED_MODULE_14__.MatStepper, _angular_material_icon__WEBPACK_IMPORTED_MODULE_15__.MatIcon, _forms_pais_form_pais_form_component__WEBPACK_IMPORTED_MODULE_1__.PaisFormComponent, _forms_provincia_form_provincia_form_component__WEBPACK_IMPORTED_MODULE_2__.ProvinciaFormComponent, _forms_localidad_form_localidad_form_component__WEBPACK_IMPORTED_MODULE_3__.LocalidadFormComponent, _forms_empresa_form_empresa_form_component__WEBPACK_IMPORTED_MODULE_4__.EmpresaFormComponent, _forms_empresa_planta_form_empresa_planta_form_component__WEBPACK_IMPORTED_MODULE_5__.EmpresaPlantaFormComponent, _forms_maquina_form_maquina_form_component__WEBPACK_IMPORTED_MODULE_6__.MaquinaFormComponent, _forms_tipo_maquina_form_tipo_maquina_form_component__WEBPACK_IMPORTED_MODULE_7__.TipoMaquinaFormComponent, _forms_linea_produccion_form_linea_produccion_form_component__WEBPACK_IMPORTED_MODULE_8__.LineaProduccionFormComponent, _forms_proceso_form_proceso_form_component__WEBPACK_IMPORTED_MODULE_9__.ProcesoFormComponent, _forms_variable_form_variable_form_component__WEBPACK_IMPORTED_MODULE_10__.VariableFormComponent, _forms_trigger_form_trigger_form_component__WEBPACK_IMPORTED_MODULE_11__.TriggerFormComponent],
+  dependencies: [_angular_common__WEBPACK_IMPORTED_MODULE_14__.NgIf, _angular_material_stepper__WEBPACK_IMPORTED_MODULE_15__.MatStep, _angular_material_stepper__WEBPACK_IMPORTED_MODULE_15__.MatStepLabel, _angular_material_stepper__WEBPACK_IMPORTED_MODULE_15__.MatStepper, _angular_material_icon__WEBPACK_IMPORTED_MODULE_16__.MatIcon, _forms_pais_form_pais_form_component__WEBPACK_IMPORTED_MODULE_1__.PaisFormComponent, _forms_provincia_form_provincia_form_component__WEBPACK_IMPORTED_MODULE_2__.ProvinciaFormComponent, _forms_localidad_form_localidad_form_component__WEBPACK_IMPORTED_MODULE_3__.LocalidadFormComponent, _forms_empresa_form_empresa_form_component__WEBPACK_IMPORTED_MODULE_4__.EmpresaFormComponent, _forms_empresa_planta_form_empresa_planta_form_component__WEBPACK_IMPORTED_MODULE_5__.EmpresaPlantaFormComponent, _forms_maquina_form_maquina_form_component__WEBPACK_IMPORTED_MODULE_6__.MaquinaFormComponent, _forms_tipo_maquina_form_tipo_maquina_form_component__WEBPACK_IMPORTED_MODULE_7__.TipoMaquinaFormComponent, _forms_linea_produccion_form_linea_produccion_form_component__WEBPACK_IMPORTED_MODULE_8__.LineaProduccionFormComponent, _forms_proceso_form_proceso_form_component__WEBPACK_IMPORTED_MODULE_9__.ProcesoFormComponent, _forms_variable_form_variable_form_component__WEBPACK_IMPORTED_MODULE_10__.VariableFormComponent, _forms_trigger_form_trigger_form_component__WEBPACK_IMPORTED_MODULE_11__.TriggerFormComponent],
   styles: [".mat-step-header[_ngcontent-%COMP%] {\n  pointer-events: none !important;\n}\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImhvbWU1LmNvbXBvbmVudC5jc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7RUFDRSwrQkFBK0I7QUFDakMiLCJmaWxlIjoiaG9tZTUuY29tcG9uZW50LmNzcyIsInNvdXJjZXNDb250ZW50IjpbIi5tYXQtc3RlcC1oZWFkZXIge1xyXG4gIHBvaW50ZXItZXZlbnRzOiBub25lICFpbXBvcnRhbnQ7XHJcbn1cclxuIl19 */\n/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8uL3NyYy9hcHAvY29tcG9uZW50cy9ob21lNS9ob21lNS5jb21wb25lbnQuY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0VBQ0UsK0JBQStCO0FBQ2pDOztBQUVBLDRVQUE0VSIsInNvdXJjZXNDb250ZW50IjpbIi5tYXQtc3RlcC1oZWFkZXIge1xyXG4gIHBvaW50ZXItZXZlbnRzOiBub25lICFpbXBvcnRhbnQ7XHJcbn1cclxuIl0sInNvdXJjZVJvb3QiOiIifQ== */"]
 });
 
@@ -2087,7 +2096,7 @@ DialogOverviewExampleDialog.ɵcmp = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED
   features: [_angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵStandaloneFeature"]],
   decls: 10,
   vars: 0,
-  consts: [["mat-dialog-title", ""], ["mat-dialog-content", ""], ["mat-dialog-actions", ""], ["mat-button", "", 3, "click"], ["mat-button", "", "cdkFocusInitial", "", 3, "mat-dialog-close", "click"]],
+  consts: [["mat-dialog-title", ""], ["mat-dialog-content", ""], ["mat-dialog-actions", ""], ["mat-button", "", 3, "click"], ["mat-raised-button", "", "color", "primary", "mat-button", "", "cdkFocusInitial", "", 1, "m-3", 3, "mat-dialog-close", "click"]],
   template: function DialogOverviewExampleDialog_Template(rf, ctx) {
     if (rf & 1) {
       _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementStart"](0, "h1", 0);
@@ -2100,13 +2109,13 @@ DialogOverviewExampleDialog.ɵcmp = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED
       _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵlistener"]("click", function DialogOverviewExampleDialog_Template_button_click_6_listener() {
         return ctx.onNoClick();
       });
-      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵtext"](7, "No Thanks");
+      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵtext"](7, "No");
       _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementEnd"]();
       _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementStart"](8, "button", 4);
       _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵlistener"]("click", function DialogOverviewExampleDialog_Template_button_click_8_listener() {
         return ctx.refreshToken();
       });
-      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵtext"](9, " Ok ");
+      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵtext"](9, " De acuerdo ");
       _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementEnd"]()();
     }
   },
@@ -2163,7 +2172,7 @@ function EmpresaFormComponent_mat_option_48_Template(rf, ctx) {
       const restoredCtx = _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵrestoreView"](_r3);
       const empresa_r1 = restoredCtx.$implicit;
       const ctx_r2 = _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵnextContext"]();
-      return _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵresetView"]([ctx_r2.setEmpresa(empresa_r1._id, empresa_r1.razon_social), ctx_r2.GetPlantasByEmpresas(empresa_r1._id)]);
+      return _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵresetView"]([ctx_r2.setEmpresa(empresa_r1._id, empresa_r1.razon_social)]);
     });
     _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementStart"](1, "p");
     _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵtext"](2);
@@ -2197,7 +2206,7 @@ class EmpresaFormComponent {
       deptartamento: this.builder.control('', _angular_forms__WEBPACK_IMPORTED_MODULE_3__.Validators.required),
       rubro: this.builder.control('', _angular_forms__WEBPACK_IMPORTED_MODULE_3__.Validators.required)
     });
-    this.subscription = this.service.currentMessage.subscribe(message => this.message = message);
+    this.subscription = this.service.localidadSelected.subscribe(message => this.id_localidad = message);
     this.subscription = this.service.listEmpresas.subscribe(message => this.listEmpresas = message);
   }
   GetAllLocalidades() {
@@ -2216,7 +2225,7 @@ class EmpresaFormComponent {
     if (this.empresaForm.valid) {
       console.log(this.empresaForm.value);
       let body = {
-        id_localidad: this.message,
+        id_localidad: this.id_localidad,
         razon_social: this.empresaForm.value.razon_social,
         nombre_fantasia: this.empresaForm.value.nombre_fantasia,
         calle: this.empresaForm.value.calle,
@@ -2232,7 +2241,7 @@ class EmpresaFormComponent {
             this.toastr.warning(res.error.error);
           } else {
             this.toastr.success('Empresa registrada corectamente');
-            this.service.getForm(this.apiEmpresas + 'localidad/' + this.message).subscribe(res => {
+            this.service.getForm(this.apiEmpresas + 'localidad/' + this.id_localidad).subscribe(res => {
               console.log('empresas res after crear: ', res);
               this.listEmpresas = res;
             });
@@ -2268,11 +2277,13 @@ class EmpresaFormComponent {
   setEmpresa(id, nombre) {
     console.log('set empresa', id, 'nombre', nombre);
     this.service.changeMessage(id);
+    this.service.empresaSelectedSource.next(id);
+    this.GetPlantasByEmpresas();
   }
-  GetPlantasByEmpresas(empresa_id) {
-    this.service.getForm(this.apiPlantas + this.message).subscribe(res => {
-      console.log('empresa get plantas', res, empresa_id);
-      this.service.streamPlantas_EmpresaSelected(res, empresa_id);
+  GetPlantasByEmpresas() {
+    this.service.getForm(this.apiPlantas + this.id_localidad).subscribe(res => {
+      console.log('empresa get plantas', res);
+      this.service.streamPlantas_EmpresaSelected(res);
     });
   }
 }
@@ -2407,7 +2418,7 @@ function EmpresaPlantaFormComponent_mat_option_32_Template(rf, ctx) {
       const restoredCtx = _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵrestoreView"](_r3);
       const planta_r1 = restoredCtx.$implicit;
       const ctx_r2 = _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵnextContext"]();
-      return _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵresetView"]([ctx_r2.setPlanta(planta_r1._id, planta_r1.nombre), ctx_r2.GetLineaByPlanta(planta_r1._id)]);
+      return _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵresetView"]([ctx_r2.setPlanta(planta_r1._id, planta_r1.nombre)]);
     });
     _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementStart"](1, "p");
     _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵtext"](2);
@@ -2439,7 +2450,6 @@ class EmpresaPlantaFormComponent {
       calle: this.builder.control('', _angular_forms__WEBPACK_IMPORTED_MODULE_3__.Validators.required),
       altura: this.builder.control('', _angular_forms__WEBPACK_IMPORTED_MODULE_3__.Validators.required)
     });
-    this.subscription = this.service.currentMessage.subscribe(message => this.message = message);
     this.subscription = this.service.listPlantas.subscribe(message => this.listPlantas = message);
     this.subscription = this.service.empresaSelected.subscribe(message => this.id_empresa = message);
     this.subscription = this.service.localidadSelected.subscribe(message => this.id_localidad = message);
@@ -2479,7 +2489,7 @@ class EmpresaPlantaFormComponent {
             this.toastr.warning(res.error.error.message);
           } else {
             this.toastr.success('Planta registrada corectamente');
-            this.service.getForm(this.apiPlanta + this.message).subscribe(res => {
+            this.service.getForm(this.apiPlanta + this.id_empresa).subscribe(res => {
               this.listPlantas = res;
             });
           }
@@ -2514,11 +2524,13 @@ class EmpresaPlantaFormComponent {
   setPlanta(id, nombre) {
     console.log('set planta', id, 'nombre', nombre);
     this.service.changeMessage(id);
+    this.service.plantaSelectedSource.next(id);
+    this.GetLineaByPlanta();
   }
-  GetLineaByPlanta(planta_id) {
-    this.service.getForm(this.apiLinea + this.message).subscribe(res => {
-      console.log('planta get lineas', res, planta_id);
-      this.service.streamLinea_PlantaSelected(res, planta_id);
+  GetLineaByPlanta() {
+    this.service.getForm(this.apiLinea + this.id_empresa).subscribe(res => {
+      console.log('planta get lineas', res);
+      this.service.streamLinea_PlantaSelected(res);
     });
   }
 }
@@ -2633,7 +2645,7 @@ function LineaProduccionFormComponent_mat_option_32_Template(rf, ctx) {
       const restoredCtx = _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵrestoreView"](_r3);
       const linea_r1 = restoredCtx.$implicit;
       const ctx_r2 = _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵnextContext"]();
-      return _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵresetView"]([ctx_r2.setLinea(linea_r1._id, linea_r1.nombre), ctx_r2.GetMaquinaByLinea(linea_r1._id)]);
+      return _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵresetView"]([ctx_r2.setLinea(linea_r1._id, linea_r1.nombre)]);
     });
     _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementStart"](1, "p");
     _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵtext"](2);
@@ -2663,7 +2675,6 @@ class LineaProduccionFormComponent {
       descripcion: this.builder.control('', _angular_forms__WEBPACK_IMPORTED_MODULE_3__.Validators.required),
       identificador: this.builder.control('', _angular_forms__WEBPACK_IMPORTED_MODULE_3__.Validators.required)
     });
-    this.subscription = this.service.currentMessage.subscribe(message => this.message = message);
     this.subscription = this.service.listLineas.subscribe(message => this.listLineas = message);
     this.subscription = this.service.plantaSelected.subscribe(message => this.id_empresa_planta = message);
   }
@@ -2695,7 +2706,7 @@ class LineaProduccionFormComponent {
             this.toastr.warning(res.error.error);
           } else {
             this.toastr.success('Linea de produccion registrada corectamente');
-            this.service.getForm(this.apiLinea + this.message).subscribe(res => {
+            this.service.getForm(this.apiLinea + this.id_empresa_planta).subscribe(res => {
               this.listLineas = res;
             });
           }
@@ -2730,11 +2741,13 @@ class LineaProduccionFormComponent {
   setLinea(id, nombre) {
     console.log('set linea', id, 'nombre', nombre);
     this.service.changeMessage(id);
+    this.service.lineaSelectedSource.next(id);
+    this.GetMaquinaByLinea();
   }
-  GetMaquinaByLinea(linea_id) {
-    this.service.getForm(this.apiMaquina + this.message).subscribe(res => {
-      console.log('linea get maquinas', res, linea_id);
-      this.service.streamMaquinas_LineaSelected(res, linea_id);
+  GetMaquinaByLinea() {
+    this.service.getForm(this.apiMaquina + this.id_empresa_planta).subscribe(res => {
+      console.log('linea get maquinas', res);
+      this.service.streamMaquinas_LineaSelected(res);
     });
   }
 }
@@ -2847,7 +2860,7 @@ function LocalidadFormComponent_mat_option_24_Template(rf, ctx) {
       const restoredCtx = _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵrestoreView"](_r3);
       const localidad_r1 = restoredCtx.$implicit;
       const ctx_r2 = _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵnextContext"]();
-      return _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵresetView"]([ctx_r2.setLocalidad(localidad_r1._id, localidad_r1.nombre), ctx_r2.GetEmpresasByLocalidad(localidad_r1._id)]);
+      return _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵresetView"]([ctx_r2.setLocalidad(localidad_r1._id, localidad_r1.nombre)]);
     });
     _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementStart"](1, "p");
     _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵtext"](2);
@@ -2875,7 +2888,8 @@ class LocalidadFormComponent {
     this.localidadForm = this.builder.group({
       nombre: this.builder.control('', _angular_forms__WEBPACK_IMPORTED_MODULE_3__.Validators.required)
     });
-    this.subscription = this.service.currentMessage.subscribe(message => this.message = message);
+    this.subscription = this.service.localidadSelected.subscribe(message => this.id_localidad = message);
+    this.subscription = this.service.provinciaSelected.subscribe(message => this.id_provincia = message);
     this.subscription2 = this.service.listLocalidades.subscribe(message => this.listLocalidades = message);
   }
   GetAllProvincias() {
@@ -2896,7 +2910,7 @@ class LocalidadFormComponent {
       console.log(this.localidadForm.value);
       let body = {
         nombre: this.localidadForm.value.nombre,
-        id_provincia: this.message
+        id_provincia: this.id_provincia
       };
       this.service.postForm(this.apiLocalidad, body).subscribe({
         next: res => {
@@ -2905,7 +2919,7 @@ class LocalidadFormComponent {
             this.toastr.warning(res.error.error);
           } else {
             this.toastr.success('Localidad registrada correctamente');
-            this.service.getForm(this.apiLocalidad + this.message).subscribe(res => {
+            this.service.getForm(this.apiLocalidad + this.id_provincia).subscribe(res => {
               this.listLocalidades = res;
             });
           }
@@ -2940,11 +2954,13 @@ class LocalidadFormComponent {
   setLocalidad(id, nombre) {
     console.log('set localidad', id, 'nombre', nombre);
     this.service.changeMessage(id);
+    this.service.localidadSelectedSource.next(id);
+    this.GetEmpresasByLocalidad();
   }
-  GetEmpresasByLocalidad(empresa_id) {
-    this.service.getForm(this.apiEmpresas + 'localidad/' + this.message).subscribe(res => {
+  GetEmpresasByLocalidad() {
+    this.service.getForm(this.apiEmpresas + 'localidad/' + this.id_localidad).subscribe(res => {
       console.log('Localidad-form get empresas', res);
-      this.service.streamEmpresas_LocalidadSelected(res, empresa_id);
+      this.service.streamEmpresas_LocalidadSelected(res);
     });
   }
 }
@@ -3277,7 +3293,7 @@ function PaisFormComponent_mat_option_24_Template(rf, ctx) {
       const restoredCtx = _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵrestoreView"](_r3);
       const pais_r1 = restoredCtx.$implicit;
       const ctx_r2 = _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵnextContext"]();
-      return _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵresetView"]([ctx_r2.setPais(pais_r1._id, pais_r1.nombre), ctx_r2.GetProvinciasByPais(pais_r1._id)]);
+      return _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵresetView"]([ctx_r2.setPais(pais_r1._id, pais_r1.nombre)]);
     });
     _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementStart"](1, "p");
     _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵtext"](2);
@@ -3306,7 +3322,7 @@ class PaisFormComponent {
     this.paisForm = this._formBuilder.group({
       nombre: this._formBuilder.control('', _angular_forms__WEBPACK_IMPORTED_MODULE_3__.Validators.required)
     });
-    this.subscription = this.service.currentMessage.subscribe(message => this.message = message);
+    this.subscription = this.service.paisSelected.subscribe(message => this.id_pais = message);
   }
   GetAllPaises() {
     this.service.getForm(this.apiPaises).subscribe(res => {
@@ -3357,12 +3373,14 @@ class PaisFormComponent {
   setPais(id, nombre) {
     console.log('set pais', id, 'nombre', nombre);
     this.service.changeMessage(id);
+    this.service.paisSelectedSource.next(id);
+    this.GetProvinciasByPais();
   }
-  GetProvinciasByPais(pais_id) {
-    console.log('pais nombre', this.message);
-    this.service.getForm(this.apiProvincia + this.message).subscribe(res => {
+  GetProvinciasByPais() {
+    console.log('pais nombre', this.id_pais);
+    this.service.getForm(this.apiProvincia + this.id_pais).subscribe(res => {
       console.log('pais form get provincias', res);
-      this.service.streamProvincias_PaisSelected(res, pais_id);
+      this.service.streamProvincias_PaisSelected(res);
     });
   }
 }
@@ -3657,7 +3675,7 @@ function ProvinciaFormComponent_mat_option_24_Template(rf, ctx) {
       const restoredCtx = _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵrestoreView"](_r3);
       const provincia_r1 = restoredCtx.$implicit;
       const ctx_r2 = _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵnextContext"]();
-      return _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵresetView"]([ctx_r2.setProvincia(provincia_r1._id, provincia_r1.nombre), ctx_r2.GetLocalidadesByProvincia(provincia_r1._id)]);
+      return _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵresetView"]([ctx_r2.setProvincia(provincia_r1._id, provincia_r1.nombre)]);
     });
     _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementStart"](1, "p");
     _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵtext"](2);
@@ -3685,7 +3703,8 @@ class ProvinciaFormComponent {
     this.provinciaForm = this.builder.group({
       nombre: this.builder.control('', _angular_forms__WEBPACK_IMPORTED_MODULE_3__.Validators.required)
     });
-    this.subscription = this.service.currentMessage.subscribe(message => this.message = message);
+    this.subscription = this.service.paisSelected.subscribe(message => this.id_pais = message);
+    this.subscription = this.service.provinciaSelected.subscribe(message => this.id_provincia = message);
     this.subscription2 = this.service.listProvincias.subscribe(message => this.listProvinciasPais = message);
   }
   GetAllPaises() {
@@ -3712,15 +3731,15 @@ class ProvinciaFormComponent {
       console.log(this.provinciaForm.value);
       let body = {
         nombre: this.provinciaForm.value.nombre,
-        id_pais: this.message
+        id_pais: this.id_pais
       };
       this.service.postForm(this.apiProvincia, body).subscribe({
         next: res => {
           console.log('respuesta: ', res);
           if (res.status == 200) {
             this.toastr.success('provincia registrada correctamente');
-            this.service.getForm(this.apiProvincia + this.message).subscribe(res => {
-              this.listProvincias = res;
+            this.service.getForm(this.apiProvincia + this.id_pais).subscribe(res => {
+              this.listProvinciasPais = res;
             });
           } else if (res.status == 403) {
             this.toastr.warning('acceso denegado, token expirado');
@@ -3758,11 +3777,13 @@ class ProvinciaFormComponent {
   setProvincia(id, nombre) {
     console.log('set provincia', id, 'nombre', nombre);
     this.service.changeMessage(id);
+    this.service.provinciaSelectedSource.next(id);
+    this.GetLocalidadesByProvincia();
   }
-  GetLocalidadesByProvincia(provincia_id) {
-    this.service.getForm(this.apiLocalidad + this.message).subscribe(res => {
+  GetLocalidadesByProvincia() {
+    this.service.getForm(this.apiLocalidad + this.id_provincia).subscribe(res => {
       console.log('provincia form get localidades', res);
-      this.service.streamLocalides_ProvinciaSelected(res, provincia_id);
+      this.service.streamLocalides_ProvinciaSelected(res);
     });
   }
 }
@@ -4692,35 +4713,29 @@ class AuthService {
     console.log('change message: ', message);
     this.messageSource.next(message);
   }
-  streamProvincias_PaisSelected(provincias, paisSelected) {
-    console.log('change message: ', provincias, paisSelected);
+  streamProvincias_PaisSelected(provincias) {
+    console.log('change message: ', provincias);
     this.provinciasSource.next(provincias);
-    this.paisSelectedSource.next(paisSelected);
   }
-  streamLocalides_ProvinciaSelected(localidades, provinciaSelected) {
+  streamLocalides_ProvinciaSelected(localidades) {
     console.log('change message: ', localidades);
     this.localidadesSource.next(localidades);
-    this.provinciaSelectedSource.next(provinciaSelected);
   }
-  streamEmpresas_LocalidadSelected(empresas, localidadSelected) {
+  streamEmpresas_LocalidadSelected(empresas) {
     console.log('change message: ', empresas);
     this.empresasSource.next(empresas);
-    this.localidadSelectedSource.next(localidadSelected);
   }
-  streamPlantas_EmpresaSelected(plantas, empresaSelected) {
+  streamPlantas_EmpresaSelected(plantas) {
     console.log('change message: ', plantas);
     this.plantasSource.next(plantas);
-    this.empresaSelectedSource.next(empresaSelected);
   }
-  streamLinea_PlantaSelected(linea, plantaSelected) {
+  streamLinea_PlantaSelected(linea) {
     console.log('change message: ', linea);
     this.lineaSource.next(linea);
-    this.plantaSelectedSource.next(plantaSelected);
   }
-  streamMaquinas_LineaSelected(Maquinas, LineaSelected) {
+  streamMaquinas_LineaSelected(Maquinas) {
     console.log('change message: ', Maquinas);
     this.maquinaSource.next(Maquinas);
-    this.lineaSelectedSource.next(LineaSelected);
   }
   streamTipoSelected(TipoMaquina) {
     console.log('tipo maquina selected: ', TipoMaquina);
