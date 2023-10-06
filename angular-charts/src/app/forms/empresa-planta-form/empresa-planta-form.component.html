@@ -45,12 +45,7 @@
           <mat-option
             *ngFor="let planta of listPlantas"
             [value]="planta._id"
-            (click)="
-              [
-                setPlanta(planta._id, planta.nombre),
-                GetLineaByPlanta(planta._id)
-              ]
-            "
+            (click)="[setPlanta(planta._id, planta.nombre)]"
           >
             <p>{{ planta.nombre }}</p>
           </mat-option>

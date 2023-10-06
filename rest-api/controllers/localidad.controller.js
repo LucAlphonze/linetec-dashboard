@@ -28,7 +28,6 @@ const localidadPorProvincia = async (req, res) => {
       "id_provincia",
       "nombre"
     );
-
     res.status(200).send(lpp);
   } catch (error) {
     res.status(500).json({

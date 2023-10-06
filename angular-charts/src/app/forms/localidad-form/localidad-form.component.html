@@ -36,12 +36,7 @@
           <mat-option
             *ngFor="let localidad of listLocalidades"
             [value]="localidad._id"
-            (click)="
-              [
-                setLocalidad(localidad._id, localidad.nombre),
-                GetEmpresasByLocalidad(localidad._id)
-              ]
-            "
+            (click)="[setLocalidad(localidad._id, localidad.nombre)]"
           >
             <p>{{ localidad.nombre }}</p>
           </mat-option>

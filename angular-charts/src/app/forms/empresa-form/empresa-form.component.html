@@ -60,12 +60,7 @@
           <mat-option
             *ngFor="let empresa of listEmpresas"
             [value]="empresa._id"
-            (click)="
-              [
-                setEmpresa(empresa._id, empresa.razon_social),
-                GetPlantasByEmpresas(empresa._id)
-              ]
-            "
+            (click)="[setEmpresa(empresa._id, empresa.razon_social)]"
           >
             <p>{{ empresa.razon_social }}</p>
           </mat-option>

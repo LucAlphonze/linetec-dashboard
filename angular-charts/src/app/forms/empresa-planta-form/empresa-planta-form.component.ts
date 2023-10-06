@@ -21,8 +21,6 @@ export class EmpresaPlantaFormComponent implements OnInit {
   listPlantas: any;
   id_empresa!: string;
   id_localidad!: string;
-  message!: string;
-
   apiLocalidad = environment.API_URL_LOCALIDADES;
   apiEmpresas = environment.API_URL_EMPRESAS;
   apiPlanta = environment.API_URL_PLANTA;
@@ -39,9 +37,6 @@ export class EmpresaPlantaFormComponent implements OnInit {
       calle: this.builder.control('', Validators.required),
       altura: this.builder.control('', Validators.required),
     });
-    this.subscription = this.service.currentMessage.subscribe(
-      (message) => (this.message = message)
-    );
     this.subscription = this.service.listPlantas.subscribe(
       (message) => (this.listPlantas = message)
     );
@@ -91,7 +86,7 @@ export class EmpresaPlantaFormComponent implements OnInit {
           } else {
             this.toastr.success('Planta registrada corectamente');
             this.service
-              .getForm(this.apiPlanta + this.message)
+              .getForm(this.apiPlanta + this.id_empresa)
               .subscribe((res: any) => {
                 this.listPlantas = res;
               });
@@ -127,12 +122,16 @@ export class EmpresaPlantaFormComponent implements OnInit {
   setPlanta(id: any, nombre: any) {
     console.log('set planta', id, 'nombre', nombre);
     this.service.changeMessage(id);
+    this.service.plantaSelectedSource.next(id);
+    this.GetLineaByPlanta();
   }
 
-  GetLineaByPlanta(planta_id: string) {
-    this.service.getForm(this.apiLinea + this.message).subscribe((res: any) => {
-      console.log('planta get lineas', res, planta_id);
-      this.service.streamLinea_PlantaSelected(res, planta_id);
-    });
+  GetLineaByPlanta() {
+    this.service
+      .getForm(this.apiLinea + this.id_empresa)
+      .subscribe((res: any) => {
+        console.log('planta get lineas', res);
+        this.service.streamLinea_PlantaSelected(res);
+      });
   }
 }

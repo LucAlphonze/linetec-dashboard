@@ -42,3 +42,15 @@ db.users.insertOne({
   __v: 0,
   role: ObjectId("64f1f60e918724a5f931d909"),
 });
+
+db.triggers.insertOne({
+  nombre: "cambio-valor",
+  descripcion:
+    "variables con este trigger solo seran insertadas si su valor es distinto del ultimo registro",
+});
+
+db.triggers.insertOne({
+  nombre: "cambio-tiempo",
+  descripcion:
+    "variables con este trigger solo seran insertadas si ha pasado determinado tiempo desde el ultimo registro",
+});

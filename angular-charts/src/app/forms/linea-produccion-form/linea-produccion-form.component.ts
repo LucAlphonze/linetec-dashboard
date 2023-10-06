@@ -18,7 +18,6 @@ export class LineaProduccionFormComponent implements OnInit {
   ) {}
   listPlantas: any;
   listLineas: any;
-  message: any;
   id_empresa_planta!: string;
   apiPlanta = environment.API_URL_PLANTA;
   apiLinea = environment.API_URL_LINEA_PRODUCCION;
@@ -34,9 +33,7 @@ export class LineaProduccionFormComponent implements OnInit {
       descripcion: this.builder.control('', Validators.required),
       identificador: this.builder.control('', Validators.required),
     });
-    this.subscription = this.service.currentMessage.subscribe(
-      (message) => (this.message = message)
-    );
+
     this.subscription = this.service.listLineas.subscribe(
       (message) => (this.listLineas = message)
     );
@@ -75,7 +72,7 @@ export class LineaProduccionFormComponent implements OnInit {
           } else {
             this.toastr.success('Linea de produccion registrada corectamente');
             this.service
-              .getForm(this.apiLinea + this.message)
+              .getForm(this.apiLinea + this.id_empresa_planta)
               .subscribe((res: any) => {
                 this.listLineas = res;
               });
@@ -112,14 +109,16 @@ export class LineaProduccionFormComponent implements OnInit {
   setLinea(id: any, nombre: any) {
     console.log('set linea', id, 'nombre', nombre);
     this.service.changeMessage(id);
+    this.service.lineaSelectedSource.next(id);
+    this.GetMaquinaByLinea();
   }
 
-  GetMaquinaByLinea(linea_id: string) {
+  GetMaquinaByLinea() {
     this.service
-      .getForm(this.apiMaquina + this.message)
+      .getForm(this.apiMaquina + this.id_empresa_planta)
       .subscribe((res: any) => {
-        console.log('linea get maquinas', res, linea_id);
-        this.service.streamMaquinas_LineaSelected(res, linea_id);
+        console.log('linea get maquinas', res);
+        this.service.streamMaquinas_LineaSelected(res);
       });
   }
 }

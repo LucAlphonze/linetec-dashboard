@@ -45,9 +45,7 @@
           <mat-option
             *ngFor="let linea of listLineas"
             [value]="linea._id"
-            (click)="
-              [setLinea(linea._id, linea.nombre), GetMaquinaByLinea(linea._id)]
-            "
+            (click)="[setLinea(linea._id, linea.nombre)]"
           >
             <p>{{ linea.nombre }}</p>
           </mat-option>

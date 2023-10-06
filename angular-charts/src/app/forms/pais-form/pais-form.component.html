@@ -38,9 +38,7 @@
           <mat-option
             *ngFor="let pais of listPaises"
             [value]="pais._id"
-            (click)="
-              [setPais(pais._id, pais.nombre), GetProvinciasByPais(pais._id)]
-            "
+            (click)="[setPais(pais._id, pais.nombre)]"
           >
             <p>{{ pais.nombre }}</p>
           </mat-option>

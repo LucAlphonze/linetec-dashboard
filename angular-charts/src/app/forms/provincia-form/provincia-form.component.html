@@ -38,12 +38,7 @@
           <mat-option
             *ngFor="let provincia of listProvinciasPais"
             [value]="provincia._id"
-            (click)="
-              [
-                setProvincia(provincia._id, provincia.nombre),
-                GetLocalidadesByProvincia(provincia._id)
-              ]
-            "
+            (click)="[setProvincia(provincia._id, provincia.nombre)]"
           >
             <p>{{ provincia.nombre }}</p>
           </mat-option>
