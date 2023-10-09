@@ -109,13 +109,23 @@ const editarLinea = async (req, res) => {
   const lineaId = req.params.lineaId;
   const body = req.body;
   try {
-    const linea = await LineaProduccion.findByIdAndUpdate(lineaId, body);
-
-    res.status(204).json({
-      ok: true,
-      datos: linea,
-      status: 204,
+    const existeLineaDeProduccion = await LineaProduccion.find({
+      _id: lineaId,
     });
+    if (existeLineaDeProduccion.length > 0) {
+      const linea = await LineaProduccion.findByIdAndUpdate(lineaId, body, {
+        new: true,
+      });
+      res.status(204).json({
+        ok: true,
+        datos: linea,
+      });
+    } else {
+      res.status(404).json({
+        ok: false,
+        datos: `La linea de produccion con el id: ${lineaId} no existe`,
+      });
+    }
   } catch (err) {
     res.status(500).json({
       ok: false,

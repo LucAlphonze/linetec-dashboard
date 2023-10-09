@@ -109,13 +109,23 @@ const editarProvincia = async (req, res) => {
   const provinciaId = req.params.provinciaId;
   const body = req.body;
   try {
-    const provincia = await Provincia.findByIdAndUpdate(provinciaId, body);
-
-    res.status(204).json({
-      ok: true,
-      datos: provincia,
-      status: 204,
+    const existeProvincia = await Provincia.find({
+      _id: provinciaId,
     });
+    if (existeProvincia.length > 0) {
+      const provincia = await Provincia.findByIdAndUpdate(provinciaId, body, {
+        new: true,
+      });
+      res.status(204).json({
+        ok: true,
+        datos: provincia,
+      });
+    } else {
+      res.status(404).json({
+        ok: false,
+        datos: `La provincia con el id: ${provinciaId} no existe`,
+      });
+    }
   } catch (err) {
     res.status(500).json({
       ok: false,

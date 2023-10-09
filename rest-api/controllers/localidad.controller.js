@@ -117,13 +117,23 @@ const editarLocalidad = async (req, res) => {
   const localidadId = req.params.localidadId;
   const body = req.body;
   try {
-    const localidad = await Localidad.findByIdAndUpdate(localidadId, body);
-
-    res.status(204).json({
-      ok: true,
-      datos: localidad,
-      status: 204,
+    const existeLocalidad = await Localidad.find({
+      _id: localidadId,
     });
+    if (existeLocalidad.length > 0) {
+      const localidad = await Localidad.findByIdAndUpdate(localidadId, body, {
+        new: true,
+      });
+      res.status(204).json({
+        ok: true,
+        datos: localidad,
+      });
+    } else {
+      res.status(404).json({
+        ok: false,
+        datos: `La localidad con el id: ${localidadId} no existe`,
+      });
+    }
   } catch (err) {
     res.status(500).json({
       ok: false,

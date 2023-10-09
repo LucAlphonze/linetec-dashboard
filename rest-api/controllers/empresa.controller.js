@@ -130,13 +130,23 @@ const editarEmpresa = async (req, res) => {
   const empresaId = req.params.empresaId;
   const body = req.body;
   try {
-    const empresa = await Empresa.findByIdAndUpdate(empresaId, body);
-
-    res.status(204).json({
-      ok: true,
-      datos: empresa,
-      status: 204,
+    const existeEmpresa = await Empresa.find({
+      _id: empresaId,
     });
+    if (existeEmpresa.length > 0) {
+      const empresa = await Empresa.findByIdAndUpdate(empresaId, body, {
+        new: true,
+      });
+      res.status(204).json({
+        ok: true,
+        datos: empresa,
+      });
+    } else {
+      res.status(404).json({
+        ok: false,
+        datos: `La empresa con el id: ${empresaId} no existe`,
+      });
+    }
   } catch (err) {
     res.status(500).json({
       ok: false,

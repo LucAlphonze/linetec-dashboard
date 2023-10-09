@@ -81,17 +81,25 @@ const editarPais = async (req, res) => {
   const paisId = req.params.paisId;
   const body = req.body;
   try {
-    const pais = await Pais.findByIdAndUpdate(paisId, body);
-
-    res.status(204).json({
-      ok: true,
-      datos: pais,
-      status: 204,
+    const existePais = await Pais.find({
+      _id: paisId,
     });
-  } catch (err) {
+    if (existePais.length > 0) {
+      const pais = await Pais.findByIdAndUpdate(paisId, body, { new: true });
+      res.status(204).json({
+        ok: true,
+        datos: pais,
+      });
+    } else {
+      res.status(404).json({
+        ok: false,
+        datos: `el pais con el id: ${paisId} no existe`,
+      });
+    }
+  } catch (error) {
     res.status(500).json({
       ok: false,
-      error: err,
+      error: error,
     });
   }
 };

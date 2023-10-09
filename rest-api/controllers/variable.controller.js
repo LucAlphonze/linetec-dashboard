@@ -105,13 +105,21 @@ const editarVariable = async (req, res) => {
   const variableId = req.params.variableId;
   const body = req.body;
   try {
-    const variable = await Variable.findByIdAndUpdate(variableId, body);
-
-    res.status(204).json({
-      ok: true,
-      datos: variable,
-      status: 204,
+    const existeVariable = await Variable.find({
+      _id: variableId,
     });
+    if (existeVariable.length > 0) {
+      const variable = await Variable.findByIdAndUpdate(variableId, body);
+      res.status(204).json({
+        ok: true,
+        datos: variable,
+      });
+    } else {
+      res.status(404).json({
+        ok: false,
+        datos: `La variable con el id: ${variableId} no existe`,
+      });
+    }
   } catch (err) {
     res.status(500).json({
       ok: false,

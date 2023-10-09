@@ -73,13 +73,21 @@ const editarTrigger = async (req, res) => {
   const triggerId = req.params.triggerId;
   const body = req.body;
   try {
-    const trigger = await Trigger.findByIdAndUpdate(triggerId, body);
-
-    res.status(204).json({
-      ok: true,
-      datos: trigger,
-      status: 204,
+    const existeTrigger = await Trigger.find({
+      _id: triggerId,
     });
+    if (existeTrigger.length > 0) {
+      const trigger = await Trigger.findByIdAndUpdate(triggerId, body);
+      res.status(204).json({
+        ok: true,
+        datos: trigger,
+      });
+    } else {
+      res.status(404).json({
+        ok: false,
+        datos: `El trigger con el id: ${triggerId} no existe`,
+      });
+    }
   } catch (err) {
     res.status(500).json({
       ok: false,
