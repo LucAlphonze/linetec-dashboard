@@ -23,6 +23,7 @@ export class EmpresaFormComponent implements OnInit {
   apiPlantas = environment.API_URL_PLANTA;
   isOptional = true;
   id_localidad!: string;
+  id_empresa!: string;
   empresaForm!: FormGroup;
   subscription!: Subscription;
 
@@ -115,6 +116,7 @@ export class EmpresaFormComponent implements OnInit {
   }
   setEmpresa(id: any, nombre: any) {
     console.log('set empresa', id, 'nombre', nombre);
+    this.id_empresa = id;
     this.service.changeMessage(id);
     this.service.empresaSelectedSource.next(id);
     this.GetPlantasByEmpresas();
@@ -122,7 +124,7 @@ export class EmpresaFormComponent implements OnInit {
 
   GetPlantasByEmpresas() {
     this.service
-      .getForm(this.apiPlantas + this.id_localidad)
+      .getForm(this.apiPlantas + this.id_empresa)
       .subscribe((res: any) => {
         console.log('empresa get plantas', res);
         this.service.streamPlantas_EmpresaSelected(res);

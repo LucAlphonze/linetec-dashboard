@@ -2276,12 +2276,13 @@ class EmpresaFormComponent {
   }
   setEmpresa(id, nombre) {
     console.log('set empresa', id, 'nombre', nombre);
+    this.id_empresa = id;
     this.service.changeMessage(id);
     this.service.empresaSelectedSource.next(id);
     this.GetPlantasByEmpresas();
   }
   GetPlantasByEmpresas() {
-    this.service.getForm(this.apiPlantas + this.id_localidad).subscribe(res => {
+    this.service.getForm(this.apiPlantas + this.id_empresa).subscribe(res => {
       console.log('empresa get plantas', res);
       this.service.streamPlantas_EmpresaSelected(res);
     });
@@ -2524,11 +2525,12 @@ class EmpresaPlantaFormComponent {
   setPlanta(id, nombre) {
     console.log('set planta', id, 'nombre', nombre);
     this.service.changeMessage(id);
+    this.id_planta = id;
     this.service.plantaSelectedSource.next(id);
     this.GetLineaByPlanta();
   }
   GetLineaByPlanta() {
-    this.service.getForm(this.apiLinea + this.id_empresa).subscribe(res => {
+    this.service.getForm(this.apiLinea + this.id_planta).subscribe(res => {
       console.log('planta get lineas', res);
       this.service.streamLinea_PlantaSelected(res);
     });
@@ -2741,11 +2743,12 @@ class LineaProduccionFormComponent {
   setLinea(id, nombre) {
     console.log('set linea', id, 'nombre', nombre);
     this.service.changeMessage(id);
+    this.id_linea = id;
     this.service.lineaSelectedSource.next(id);
     this.GetMaquinaByLinea();
   }
   GetMaquinaByLinea() {
-    this.service.getForm(this.apiMaquina + this.id_empresa_planta).subscribe(res => {
+    this.service.getForm(this.apiMaquina + this.id_linea).subscribe(res => {
       console.log('linea get maquinas', res);
       this.service.streamMaquinas_LineaSelected(res);
     });
@@ -4045,14 +4048,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var ngx_toastr__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ngx-toastr */ 7548);
 /* harmony import */ var src_app_service_auth_service__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! src/app/service/auth.service */ 9692);
 /* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @angular/common */ 6575);
-/* harmony import */ var _angular_material_input__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @angular/material/input */ 26);
-/* harmony import */ var _angular_material_form_field__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @angular/material/form-field */ 1333);
-/* harmony import */ var _angular_material_select__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @angular/material/select */ 6355);
-/* harmony import */ var _angular_material_core__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @angular/material/core */ 5309);
-/* harmony import */ var _angular_material_card__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @angular/material/card */ 8497);
-/* harmony import */ var _angular_material_button__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @angular/material/button */ 895);
-/* harmony import */ var _angular_material_expansion__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @angular/material/expansion */ 8060);
-/* harmony import */ var _angular_material_stepper__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! @angular/material/stepper */ 6272);
+/* harmony import */ var _angular_material_form_field__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @angular/material/form-field */ 1333);
+/* harmony import */ var _angular_material_select__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @angular/material/select */ 6355);
+/* harmony import */ var _angular_material_core__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @angular/material/core */ 5309);
+/* harmony import */ var _angular_material_card__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @angular/material/card */ 8497);
+/* harmony import */ var _angular_material_button__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @angular/material/button */ 895);
+/* harmony import */ var _angular_material_stepper__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @angular/material/stepper */ 6272);
+/* harmony import */ var _angular_material_divider__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @angular/material/divider */ 9400);
 
 
 
@@ -4067,26 +4069,32 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-
-function TriggerFormComponent_mat_option_28_Template(rf, ctx) {
+function TriggerFormComponent_div_10_Template(rf, ctx) {
   if (rf & 1) {
     const _r3 = _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵgetCurrentView"]();
-    _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementStart"](0, "mat-option", 11);
-    _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵlistener"]("click", function TriggerFormComponent_mat_option_28_Template_mat_option_click_0_listener() {
+    _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementStart"](0, "div", 0)(1, "mat-option", 3);
+    _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵlistener"]("click", function TriggerFormComponent_div_10_Template_mat_option_click_1_listener() {
       const restoredCtx = _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵrestoreView"](_r3);
       const trigger_r1 = restoredCtx.$implicit;
       const ctx_r2 = _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵnextContext"]();
-      return _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵresetView"]([ctx_r2.setTrigger(trigger_r1._id, trigger_r1.nombre), ctx_r2.StreamTriggerSelected(trigger_r1._id)]);
+      return _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵresetView"]([ctx_r2.setTrigger(trigger_r1._id, trigger_r1.nombre, trigger_r1.descripcion), ctx_r2.StreamTriggerSelected(trigger_r1._id)]);
     });
-    _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementStart"](1, "p");
-    _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵtext"](2);
+    _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementStart"](2, "p");
+    _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵtext"](3);
+    _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementEnd"]()();
+    _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelement"](4, "mat-divider");
+    _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementStart"](5, "p");
+    _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵtext"](6);
     _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementEnd"]()();
   }
   if (rf & 2) {
     const trigger_r1 = ctx.$implicit;
+    _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵadvance"](1);
     _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵproperty"]("value", trigger_r1._id);
     _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵadvance"](2);
     _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵtextInterpolate"](trigger_r1.nombre);
+    _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵadvance"](3);
+    _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵtextInterpolate1"](" ", trigger_r1.descripcion, " ");
   }
 }
 class TriggerFormComponent {
@@ -4149,9 +4157,10 @@ class TriggerFormComponent {
       }
     });
   }
-  setTrigger(id, nombre) {
+  setTrigger(id, nombre, descripcion) {
     console.log('set tipo', id, 'nombre', nombre);
     this.service.changeMessage(id);
+    this.trigger_descripcion = descripcion;
   }
   StreamTriggerSelected(trigger_id) {
     this.service.streamTriggerSelected(trigger_id);
@@ -4163,52 +4172,30 @@ TriggerFormComponent.ɵfac = function TriggerFormComponent_Factory(t) {
 TriggerFormComponent.ɵcmp = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵdefineComponent"]({
   type: TriggerFormComponent,
   selectors: [["app-trigger-form"]],
-  decls: 31,
-  vars: 2,
-  consts: [[1, "flex", "flex-col"], ["hideToggle", ""], [1, "example-form", 3, "formGroup", "ngSubmit"], [1, ""], ["matInput", "", "formControlName", "nombre"], ["matInput", "", "formControlName", "descripcion"], [1, "m-1"], ["mat-raised-button", "", "color", "primary", 1, "m-3"], [1, "flex", "flex-col", "p-3"], [3, "value", "click", 4, "ngFor", "ngForOf"], ["mat-button", "", "matStepperNext", ""], [3, "value", "click"]],
+  decls: 13,
+  vars: 1,
+  consts: [[1, "flex", "flex-col", "p-3"], ["class", "flex flex-col p-3", 4, "ngFor", "ngForOf"], ["mat-button", "", "matStepperNext", ""], [3, "value", "click"]],
   template: function TriggerFormComponent_Template(rf, ctx) {
     if (rf & 1) {
       _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementStart"](0, "mat-card")(1, "mat-card-header")(2, "h2");
       _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵtext"](3, "Formulario de Trigger");
       _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementEnd"]()();
-      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementStart"](4, "mat-card-content")(5, "div", 0)(6, "mat-accordion")(7, "mat-expansion-panel", 1)(8, "mat-expansion-panel-header")(9, "mat-panel-title");
-      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵtext"](10, "Formulario de Trigger");
-      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementEnd"]()();
-      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementStart"](11, "form", 2);
-      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵlistener"]("ngSubmit", function TriggerFormComponent_Template_form_ngSubmit_11_listener() {
-        return ctx.crearTrigger();
-      });
-      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementStart"](12, "mat-form-field", 3)(13, "mat-label");
-      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵtext"](14, "Nombre del trigger");
+      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementStart"](4, "mat-card-content")(5, "div", 0)(6, "mat-form-field")(7, "mat-label");
+      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵtext"](8, "Elegir un Trigger");
       _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementEnd"]();
-      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelement"](15, "input", 4);
-      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementEnd"]();
-      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementStart"](16, "mat-form-field", 3)(17, "mat-label");
-      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵtext"](18, "Descripcion del trigger");
-      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementEnd"]();
-      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelement"](19, "input", 5);
-      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementEnd"]();
-      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementStart"](20, "div", 6)(21, "button", 7);
-      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵtext"](22, " submit ");
-      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementEnd"]()()()()()();
-      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementStart"](23, "div", 8)(24, "mat-form-field")(25, "mat-label");
-      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵtext"](26, "Elegir un Trigger");
-      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementEnd"]();
-      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementStart"](27, "mat-select");
-      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵtemplate"](28, TriggerFormComponent_mat_option_28_Template, 3, 2, "mat-option", 9);
+      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementStart"](9, "mat-select");
+      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵtemplate"](10, TriggerFormComponent_div_10_Template, 7, 3, "div", 1);
       _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementEnd"]()()();
-      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementStart"](29, "button", 10);
-      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵtext"](30, "Siguiente");
+      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementStart"](11, "button", 2);
+      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵtext"](12, "Siguiente");
       _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementEnd"]()()();
     }
     if (rf & 2) {
-      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵadvance"](11);
-      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵproperty"]("formGroup", ctx.triggerForm);
-      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵadvance"](17);
+      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵadvance"](10);
       _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵproperty"]("ngForOf", ctx.listTriggers);
     }
   },
-  dependencies: [_angular_common__WEBPACK_IMPORTED_MODULE_5__.NgForOf, _angular_forms__WEBPACK_IMPORTED_MODULE_3__["ɵNgNoValidate"], _angular_forms__WEBPACK_IMPORTED_MODULE_3__.DefaultValueAccessor, _angular_forms__WEBPACK_IMPORTED_MODULE_3__.NgControlStatus, _angular_forms__WEBPACK_IMPORTED_MODULE_3__.NgControlStatusGroup, _angular_forms__WEBPACK_IMPORTED_MODULE_3__.FormGroupDirective, _angular_forms__WEBPACK_IMPORTED_MODULE_3__.FormControlName, _angular_material_input__WEBPACK_IMPORTED_MODULE_6__.MatInput, _angular_material_form_field__WEBPACK_IMPORTED_MODULE_7__.MatFormField, _angular_material_form_field__WEBPACK_IMPORTED_MODULE_7__.MatLabel, _angular_material_select__WEBPACK_IMPORTED_MODULE_8__.MatSelect, _angular_material_core__WEBPACK_IMPORTED_MODULE_9__.MatOption, _angular_material_card__WEBPACK_IMPORTED_MODULE_10__.MatCard, _angular_material_card__WEBPACK_IMPORTED_MODULE_10__.MatCardContent, _angular_material_card__WEBPACK_IMPORTED_MODULE_10__.MatCardHeader, _angular_material_button__WEBPACK_IMPORTED_MODULE_11__.MatButton, _angular_material_expansion__WEBPACK_IMPORTED_MODULE_12__.MatAccordion, _angular_material_expansion__WEBPACK_IMPORTED_MODULE_12__.MatExpansionPanel, _angular_material_expansion__WEBPACK_IMPORTED_MODULE_12__.MatExpansionPanelHeader, _angular_material_expansion__WEBPACK_IMPORTED_MODULE_12__.MatExpansionPanelTitle, _angular_material_stepper__WEBPACK_IMPORTED_MODULE_13__.MatStepperNext],
+  dependencies: [_angular_common__WEBPACK_IMPORTED_MODULE_5__.NgForOf, _angular_material_form_field__WEBPACK_IMPORTED_MODULE_6__.MatFormField, _angular_material_form_field__WEBPACK_IMPORTED_MODULE_6__.MatLabel, _angular_material_select__WEBPACK_IMPORTED_MODULE_7__.MatSelect, _angular_material_core__WEBPACK_IMPORTED_MODULE_8__.MatOption, _angular_material_card__WEBPACK_IMPORTED_MODULE_9__.MatCard, _angular_material_card__WEBPACK_IMPORTED_MODULE_9__.MatCardContent, _angular_material_card__WEBPACK_IMPORTED_MODULE_9__.MatCardHeader, _angular_material_button__WEBPACK_IMPORTED_MODULE_10__.MatButton, _angular_material_stepper__WEBPACK_IMPORTED_MODULE_11__.MatStepperNext, _angular_material_divider__WEBPACK_IMPORTED_MODULE_12__.MatDivider],
   styles: ["/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiJ0cmlnZ2VyLWZvcm0uY29tcG9uZW50LmNzcyJ9 */\n/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8uL3NyYy9hcHAvZm9ybXMvdHJpZ2dlci1mb3JtL3RyaWdnZXItZm9ybS5jb21wb25lbnQuY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiI7QUFDQSx3S0FBd0siLCJzb3VyY2VSb290IjoiIn0= */"]
 });
 

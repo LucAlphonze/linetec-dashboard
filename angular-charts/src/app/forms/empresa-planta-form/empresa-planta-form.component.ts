@@ -21,6 +21,7 @@ export class EmpresaPlantaFormComponent implements OnInit {
   listPlantas: any;
   id_empresa!: string;
   id_localidad!: string;
+  id_planta!: string;
   apiLocalidad = environment.API_URL_LOCALIDADES;
   apiEmpresas = environment.API_URL_EMPRESAS;
   apiPlanta = environment.API_URL_PLANTA;
@@ -122,13 +123,14 @@ export class EmpresaPlantaFormComponent implements OnInit {
   setPlanta(id: any, nombre: any) {
     console.log('set planta', id, 'nombre', nombre);
     this.service.changeMessage(id);
+    this.id_planta = id;
     this.service.plantaSelectedSource.next(id);
     this.GetLineaByPlanta();
   }
 
   GetLineaByPlanta() {
     this.service
-      .getForm(this.apiLinea + this.id_empresa)
+      .getForm(this.apiLinea + this.id_planta)
       .subscribe((res: any) => {
         console.log('planta get lineas', res);
         this.service.streamLinea_PlantaSelected(res);

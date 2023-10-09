@@ -3,51 +3,27 @@
     <h2>Formulario de Trigger</h2>
   </mat-card-header>
   <mat-card-content>
-    <div class="flex flex-col">
-      <mat-accordion>
-        <mat-expansion-panel hideToggle>
-          <mat-expansion-panel-header>
-            <mat-panel-title>Formulario de Trigger</mat-panel-title>
-          </mat-expansion-panel-header>
-          <form
-            class="example-form"
-            [formGroup]="triggerForm"
-            (ngSubmit)="crearTrigger()"
-          >
-            <mat-form-field class="">
-              <mat-label>Nombre del trigger</mat-label>
-              <input matInput formControlName="nombre" />
-            </mat-form-field>
-            <mat-form-field class="">
-              <mat-label>Descripcion del trigger</mat-label>
-              <input matInput formControlName="descripcion" />
-            </mat-form-field>
-
-            <div class="m-1">
-              <button class="m-3" mat-raised-button color="primary">
-                submit
-              </button>
-            </div>
-          </form>
-        </mat-expansion-panel>
-      </mat-accordion>
-    </div>
     <div class="flex flex-col p-3">
       <mat-form-field>
         <mat-label>Elegir un Trigger</mat-label>
         <mat-select>
-          <mat-option
-            *ngFor="let trigger of listTriggers"
-            [value]="trigger._id"
-            (click)="
-              [
-                setTrigger(trigger._id, trigger.nombre),
-                StreamTriggerSelected(trigger._id)
-              ]
-            "
-          >
-            <p>{{ trigger.nombre }}</p>
-          </mat-option>
+          <div class="flex flex-col p-3" *ngFor="let trigger of listTriggers">
+            <mat-option
+              [value]="trigger._id"
+              (click)="
+                [
+                  setTrigger(trigger._id, trigger.nombre, trigger.descripcion),
+                  StreamTriggerSelected(trigger._id)
+                ]
+              "
+            >
+              <p>{{ trigger.nombre }}</p>
+            </mat-option>
+            <mat-divider></mat-divider>
+            <p>
+              {{ trigger.descripcion }}
+            </p>
+          </div>
         </mat-select>
       </mat-form-field>
     </div>

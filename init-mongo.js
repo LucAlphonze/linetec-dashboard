@@ -54,3 +54,14 @@ db.triggers.insertOne({
   descripcion:
     "variables con este trigger solo seran insertadas si ha pasado determinado tiempo desde el ultimo registro",
 });
+db.triggers.insertOne({
+  nombre: "cambio-porcentaje",
+  descripcion:
+    "variables con este trigger solo seran insertadas si su valor es x% distinto del ultimo registro",
+});
+
+db.triggers.insertOne({
+  nombre: "sin-filtro",
+  descripcion:
+    "variables con este trigger seran insertadas sin ningun tipo de filtro",
+});

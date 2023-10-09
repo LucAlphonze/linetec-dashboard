@@ -19,6 +19,7 @@ export class LineaProduccionFormComponent implements OnInit {
   listPlantas: any;
   listLineas: any;
   id_empresa_planta!: string;
+  id_linea!: string;
   apiPlanta = environment.API_URL_PLANTA;
   apiLinea = environment.API_URL_LINEA_PRODUCCION;
   apiMaquina = environment.API_URL_MAQUINA;
@@ -109,13 +110,14 @@ export class LineaProduccionFormComponent implements OnInit {
   setLinea(id: any, nombre: any) {
     console.log('set linea', id, 'nombre', nombre);
     this.service.changeMessage(id);
+    this.id_linea = id;
     this.service.lineaSelectedSource.next(id);
     this.GetMaquinaByLinea();
   }
 
   GetMaquinaByLinea() {
     this.service
-      .getForm(this.apiMaquina + this.id_empresa_planta)
+      .getForm(this.apiMaquina + this.id_linea)
       .subscribe((res: any) => {
         console.log('linea get maquinas', res);
         this.service.streamMaquinas_LineaSelected(res);

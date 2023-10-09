@@ -35,8 +35,29 @@ async function filtradoPost(variable, nuevoRegistro, ultimoRegistro) {
         return nuevoRegistro;
       }
       break;
+    case "cambio-porcentaje":
+      var x_porciento =
+        (ultimoRegistro?.valor_lectura_ / 100) *
+        parseInt(variable.trigger_valor);
+      if (
+        (ultimoRegistro =
+          null ||
+          Math.abs(
+            ultimoRegistro?.valor_lectura - nuevoRegistro.valor_lectura
+          ) >= x_porciento)
+      ) {
+        console.log("cambio-porcentaje: ", nuevoRegistro);
+        return nuevoRegistro;
+      }
+      break;
+    case "sin-filtro":
+      if (nuevoRegistro.valor_lectura) {
+        return nuevoRegistro;
+      }
+      break;
 
     default:
+      console.log("default case, breaking...");
       break;
   }
 }
