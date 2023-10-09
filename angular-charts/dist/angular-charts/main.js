@@ -4238,13 +4238,13 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-function VariableFormComponent_mat_list_21_Template(rf, ctx) {
+function VariableFormComponent_mat_list_25_Template(rf, ctx) {
   if (rf & 1) {
     const _r3 = _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵgetCurrentView"]();
-    _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementStart"](0, "mat-list", 10)(1, "mat-list-item", 11);
+    _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementStart"](0, "mat-list", 11)(1, "mat-list-item", 12);
     _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵtext"](2);
-    _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementStart"](3, "a", 12);
-    _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵlistener"]("click", function VariableFormComponent_mat_list_21_Template_a_click_3_listener() {
+    _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementStart"](3, "a", 13);
+    _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵlistener"]("click", function VariableFormComponent_mat_list_25_Template_a_click_3_listener() {
       const restoredCtx = _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵrestoreView"](_r3);
       const variable_r1 = restoredCtx.$implicit;
       const ctx_r2 = _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵnextContext"]();
@@ -4276,6 +4276,7 @@ class VariableFormComponent {
     this.GetAllTriggers();
     this.variableForm = this._formBuilder.group({
       nombre: this._formBuilder.control('', _angular_forms__WEBPACK_IMPORTED_MODULE_3__.Validators.required),
+      descripcion: this._formBuilder.control(''),
       trigger_valor: this._formBuilder.control('')
     });
     this.subscription = this.service.maquinaSelected.subscribe(message => this.id_maquina = message);
@@ -4360,9 +4361,9 @@ VariableFormComponent.ɵfac = function VariableFormComponent_Factory(t) {
 VariableFormComponent.ɵcmp = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵdefineComponent"]({
   type: VariableFormComponent,
   selectors: [["app-variable-form"]],
-  decls: 27,
+  decls: 31,
   vars: 2,
-  consts: [[1, "example-form", 3, "formGroup", "ngSubmit"], [1, "flex", "flex-col"], [1, ""], ["matInput", "", "formControlName", "nombre"], ["matInput", "", "formControlName", "trigger_valor"], ["hideToggle", "", 3, "click"], ["role", "list", 4, "ngFor", "ngForOf"], [1, "m-1"], ["mat-raised-button", "", "color", "primary", 1, "m-3"], ["mat-button", "", "matStepperNext", ""], ["role", "list"], ["role", "listitem"], ["mat-raised-button", "", "color", "warn", 1, "m-3", 3, "click"]],
+  consts: [[1, "example-form", 3, "formGroup", "ngSubmit"], [1, "flex", "flex-col"], [1, ""], ["matInput", "", "formControlName", "nombre"], ["matInput", "", "formControlName", "descripcion"], ["matInput", "", "formControlName", "trigger_valor"], ["hideToggle", "", 3, "click"], ["role", "list", 4, "ngFor", "ngForOf"], [1, "m-1"], ["mat-raised-button", "", "color", "primary", 1, "m-3"], ["mat-button", "", "matStepperNext", ""], ["role", "list"], ["role", "listitem"], ["mat-raised-button", "", "color", "warn", 1, "m-3", 3, "click"]],
   template: function VariableFormComponent_Template(rf, ctx) {
     if (rf & 1) {
       _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementStart"](0, "mat-card")(1, "mat-card-header")(2, "h2");
@@ -4373,35 +4374,40 @@ VariableFormComponent.ɵcmp = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODUL
         return ctx.crearVariable();
       });
       _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementStart"](6, "div", 1)(7, "mat-form-field", 2)(8, "mat-label");
-      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵtext"](9, "descripcion de la variable ");
+      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵtext"](9, "nombre de la variable ");
       _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementEnd"]();
       _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelement"](10, "input", 3);
       _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementEnd"]();
       _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementStart"](11, "mat-form-field", 2)(12, "mat-label");
-      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵtext"](13, "valor del trigger ");
+      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵtext"](13, "descripcion de la variable ");
       _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementEnd"]();
       _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelement"](14, "input", 4);
+      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementEnd"]();
+      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementStart"](15, "mat-form-field", 2)(16, "mat-label");
+      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵtext"](17, "valor del trigger ");
+      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementEnd"]();
+      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelement"](18, "input", 5);
       _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementEnd"]()();
-      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementStart"](15, "div")(16, "mat-accordion")(17, "mat-expansion-panel", 5);
-      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵlistener"]("click", function VariableFormComponent_Template_mat_expansion_panel_click_17_listener() {
+      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementStart"](19, "div")(20, "mat-accordion")(21, "mat-expansion-panel", 6);
+      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵlistener"]("click", function VariableFormComponent_Template_mat_expansion_panel_click_21_listener() {
         return ctx.GetAllVariables();
       });
-      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementStart"](18, "mat-expansion-panel-header")(19, "mat-panel-title");
-      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵtext"](20, " Listado de variables");
+      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementStart"](22, "mat-expansion-panel-header")(23, "mat-panel-title");
+      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵtext"](24, " Listado de variables");
       _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementEnd"]()();
-      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵtemplate"](21, VariableFormComponent_mat_list_21_Template, 5, 1, "mat-list", 6);
+      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵtemplate"](25, VariableFormComponent_mat_list_25_Template, 5, 1, "mat-list", 7);
       _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementEnd"]()()();
-      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementStart"](22, "div", 7)(23, "button", 8);
-      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵtext"](24, "submit");
+      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementStart"](26, "div", 8)(27, "button", 9);
+      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵtext"](28, "submit");
       _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementEnd"]();
-      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementStart"](25, "button", 9);
-      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵtext"](26, "Next");
+      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementStart"](29, "button", 10);
+      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵtext"](30, "Next");
       _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementEnd"]()()()()();
     }
     if (rf & 2) {
       _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵadvance"](5);
       _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵproperty"]("formGroup", ctx.variableForm);
-      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵadvance"](16);
+      _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵadvance"](20);
       _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵproperty"]("ngForOf", ctx.listaVariables);
     }
   },
