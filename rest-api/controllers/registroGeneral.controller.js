@@ -150,7 +150,16 @@ const crearRegistroGeneral = async (req, res) => {
       "registro nuevo: ",
       registroGeneral
     );
-
+    if (RegistroGeneral.find(registroGeneral.time_stamp).length > 0) {
+      console.log(
+        "registro general post error, ya existe un documento con este timestamp "
+      );
+      res.status(500).json({
+        ok: false,
+        datos: "ya existe un documento con este timestamp",
+      });
+      return;
+    }
     let filtrado = await filtradoPost(
       variable,
       registroGeneral,
