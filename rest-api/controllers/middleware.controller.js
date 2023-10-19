@@ -6,10 +6,13 @@ async function filtradoPost(variable, nuevoRegistro, ultimoRegistro) {
           nuevoRegistro.fecha_lectura
         ).getTime();
         let old_fecha_lectura_milis = new Date(
-          ultimoRegistro.fecha_lectura
+          ultimoRegistro?.fecha_lectura ? ultimoRegistro.fecha_lectura : null
         ).getTime();
         let millis = parseInt(variable.trigger_valor);
-        if (fecha_lectura_milis > old_fecha_lectura_milis + millis) {
+        if (
+          fecha_lectura_milis > old_fecha_lectura_milis + millis ||
+          old_fecha_lectura_milis == null
+        ) {
           console.log(
             "cambio-tiempo: ",
             nuevoRegistro,
@@ -51,9 +54,7 @@ async function filtradoPost(variable, nuevoRegistro, ultimoRegistro) {
       }
       break;
     case "sin-filtro":
-      if (nuevoRegistro.valor_lectura) {
-        return nuevoRegistro;
-      }
+      return nuevoRegistro;
       break;
 
     default:
