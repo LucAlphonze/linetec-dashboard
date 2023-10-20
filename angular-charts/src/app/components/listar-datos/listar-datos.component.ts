@@ -1,9 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Datos } from 'src/app/models/datos.model';
 import { HttpServiceService } from 'src/app/service/http-service.service';
 import { Chart, registerables } from 'node_modules/chart.js';
 import { AuthService } from 'src/app/service/auth.service';
 import { JwtHelperService } from '@auth0/angular-jwt';
+import { FormControl, FormGroup } from '@angular/forms';
+import { UtilsService } from 'src/app/service/utils.service';
 Chart.register(...registerables);
 
 @Component({
@@ -13,6 +14,7 @@ Chart.register(...registerables);
 })
 export class ListarDatosComponent implements OnInit, OnDestroy {
   listDatos: any[] = [];
+  listDatos2: any[] = [];
   listVariables: any[] = [];
   listCheckbox: any[] = [];
   sensor_1: string = 'sensor 1';
@@ -21,11 +23,18 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
   id: any = 0;
   chart: any;
   chart2: any;
+  chart3: any;
   title: string = 'Prueba angular';
   timeout: any;
   token: any;
+  range = new FormGroup({
+    start: new FormControl<Date | null>(null),
+    end: new FormControl<Date | null>(null),
+  });
+
   constructor(
     private _httpService: HttpServiceService,
+    private utils: UtilsService,
     private authService: AuthService,
     private jwtHelper: JwtHelperService
   ) {
@@ -38,7 +47,11 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
       type: 'line',
       data: {
         labels: [],
-        datasets: [],
+        datasets: [
+          {
+            data: [],
+          },
+        ],
       },
       options: {
         scales: {
@@ -51,17 +64,25 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
     this.chart2 = new Chart('myChart2', {
       type: 'bar',
       data: {
-        labels: [[new Date('2023-09-21')], [new Date('2023-09-22')]],
+        labels: [],
+        datasets: [],
+      },
+    });
+    this.chart3 = new Chart('myChart3', {
+      type: 'doughnut',
+      data: {
+        labels: [],
         datasets: [
-          { data: [500], label: 'dato de prueba' },
-          { data: [0, 800], label: 'dato de prueba2' },
+          {
+            data: [],
+            borderColor: this.getDataColors(),
+            backgroundColor: this.getDataColors('20'),
+          },
         ],
       },
       options: {
-        scales: {
-          y: {
-            beginAtZero: true,
-          },
+        plugins: {
+          legend: { position: 'left' },
         },
       },
     });
@@ -74,61 +95,21 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
     }
   }
 
-  getRegistros(value: any) {
-    this.chart.data.datasets.forEach((array: any) => {
-      array.data = [];
-    });
-    console.log(value);
-    for (let i = 0; i < this.listCheckbox.length; i++) {
-      this._httpService
-        .getValores(this.listCheckbox[i]._id)
-        .subscribe((data) => {
-          this.listDatos = data['datos'];
-          console.log('datos: ', this.listDatos);
-          for (let j = 0; j < this.chart.data.datasets.length; j++) {
-            if (
-              this.listCheckbox[i].nombre == this.chart.data.datasets[j].label
-            ) {
-              console.log(
-                'IF TRUE',
-                'check box nombre: ',
-                this.listCheckbox[i].nombre,
-                'en la posicion i:',
-                i,
-                'variable nombre: ',
-                this.chart.data.datasets[j],
-                'en la posicion: ',
-                j
-              );
-              this.chart.data.labels = this.listDatos.map(
-                (x) => x.fecha_lectura
-              );
-              console.log('despues del for each', this.chart.data.labels);
-              this.chart.data.datasets[j].data = this.listDatos.map(
-                (x) => x.valor_lectura
-              );
-            } else {
-              console.log(
-                'ELSE',
-                'check box nombre: ',
-                this.listCheckbox[i].nombre,
-                'en la posicion i:',
-                i,
-                'variable nombre: ',
-                this.chart.data.datasets[j],
-                'en la posicion: ',
-                j
-              );
-            }
-            if (j == this.chart.data.datasets.length) {
-              j = 0;
-            }
-          }
-          this.chart.update();
-        });
-      console.log(this.chart.data.datasets[i].data);
-    }
-    console.log('data label', this.chart.data.datasets);
+  getRegistros() {
+    this._httpService
+      .getValores(this.listVariables[1]._id)
+      .subscribe((data) => {
+        this.listDatos = data['datos'];
+        console.log('datos: ', this.listDatos);
+        this.chart.data.labels = this.listDatos.map((x) =>
+          new Date(x.fecha_lectura).toLocaleDateString()
+        );
+        console.log('despues del for each', this.chart.data.labels);
+        this.chart.data.datasets[0].data = this.listDatos.map(
+          (x) => x.valor_lectura
+        );
+        this.chart.update();
+      });
   }
 
   makeCheckboxArray(value: any) {
@@ -148,17 +129,55 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
     this._httpService.getVariables().subscribe((data) => {
       this.listVariables = data;
       console.log(this.listVariables);
-
-      for (let i = 0; i < this.listVariables.length; i++) {
-        this.chart.data.datasets[i] = {
-          data: [],
-          label: [this.listVariables[i].nombre],
-          fill: false,
-          borderColor: 'rgb(255, 0, 0)',
-          tension: 0.1,
-        };
-      }
+      this.getRegistros();
+      this.chart.data.datasets[0].label = this.listVariables[2].nombre;
+      // for (let i = 0; i < this.listVariables.length; i++) {
+      //   this.chart.data.datasets[i] = {
+      //     data: [],
+      //     label: [this.listVariables[i].nombre],
+      //     fill: false,
+      //     borderColor: this.getDataColors(),
+      //     backgroundColor: this.getDataColors('20'),
+      //     tension: 0.1,
+      //   };
+      // }
     });
+  }
+  getFiltrados() {
+    var inicio: any = this.range.value.start?.getTime().toString();
+    var final: any = this.range.value.end?.getTime().toString();
+    this._httpService
+      .getValoresFiltrados(this.listVariables[2], inicio, final, 'max')
+      .subscribe((data) => {
+        console.log(data);
+        this.listDatos2 = data['datos'];
+        this.chart3.data.labels = this.listDatos2.map((x) => x._id);
+        this.chart3.data.datasets[0].data = this.listDatos2.map(
+          (x) => x.respuesta
+        );
+        this.chart3.update();
+        // this.chart2.data.labels = this.listDatos.map((x) => {
+        //   x._id;
+        // });
+
+        this.listDatos2.forEach((datos) => {
+          const dsColor = this.utils.namedColor(
+            this.chart2.data.datasets.length
+          );
+          var newDataSet = {
+            label: 'Dataset ' + (this.chart2.data.datasets.length + 1),
+            backgroundColor: this.utils.transparentize(dsColor, 0.5),
+            borderColor: dsColor,
+            data: [datos.respuesta],
+          };
+          this.chart2.data.datasets.push(newDataSet);
+          this.chart2.data.labels.push(datos._id);
+
+          this.chart2.update();
+          console.log(this.chart2.data.datasets);
+          console.log(this.chart2.data.labels);
+        });
+      });
   }
 
   expirationCheck(): void {
@@ -168,4 +187,19 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
       new Date().valueOf();
     this.authService.expirationCounter(this.timeout);
   }
+  getDataColors = (opacity?: String) => {
+    const colors = [
+      '#7448c2',
+      '#21c0d7',
+      '#d99e2b',
+      '#cd3a81',
+      '#9c99cc',
+      '#e14eca',
+      '#ffffff',
+      '#ff0000',
+      '#d6ff00',
+      '#0038ff',
+    ];
+    return colors.map((color) => (opacity ? `${color + opacity}` : color));
+  };
 }

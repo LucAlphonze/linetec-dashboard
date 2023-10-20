@@ -19,6 +19,22 @@ export class HttpServiceService {
       },
     });
   }
+  getValoresFiltrados(
+    variable: String,
+    inicio: String,
+    fin: String,
+    operacion: string
+  ): Observable<any> {
+    return this.http.get(
+      this.registroGeneral + `filter/${variable}/${inicio}/${fin}/${operacion}`,
+      {
+        headers: {
+          Authorization:
+            'Bearer ' + sessionStorage.getItem('token')?.toString(),
+        },
+      }
+    );
+  }
   getVariables(): Observable<any> {
     return this.http.get(this.variables, {
       headers: {

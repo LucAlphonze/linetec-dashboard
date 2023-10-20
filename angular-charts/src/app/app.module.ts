@@ -31,6 +31,7 @@ import { VariableFormComponent } from './forms/variable-form/variable-form.compo
 import { JwtModule } from '@auth0/angular-jwt';
 import { TriggerFormComponent } from './forms/trigger-form/trigger-form.component';
 import { Home5Component } from './components/home5/home5.component';
+import { MAT_DATE_LOCALE } from '@angular/material/core';
 
 export function tokenGetter() {
   return localStorage.getItem('token');
@@ -77,7 +78,7 @@ export function tokenGetter() {
     MaterialModule,
     ToastrModule.forRoot(),
   ],
-  providers: [],
+  providers: [{ provide: MAT_DATE_LOCALE, useValue: 'en-GB' }],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
