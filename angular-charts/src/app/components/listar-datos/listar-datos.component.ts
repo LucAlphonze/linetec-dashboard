@@ -147,7 +147,7 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
     var inicio: any = this.range.value.start?.getTime().toString();
     var final: any = this.range.value.end?.getTime().toString();
     this._httpService
-      .getValoresFiltrados(this.listVariables[1], inicio, final, 'max')
+      .getValoresFiltrados(this.listVariables[1]._id, inicio, final, 'max')
       .subscribe((data) => {
         console.log(data);
         this.listDatos2 = data['datos'];
