@@ -5,13 +5,33 @@ const { filtradoPost } = require("./middleware.controller");
 
 const obtenerTodos = async (req, res) => {
   try {
-    let variable = req.params.variable;
-    const registrosGenerales = await RegistroGeneral.find({
-      id_variable: variable,
-    })
-      .limit(20)
-      .sort({ fecha_lectura: 1 })
-      .populate("id_variable", "nombre");
+    const variable = req.params.variable;
+    const registrosGenerales = await RegistroGeneral.aggregate([
+      {
+        $match: {
+          id_variable: new mongoose.Types.ObjectId(variable),
+        },
+      },
+      {
+        $group: {
+          _id: {
+            $dateToString: {
+              format: "%Y-%m-%d",
+              date: "$fecha_lectura",
+            },
+          },
+          max: {
+            $max: "$valor_lectura",
+          },
+        },
+      },
+      {
+        $sort: {
+          _id: 1,
+        },
+      },
+    ]);
+
     res.status(200).json({
       ok: true,
       datos: registrosGenerales,

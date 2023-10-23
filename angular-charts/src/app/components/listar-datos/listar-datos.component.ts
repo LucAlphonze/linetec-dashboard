@@ -61,13 +61,13 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
         },
       },
     });
-    this.chart2 = new Chart('myChart2', {
-      type: 'bar',
-      data: {
-        labels: [],
-        datasets: [],
-      },
-    });
+    // this.chart2 = new Chart('myChart2', {
+    //   type: 'bar',
+    //   data: {
+    //     labels: [],
+    //     datasets: [],
+    //   },
+    // });
     this.chart3 = new Chart('myChart3', {
       type: 'doughnut',
       data: {
@@ -102,12 +102,10 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
         this.listDatos = data['datos'];
         console.log('datos: ', this.listDatos);
         this.chart.data.labels = this.listDatos.map((x) =>
-          new Date(x.fecha_lectura).toLocaleDateString()
+          new Date(x._id).toLocaleDateString()
         );
         console.log('despues del for each', this.chart.data.labels);
-        this.chart.data.datasets[0].data = this.listDatos.map(
-          (x) => x.valor_lectura
-        );
+        this.chart.data.datasets[0].data = this.listDatos.map((x) => x.max);
         this.chart.update();
       });
   }

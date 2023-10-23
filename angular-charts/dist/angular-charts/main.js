@@ -1254,13 +1254,13 @@ class ListarDatosComponent {
         }
       }
     });
-    this.chart2 = new node_modules_chart_js__WEBPACK_IMPORTED_MODULE_3__.Chart('myChart2', {
-      type: 'bar',
-      data: {
-        labels: [],
-        datasets: []
-      }
-    });
+    // this.chart2 = new Chart('myChart2', {
+    //   type: 'bar',
+    //   data: {
+    //     labels: [],
+    //     datasets: [],
+    //   },
+    // });
     this.chart3 = new node_modules_chart_js__WEBPACK_IMPORTED_MODULE_3__.Chart('myChart3', {
       type: 'doughnut',
       data: {
@@ -1290,9 +1290,9 @@ class ListarDatosComponent {
     this._httpService.getValores(this.listVariables[1]._id).subscribe(data => {
       this.listDatos = data['datos'];
       console.log('datos: ', this.listDatos);
-      this.chart.data.labels = this.listDatos.map(x => new Date(x.fecha_lectura).toLocaleDateString());
+      this.chart.data.labels = this.listDatos.map(x => new Date(x._id).toLocaleDateString());
       console.log('despues del for each', this.chart.data.labels);
-      this.chart.data.datasets[0].data = this.listDatos.map(x => x.valor_lectura);
+      this.chart.data.datasets[0].data = this.listDatos.map(x => x.max);
       this.chart.update();
     });
   }
