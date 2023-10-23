@@ -1314,7 +1314,7 @@ class ListarDatosComponent {
       this.listVariables = data;
       console.log(this.listVariables);
       this.getRegistros();
-      this.chart.data.datasets[0].label = this.listVariables[2].nombre;
+      this.chart.data.datasets[0].label = this.listVariables[1].nombre;
       // for (let i = 0; i < this.listVariables.length; i++) {
       //   this.chart.data.datasets[i] = {
       //     data: [],
