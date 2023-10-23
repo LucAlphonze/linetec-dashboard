@@ -17,7 +17,7 @@ const obtenerTodos = async (req, res) => {
           _id: {
             $dateToString: {
               format: "%Y-%m-%d",
-              date: "$fecha_lectura",
+              date: "$time_stamp",
             },
           },
           max: {
@@ -61,7 +61,7 @@ const getTodos = async (req, res) => {
   }
 };
 
-const obtenerRegistrosGenerales = async (req, res) => {
+const obtenerRegistrosGeneral = async (req, res) => {
   try {
     var idVariable = req.params.idVariable;
     const registrosGenerales = await RegistroGeneral.findOne({
@@ -240,7 +240,7 @@ function determinarOperacion(operacion) {
 }
 module.exports = {
   obtenerTodos,
-  obtenerRegistrosGenerales,
+  obtenerRegistrosGeneral,
   crearRegistroGeneral,
   getTodos,
   filtrarRegistrosGenerales,

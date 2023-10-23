@@ -9,7 +9,7 @@ const { Router } = require("express");
 
 const {
   obtenerTodos,
-  obtenerRegistrosGenerales,
+  obtenerRegistrosGeneral,
   crearRegistroGeneral,
   getTodos,
   filtrarRegistrosGenerales,
@@ -23,7 +23,7 @@ router.get(
   "/filter/:idVariable/:startdate/:enddate/:operacion",
   filtrarRegistrosGenerales
 );
-router.get("/:idVariable", obtenerRegistrosGenerales);
+router.get("/:idVariable", obtenerRegistrosGeneral);
 router.post("/", verifyToken, crearRegistroGeneral);
 
 module.exports = router;
