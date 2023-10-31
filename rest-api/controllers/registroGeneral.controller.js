@@ -152,28 +152,23 @@ const filtrarRegistrosGenerales = async (req, res) => {
       },
       {
         $match: {
-          fecha_lectura: {
+          time_stamp: {
             $gte: new Date(parseInt(sti)),
             $lte: new Date(parseInt(stf)),
           },
         },
       },
-      // usamos project para definir variables que vamos a mostrar nos puede servir para
-      // luego elegir la granularidad de las operaciones (mes, semana, dia , horas)
-      // {
-      //   $project: {year: {  $year: "$fecha_lectura",},month: {  $month: "$fecha_lectura",},day: {  $dayOfMonth: "$fecha_lectura",},weekOfMonth: {  $add: [    {      $floor: {        $divide: [          {            $dayOfMonth: "$fecha_lectura",          },          7,        ],      },    },    1,  ],},valor: "$valor_lectura",
-      //   },
-      // },
-
       {
         $group: {
           _id: {
             $dateToString: {
               format: "%Y-%m",
-              date: "$fecha_lectura",
+              date: "$time_stamp",
             },
           },
           respuesta: resultado,
+          min: { $min: "$valor_lectura" },
+          avg: { $avg: "$valor_lectura" },
         },
       },
       {

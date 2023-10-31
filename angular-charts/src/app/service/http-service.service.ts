@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { RegistroFiltrado, Variable } from '../models/datos.model';
 
 @Injectable({
   providedIn: 'root',
@@ -9,6 +10,10 @@ import { environment } from 'src/environments/environment';
 export class HttpServiceService {
   registroGeneral = environment.API_URL_RGENERAL;
   variables = environment.API_URL_VARIABLES;
+  private listaVariablesSource = new BehaviorSubject(<Variable[]>[]);
+  private listaDatosSource = new BehaviorSubject(<RegistroFiltrado[]>[]);
+  listaVariables = this.listaVariablesSource.asObservable();
+  listaDatos = this.listaDatosSource.asObservable();
 
   constructor(private http: HttpClient) {}
 
@@ -41,5 +46,13 @@ export class HttpServiceService {
         Authorization: 'Bearer ' + sessionStorage.getItem('token')?.toString(),
       },
     });
+  }
+  stream_Variables(variables: Variable[]) {
+    console.log('stream variables: ', variables);
+    this.listaVariablesSource.next(variables);
+  }
+  stream_Datos(datos: RegistroFiltrado[]) {
+    console.log('stream datos: ', datos);
+    this.listaDatosSource.next(datos);
   }
 }

@@ -5,6 +5,8 @@ import { AuthService } from 'src/app/service/auth.service';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { FormControl, FormGroup } from '@angular/forms';
 import { UtilsService } from 'src/app/service/utils.service';
+import { RegistroFiltrado } from 'src/app/models/datos.model';
+import { Subscription } from 'rxjs';
 Chart.register(...registerables);
 
 @Component({
@@ -14,7 +16,6 @@ Chart.register(...registerables);
 })
 export class ListarDatosComponent implements OnInit, OnDestroy {
   listDatos: any[] = [];
-  listDatos2: any[] = [];
   listVariables: any[] = [];
   listCheckbox: any[] = [];
   sensor_1: string = 'sensor 1';
@@ -24,9 +25,12 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
   chart: any;
   chart2: any;
   chart3: any;
+  chart4: any;
   title: string = 'Prueba angular';
   timeout: any;
   token: any;
+  subscription!: Subscription;
+  listDatos2: RegistroFiltrado[] = [];
   range = new FormGroup({
     start: new FormControl<Date | null>(null),
     end: new FormControl<Date | null>(null),
@@ -59,15 +63,33 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
             beginAtZero: true,
           },
         },
+        aspectRatio: 1,
+        maintainAspectRatio: false,
       },
     });
-    // this.chart2 = new Chart('myChart2', {
-    //   type: 'bar',
-    //   data: {
-    //     labels: [],
-    //     datasets: [],
-    //   },
-    // });
+    this.chart2 = new Chart('myChart2', {
+      type: 'bar',
+      data: {
+        labels: [],
+        datasets: [
+          {
+            data: [],
+            label: 'Corte Maximo por mes',
+            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+            borderColor: 'rgb(255, 99, 132)',
+          },
+        ],
+      },
+      options: {
+        elements: {
+          line: {
+            borderWidth: 3,
+          },
+        },
+        aspectRatio: 1,
+        maintainAspectRatio: false,
+      },
+    });
     this.chart3 = new Chart('myChart3', {
       type: 'doughnut',
       data: {
@@ -84,7 +106,51 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
         plugins: {
           legend: { position: 'left' },
         },
+        maintainAspectRatio: false,
       },
+    });
+    this.chart4 = new Chart('myChart4', {
+      type: 'radar',
+      data: {
+        labels: ['Max', 'Min', 'Avg'],
+        datasets: [],
+      },
+      options: {
+        elements: {
+          line: {
+            borderWidth: 3,
+          },
+        },
+        maintainAspectRatio: false,
+      },
+    });
+    this.subscription = this._httpService.listaDatos.subscribe((message) => {
+      this.chart4.data.datasets = [];
+      this.listDatos2 = message;
+      this.chart3.data.labels = this.listDatos2.map((x) => x._id);
+      this.chart3.data.datasets[0].data = this.listDatos2.map(
+        (x) => x.respuesta
+      );
+      this.chart3.update();
+      this.chart2.data.labels = this.listDatos2.map((x) => x._id);
+      this.chart2.data.datasets[0].data = this.listDatos2.map(
+        (x) => x.respuesta
+      );
+      this.chart2.update();
+      // this.chart4.data.datasets[0].data = this.listDatos2.map(
+      //   (x) => x.respuesta
+      // );
+      this.listDatos2.forEach((datos) => {
+        const dsColor = this.utils.namedColor(this.chart4.data.datasets.length);
+        var newDataSet = {
+          label: datos._id,
+          backgroundColor: this.utils.transparentize(dsColor, 0.5),
+          borderColor: dsColor,
+          data: [datos.respuesta, datos.min, datos.avg],
+        };
+        this.chart4.data.datasets.push(newDataSet);
+      });
+      this.chart4.update();
     });
     this.expirationCheck();
   }
@@ -125,57 +191,12 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
   }
   getVariables() {
     this._httpService.getVariables().subscribe((data) => {
+      this._httpService.stream_Variables(data);
       this.listVariables = data;
       console.log(this.listVariables);
       this.getRegistros();
-      this.chart.data.datasets[0].label = this.listVariables[1].nombre;
-      // for (let i = 0; i < this.listVariables.length; i++) {
-      //   this.chart.data.datasets[i] = {
-      //     data: [],
-      //     label: [this.listVariables[i].nombre],
-      //     fill: false,
-      //     borderColor: this.getDataColors(),
-      //     backgroundColor: this.getDataColors('20'),
-      //     tension: 0.1,
-      //   };
-      // }
+      this.chart.data.datasets[0].label = 'Corte maximo por dia';
     });
-  }
-  getFiltrados() {
-    var inicio: any = this.range.value.start?.getTime().toString();
-    var final: any = this.range.value.end?.getTime().toString();
-    this._httpService
-      .getValoresFiltrados(this.listVariables[1]._id, inicio, final, 'max')
-      .subscribe((data) => {
-        console.log(data);
-        this.listDatos2 = data['datos'];
-        this.chart3.data.labels = this.listDatos2.map((x) => x._id);
-        this.chart3.data.datasets[0].data = this.listDatos2.map(
-          (x) => x.respuesta
-        );
-        this.chart3.update();
-        // this.chart2.data.labels = this.listDatos.map((x) => {
-        //   x._id;
-        // });
-
-        this.listDatos2.forEach((datos) => {
-          const dsColor = this.utils.namedColor(
-            this.chart2.data.datasets.length
-          );
-          var newDataSet = {
-            label: 'Dataset ' + (this.chart2.data.datasets.length + 1),
-            backgroundColor: this.utils.transparentize(dsColor, 0.5),
-            borderColor: dsColor,
-            data: [datos.respuesta],
-          };
-          this.chart2.data.datasets.push(newDataSet);
-          this.chart2.data.labels.push(datos._id);
-
-          this.chart2.update();
-          console.log(this.chart2.data.datasets);
-          console.log(this.chart2.data.labels);
-        });
-      });
   }
 
   expirationCheck(): void {

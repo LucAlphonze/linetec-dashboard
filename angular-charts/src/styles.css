@@ -11,3 +11,12 @@ body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
+.carta {
+  max-width: 600px;
+  margin: auto;
+  width: 50%;
+  /* border: 3px; */
+  /* border-style: solid;
+  border-color: #673ab7; */
+  padding: 10px;
+}

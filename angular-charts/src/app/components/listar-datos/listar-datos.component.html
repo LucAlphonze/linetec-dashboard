@@ -1,4 +1,4 @@
-<div class="grid gap-4 grid-cols-2 p-5">
+<div class="grid gap-3 grid-cols-2 p-3 fondo">
   <div class="p-3">
     <mat-card>
       <mat-card-header>
@@ -10,48 +10,34 @@
     </mat-card>
   </div>
 
-  <!-- <div class="p-3">
+  <div class="p-3">
     <mat-card>
       <mat-card-header>
-        <h2>Bar chart</h2>
+        <h2>Corte Extrusora</h2>
       </mat-card-header>
       <mat-card-content>
         <canvas id="myChart2"></canvas>
       </mat-card-content>
     </mat-card>
-  </div> -->
+  </div>
 
   <div class="p-3">
-    <mat-form-field>
-      <mat-label>Por favor elija 2 fechas </mat-label>
-      <mat-date-range-input [formGroup]="range" [rangePicker]="picker">
-        <input matStartDate formControlName="start" placeholder="Start date" />
-        <input matEndDate formControlName="end" placeholder="End date" />
-      </mat-date-range-input>
-      <mat-datepicker-toggle
-        matIconSuffix
-        [for]="picker"
-      ></mat-datepicker-toggle>
-      <mat-date-range-picker #picker>
-        <mat-date-range-picker-actions>
-          <button mat-button matDateRangePickerCancel>Cancel</button>
-          <button
-            mat-raised-button
-            color="primary"
-            (click)="getFiltrados()"
-            matDateRangePickerApply
-          >
-            Apply
-          </button>
-        </mat-date-range-picker-actions>
-      </mat-date-range-picker>
-    </mat-form-field>
     <mat-card>
       <mat-card-header>
         <h2>Corte Extrusora</h2>
       </mat-card-header>
       <mat-card-content>
         <canvas id="myChart3"></canvas>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <div class="p-3">
+    <mat-card>
+      <mat-card-header>
+        <h2>Corte Extrusora</h2>
+      </mat-card-header>
+      <mat-card-content>
+        <canvas id="myChart4"></canvas>
       </mat-card-content>
     </mat-card>
   </div>
