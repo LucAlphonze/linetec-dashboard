@@ -166,9 +166,10 @@ const filtrarRegistrosGenerales = async (req, res) => {
               date: "$time_stamp",
             },
           },
-          respuesta: resultado,
+          respuesta: { $max: "$valor_lectura" },
           min: { $min: "$valor_lectura" },
           avg: { $avg: "$valor_lectura" },
+          sum: { $sum: "$valor_lectura" },
         },
       },
       {

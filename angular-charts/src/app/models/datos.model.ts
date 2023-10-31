@@ -3,12 +3,20 @@ export class RegistroFiltrado {
   respuesta!: number;
   min!: number;
   avg!: number;
+  sum!: number;
 
-  constructor(_id: string, respuesta: number, min: number, avg: number) {
+  constructor(
+    _id: string,
+    respuesta: number,
+    min: number,
+    avg: number,
+    sum: number
+  ) {
     this._id = _id;
     this.respuesta = respuesta;
     this.min = min;
     this.avg = avg;
+    this.sum = sum;
   }
 }
 

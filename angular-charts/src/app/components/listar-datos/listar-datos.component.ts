@@ -74,7 +74,7 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
         datasets: [
           {
             data: [],
-            label: 'Corte Maximo por mes',
+            label: 'Corte total por mes',
             backgroundColor: 'rgba(255, 99, 132, 0.2)',
             borderColor: 'rgb(255, 99, 132)',
           },
@@ -133,9 +133,7 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
       );
       this.chart3.update();
       this.chart2.data.labels = this.listDatos2.map((x) => x._id);
-      this.chart2.data.datasets[0].data = this.listDatos2.map(
-        (x) => x.respuesta
-      );
+      this.chart2.data.datasets[0].data = this.listDatos2.map((x) => x.sum);
       this.chart2.update();
       // this.chart4.data.datasets[0].data = this.listDatos2.map(
       //   (x) => x.respuesta
