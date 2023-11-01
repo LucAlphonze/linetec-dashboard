@@ -1261,14 +1261,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   ListarDatosComponent: () => (/* binding */ ListarDatosComponent)
 /* harmony export */ });
-/* harmony import */ var node_modules_chart_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! node_modules/chart.js */ 7005);
-/* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @angular/forms */ 8849);
-/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @angular/core */ 1699);
-/* harmony import */ var src_app_service_http_service_service__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! src/app/service/http-service.service */ 6659);
-/* harmony import */ var src_app_service_utils_service__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! src/app/service/utils.service */ 2577);
-/* harmony import */ var src_app_service_auth_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! src/app/service/auth.service */ 9692);
-/* harmony import */ var _auth0_angular_jwt__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @auth0/angular-jwt */ 2401);
-/* harmony import */ var _angular_material_card__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @angular/material/card */ 8497);
+/* harmony import */ var node_modules_chart_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! node_modules/chart.js */ 7005);
+/* harmony import */ var chartjs_adapter_date_fns__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! chartjs-adapter-date-fns */ 3878);
+/* harmony import */ var date_fns_locale__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! date-fns/locale */ 8428);
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @angular/core */ 1699);
+/* harmony import */ var src_app_service_http_service_service__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! src/app/service/http-service.service */ 6659);
+/* harmony import */ var src_app_service_utils_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! src/app/service/utils.service */ 2577);
+/* harmony import */ var src_app_service_auth_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! src/app/service/auth.service */ 9692);
+/* harmony import */ var _auth0_angular_jwt__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @auth0/angular-jwt */ 2401);
+/* harmony import */ var _angular_material_card__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @angular/material/card */ 8497);
 
 
 
@@ -1277,7 +1278,8 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-node_modules_chart_js__WEBPACK_IMPORTED_MODULE_3__.Chart.register(...node_modules_chart_js__WEBPACK_IMPORTED_MODULE_3__.registerables);
+
+node_modules_chart_js__WEBPACK_IMPORTED_MODULE_4__.Chart.register(...node_modules_chart_js__WEBPACK_IMPORTED_MODULE_4__.registerables);
 class ListarDatosComponent {
   constructor(_httpService, utils, authService, jwtHelper) {
     this._httpService = _httpService;
@@ -1287,16 +1289,21 @@ class ListarDatosComponent {
     this.listDatos = [];
     this.listVariables = [];
     this.listCheckbox = [];
+    this.todayDate = new Date();
     this.sensor_1 = 'sensor 1';
     this.sensor_2 = 'sensor 2';
     this.pulsador = 'Pulsador';
     this.id = 0;
     this.title = 'Prueba angular';
     this.listDatos2 = [];
-    this.range = new _angular_forms__WEBPACK_IMPORTED_MODULE_4__.FormGroup({
-      start: new _angular_forms__WEBPACK_IMPORTED_MODULE_4__.FormControl(null),
-      end: new _angular_forms__WEBPACK_IMPORTED_MODULE_4__.FormControl(null)
-    });
+    this.getDaysInMonth = (year, month) => new Date(year, month, 0).getDate();
+    this.addMonths = (input, months) => {
+      const date = new Date(input);
+      date.setDate(1);
+      date.setMonth(date.getMonth() + months);
+      date.setDate(Math.min(input.getDate(), this.getDaysInMonth(date.getFullYear(), date.getMonth() + 1)));
+      this.sixMonthAgoDate = date;
+    };
     this.getDataColors = opacity => {
       const colors = ['#7448c2', '#21c0d7', '#d99e2b', '#cd3a81', '#9c99cc', '#e14eca', '#ffffff', '#ff0000', '#d6ff00', '#0038ff'];
       return colors.map(color => opacity ? `${color + opacity}` : color);
@@ -1305,8 +1312,9 @@ class ListarDatosComponent {
   }
 
   ngOnInit() {
+    this.addMonths(this.todayDate, -6);
     this.getVariables();
-    this.chart = new node_modules_chart_js__WEBPACK_IMPORTED_MODULE_3__.Chart('myChart', {
+    this.chart = new node_modules_chart_js__WEBPACK_IMPORTED_MODULE_4__.Chart('myChart', {
       type: 'line',
       data: {
         labels: [],
@@ -1315,16 +1323,53 @@ class ListarDatosComponent {
         }]
       },
       options: {
-        scales: {
-          y: {
-            beginAtZero: true
+        // hay que arreglar esto para que funcione la data decimation
+        // Turn off animations and data parsing for performance
+        aspectRatio: 1,
+        maintainAspectRatio: false,
+        animation: false,
+        // parsing: false,
+        interaction: {
+          mode: 'nearest',
+          axis: 'x',
+          intersect: false
+        },
+        plugins: {
+          decimation: {
+            enabled: true,
+            algorithm: 'lttb',
+            samples: 200
           }
         },
-        aspectRatio: 1,
-        maintainAspectRatio: false
+        scales: {
+          y: {
+            type: 'linear',
+            beginAtZero: true,
+            axis: 'y',
+            ticks: {
+              maxRotation: 0,
+              autoSkip: true
+            }
+          },
+          x: {
+            type: 'time',
+            axis: 'x',
+            adapters: {
+              date: {
+                locale: date_fns_locale__WEBPACK_IMPORTED_MODULE_5__["default"]
+              }
+            },
+            ticks: {
+              source: 'auto',
+              // Disabled rotation for performance
+              maxRotation: 0,
+              autoSkip: true
+            }
+          }
+        }
       }
     });
-    this.chart2 = new node_modules_chart_js__WEBPACK_IMPORTED_MODULE_3__.Chart('myChart2', {
+    this.chart2 = new node_modules_chart_js__WEBPACK_IMPORTED_MODULE_4__.Chart('myChart2', {
       type: 'bar',
       data: {
         labels: [],
@@ -1345,7 +1390,7 @@ class ListarDatosComponent {
         maintainAspectRatio: false
       }
     });
-    this.chart3 = new node_modules_chart_js__WEBPACK_IMPORTED_MODULE_3__.Chart('myChart3', {
+    this.chart3 = new node_modules_chart_js__WEBPACK_IMPORTED_MODULE_4__.Chart('myChart3', {
       type: 'doughnut',
       data: {
         labels: [],
@@ -1364,7 +1409,7 @@ class ListarDatosComponent {
         maintainAspectRatio: false
       }
     });
-    this.chart4 = new node_modules_chart_js__WEBPACK_IMPORTED_MODULE_3__.Chart('myChart4', {
+    this.chart4 = new node_modules_chart_js__WEBPACK_IMPORTED_MODULE_4__.Chart('myChart4', {
       type: 'radar',
       data: {
         labels: ['Max', 'Min', 'Avg'],
@@ -1414,9 +1459,9 @@ class ListarDatosComponent {
     this._httpService.getValores(this.listVariables[1]._id).subscribe(data => {
       this.listDatos = data['datos'];
       console.log('datos: ', this.listDatos);
-      this.chart.data.labels = this.listDatos.map(x => new Date(x._id).toLocaleDateString());
+      this.chart.data.labels = this.listDatos.map(x => new Date(x._id).getTime());
       console.log('despues del for each', this.chart.data.labels);
-      this.chart.data.datasets[0].data = this.listDatos.map(x => x.max);
+      this.chart.data.datasets[0].data = this.listDatos.map(x => parseInt(x.max));
       this.chart.update();
     });
   }
@@ -1440,6 +1485,15 @@ class ListarDatosComponent {
       console.log(this.listVariables);
       this.getRegistros();
       this.chart.data.datasets[0].label = 'Corte maximo por dia';
+      this.getFiltrados();
+    });
+  }
+  getFiltrados() {
+    var inicio = this.sixMonthAgoDate.getTime().toString();
+    var final = this.todayDate.getTime().toString();
+    this._httpService.getValoresFiltrados(this.listVariables[1]._id, inicio, final, 'max').subscribe(data => {
+      console.log(data);
+      this._httpService.stream_Datos(data['datos']);
     });
   }
   expirationCheck() {
@@ -1449,9 +1503,9 @@ class ListarDatosComponent {
   }
 }
 ListarDatosComponent.ɵfac = function ListarDatosComponent_Factory(t) {
-  return new (t || ListarDatosComponent)(_angular_core__WEBPACK_IMPORTED_MODULE_5__["ɵɵdirectiveInject"](src_app_service_http_service_service__WEBPACK_IMPORTED_MODULE_0__.HttpServiceService), _angular_core__WEBPACK_IMPORTED_MODULE_5__["ɵɵdirectiveInject"](src_app_service_utils_service__WEBPACK_IMPORTED_MODULE_1__.UtilsService), _angular_core__WEBPACK_IMPORTED_MODULE_5__["ɵɵdirectiveInject"](src_app_service_auth_service__WEBPACK_IMPORTED_MODULE_2__.AuthService), _angular_core__WEBPACK_IMPORTED_MODULE_5__["ɵɵdirectiveInject"](_auth0_angular_jwt__WEBPACK_IMPORTED_MODULE_6__.JwtHelperService));
+  return new (t || ListarDatosComponent)(_angular_core__WEBPACK_IMPORTED_MODULE_6__["ɵɵdirectiveInject"](src_app_service_http_service_service__WEBPACK_IMPORTED_MODULE_1__.HttpServiceService), _angular_core__WEBPACK_IMPORTED_MODULE_6__["ɵɵdirectiveInject"](src_app_service_utils_service__WEBPACK_IMPORTED_MODULE_2__.UtilsService), _angular_core__WEBPACK_IMPORTED_MODULE_6__["ɵɵdirectiveInject"](src_app_service_auth_service__WEBPACK_IMPORTED_MODULE_3__.AuthService), _angular_core__WEBPACK_IMPORTED_MODULE_6__["ɵɵdirectiveInject"](_auth0_angular_jwt__WEBPACK_IMPORTED_MODULE_7__.JwtHelperService));
 };
-ListarDatosComponent.ɵcmp = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_5__["ɵɵdefineComponent"]({
+ListarDatosComponent.ɵcmp = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_6__["ɵɵdefineComponent"]({
   type: ListarDatosComponent,
   selectors: [["app-listar-datos"]],
   decls: 29,
@@ -1459,33 +1513,33 @@ ListarDatosComponent.ɵcmp = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE
   consts: [[1, "grid", "gap-3", "grid-cols-2", "p-3", "fondo"], [1, "p-3"], ["id", "myChart"], ["id", "myChart2"], ["id", "myChart3"], ["id", "myChart4"]],
   template: function ListarDatosComponent_Template(rf, ctx) {
     if (rf & 1) {
-      _angular_core__WEBPACK_IMPORTED_MODULE_5__["ɵɵelementStart"](0, "div", 0)(1, "div", 1)(2, "mat-card")(3, "mat-card-header")(4, "h2");
-      _angular_core__WEBPACK_IMPORTED_MODULE_5__["ɵɵtext"](5, "Corte Extrusora");
-      _angular_core__WEBPACK_IMPORTED_MODULE_5__["ɵɵelementEnd"]()();
-      _angular_core__WEBPACK_IMPORTED_MODULE_5__["ɵɵelementStart"](6, "mat-card-content");
-      _angular_core__WEBPACK_IMPORTED_MODULE_5__["ɵɵelement"](7, "canvas", 2);
-      _angular_core__WEBPACK_IMPORTED_MODULE_5__["ɵɵelementEnd"]()()();
-      _angular_core__WEBPACK_IMPORTED_MODULE_5__["ɵɵelementStart"](8, "div", 1)(9, "mat-card")(10, "mat-card-header")(11, "h2");
-      _angular_core__WEBPACK_IMPORTED_MODULE_5__["ɵɵtext"](12, "Corte Extrusora");
-      _angular_core__WEBPACK_IMPORTED_MODULE_5__["ɵɵelementEnd"]()();
-      _angular_core__WEBPACK_IMPORTED_MODULE_5__["ɵɵelementStart"](13, "mat-card-content");
-      _angular_core__WEBPACK_IMPORTED_MODULE_5__["ɵɵelement"](14, "canvas", 3);
-      _angular_core__WEBPACK_IMPORTED_MODULE_5__["ɵɵelementEnd"]()()();
-      _angular_core__WEBPACK_IMPORTED_MODULE_5__["ɵɵelementStart"](15, "div", 1)(16, "mat-card")(17, "mat-card-header")(18, "h2");
-      _angular_core__WEBPACK_IMPORTED_MODULE_5__["ɵɵtext"](19, "Corte Extrusora");
-      _angular_core__WEBPACK_IMPORTED_MODULE_5__["ɵɵelementEnd"]()();
-      _angular_core__WEBPACK_IMPORTED_MODULE_5__["ɵɵelementStart"](20, "mat-card-content");
-      _angular_core__WEBPACK_IMPORTED_MODULE_5__["ɵɵelement"](21, "canvas", 4);
-      _angular_core__WEBPACK_IMPORTED_MODULE_5__["ɵɵelementEnd"]()()();
-      _angular_core__WEBPACK_IMPORTED_MODULE_5__["ɵɵelementStart"](22, "div", 1)(23, "mat-card")(24, "mat-card-header")(25, "h2");
-      _angular_core__WEBPACK_IMPORTED_MODULE_5__["ɵɵtext"](26, "Corte Extrusora");
-      _angular_core__WEBPACK_IMPORTED_MODULE_5__["ɵɵelementEnd"]()();
-      _angular_core__WEBPACK_IMPORTED_MODULE_5__["ɵɵelementStart"](27, "mat-card-content");
-      _angular_core__WEBPACK_IMPORTED_MODULE_5__["ɵɵelement"](28, "canvas", 5);
-      _angular_core__WEBPACK_IMPORTED_MODULE_5__["ɵɵelementEnd"]()()()();
+      _angular_core__WEBPACK_IMPORTED_MODULE_6__["ɵɵelementStart"](0, "div", 0)(1, "div", 1)(2, "mat-card")(3, "mat-card-header")(4, "h2");
+      _angular_core__WEBPACK_IMPORTED_MODULE_6__["ɵɵtext"](5, "Corte Extrusora");
+      _angular_core__WEBPACK_IMPORTED_MODULE_6__["ɵɵelementEnd"]()();
+      _angular_core__WEBPACK_IMPORTED_MODULE_6__["ɵɵelementStart"](6, "mat-card-content");
+      _angular_core__WEBPACK_IMPORTED_MODULE_6__["ɵɵelement"](7, "canvas", 2);
+      _angular_core__WEBPACK_IMPORTED_MODULE_6__["ɵɵelementEnd"]()()();
+      _angular_core__WEBPACK_IMPORTED_MODULE_6__["ɵɵelementStart"](8, "div", 1)(9, "mat-card")(10, "mat-card-header")(11, "h2");
+      _angular_core__WEBPACK_IMPORTED_MODULE_6__["ɵɵtext"](12, "Corte Extrusora");
+      _angular_core__WEBPACK_IMPORTED_MODULE_6__["ɵɵelementEnd"]()();
+      _angular_core__WEBPACK_IMPORTED_MODULE_6__["ɵɵelementStart"](13, "mat-card-content");
+      _angular_core__WEBPACK_IMPORTED_MODULE_6__["ɵɵelement"](14, "canvas", 3);
+      _angular_core__WEBPACK_IMPORTED_MODULE_6__["ɵɵelementEnd"]()()();
+      _angular_core__WEBPACK_IMPORTED_MODULE_6__["ɵɵelementStart"](15, "div", 1)(16, "mat-card")(17, "mat-card-header")(18, "h2");
+      _angular_core__WEBPACK_IMPORTED_MODULE_6__["ɵɵtext"](19, "Corte Extrusora");
+      _angular_core__WEBPACK_IMPORTED_MODULE_6__["ɵɵelementEnd"]()();
+      _angular_core__WEBPACK_IMPORTED_MODULE_6__["ɵɵelementStart"](20, "mat-card-content");
+      _angular_core__WEBPACK_IMPORTED_MODULE_6__["ɵɵelement"](21, "canvas", 4);
+      _angular_core__WEBPACK_IMPORTED_MODULE_6__["ɵɵelementEnd"]()()();
+      _angular_core__WEBPACK_IMPORTED_MODULE_6__["ɵɵelementStart"](22, "div", 1)(23, "mat-card")(24, "mat-card-header")(25, "h2");
+      _angular_core__WEBPACK_IMPORTED_MODULE_6__["ɵɵtext"](26, "Corte Extrusora");
+      _angular_core__WEBPACK_IMPORTED_MODULE_6__["ɵɵelementEnd"]()();
+      _angular_core__WEBPACK_IMPORTED_MODULE_6__["ɵɵelementStart"](27, "mat-card-content");
+      _angular_core__WEBPACK_IMPORTED_MODULE_6__["ɵɵelement"](28, "canvas", 5);
+      _angular_core__WEBPACK_IMPORTED_MODULE_6__["ɵɵelementEnd"]()()()();
     }
   },
-  dependencies: [_angular_material_card__WEBPACK_IMPORTED_MODULE_7__.MatCard, _angular_material_card__WEBPACK_IMPORTED_MODULE_7__.MatCardContent, _angular_material_card__WEBPACK_IMPORTED_MODULE_7__.MatCardHeader],
+  dependencies: [_angular_material_card__WEBPACK_IMPORTED_MODULE_8__.MatCard, _angular_material_card__WEBPACK_IMPORTED_MODULE_8__.MatCardContent, _angular_material_card__WEBPACK_IMPORTED_MODULE_8__.MatCardHeader],
   styles: [".fondo[_ngcontent-%COMP%] {\n  background-color: rgb(223, 215, 215);\n}\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImxpc3Rhci1kYXRvcy5jb21wb25lbnQuY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0VBQ0Usb0NBQW9DO0FBQ3RDIiwiZmlsZSI6Imxpc3Rhci1kYXRvcy5jb21wb25lbnQuY3NzIiwic291cmNlc0NvbnRlbnQiOlsiLmZvbmRvIHtcclxuICBiYWNrZ3JvdW5kLWNvbG9yOiByZ2IoMjIzLCAyMTUsIDIxNSk7XHJcbn1cclxuIl19 */\n/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8uL3NyYy9hcHAvY29tcG9uZW50cy9saXN0YXItZGF0b3MvbGlzdGFyLWRhdG9zLmNvbXBvbmVudC5jc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7RUFDRSxvQ0FBb0M7QUFDdEM7O0FBRUEsd1ZBQXdWIiwic291cmNlc0NvbnRlbnQiOlsiLmZvbmRvIHtcclxuICBiYWNrZ3JvdW5kLWNvbG9yOiByZ2IoMjIzLCAyMTUsIDIxNSk7XHJcbn1cclxuIl0sInNvdXJjZVJvb3QiOiIifQ== */"]
 });
 

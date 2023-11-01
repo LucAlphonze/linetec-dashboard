@@ -1,6 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { HttpServiceService } from 'src/app/service/http-service.service';
 import { Chart, registerables } from 'node_modules/chart.js';
+import 'chartjs-adapter-date-fns';
+import { es } from 'date-fns/locale';
 import { AuthService } from 'src/app/service/auth.service';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { FormControl, FormGroup } from '@angular/forms';
@@ -18,6 +20,8 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
   listDatos: any[] = [];
   listVariables: any[] = [];
   listCheckbox: any[] = [];
+  todayDate: Date = new Date();
+  sixMonthAgoDate!: Date;
   sensor_1: string = 'sensor 1';
   sensor_2: string = 'sensor 2';
   pulsador: string = 'Pulsador';
@@ -31,10 +35,6 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
   token: any;
   subscription!: Subscription;
   listDatos2: RegistroFiltrado[] = [];
-  range = new FormGroup({
-    start: new FormControl<Date | null>(null),
-    end: new FormControl<Date | null>(null),
-  });
 
   constructor(
     private _httpService: HttpServiceService,
@@ -46,6 +46,7 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.addMonths(this.todayDate, -6);
     this.getVariables();
     this.chart = new Chart('myChart', {
       type: 'line',
@@ -58,15 +59,54 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
         ],
       },
       options: {
-        scales: {
-          y: {
-            beginAtZero: true,
-          },
-        },
+        // hay que arreglar esto para que funcione la data decimation
+        // Turn off animations and data parsing for performance
         aspectRatio: 1,
         maintainAspectRatio: false,
+        animation: false,
+        // parsing: false,
+
+        interaction: {
+          mode: 'nearest',
+          axis: 'x',
+          intersect: false,
+        },
+        plugins: {
+          decimation: {
+            enabled: true,
+            algorithm: 'lttb',
+            samples: 200,
+          },
+        },
+        scales: {
+          y: {
+            type: 'linear',
+            beginAtZero: true,
+            axis: 'y',
+            ticks: {
+              maxRotation: 0,
+              autoSkip: true,
+            },
+          },
+          x: {
+            type: 'time',
+            axis: 'x',
+            adapters: {
+              date: {
+                locale: es,
+              },
+            },
+            ticks: {
+              source: 'auto',
+              // Disabled rotation for performance
+              maxRotation: 0,
+              autoSkip: true,
+            },
+          },
+        },
       },
     });
+
     this.chart2 = new Chart('myChart2', {
       type: 'bar',
       data: {
@@ -166,10 +206,12 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
         this.listDatos = data['datos'];
         console.log('datos: ', this.listDatos);
         this.chart.data.labels = this.listDatos.map((x) =>
-          new Date(x._id).toLocaleDateString()
+          new Date(x._id).getTime()
         );
         console.log('despues del for each', this.chart.data.labels);
-        this.chart.data.datasets[0].data = this.listDatos.map((x) => x.max);
+        this.chart.data.datasets[0].data = this.listDatos.map((x) =>
+          parseInt(x.max)
+        );
         this.chart.update();
       });
   }
@@ -194,8 +236,34 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
       console.log(this.listVariables);
       this.getRegistros();
       this.chart.data.datasets[0].label = 'Corte maximo por dia';
+      this.getFiltrados();
     });
   }
+  getFiltrados() {
+    var inicio: any = this.sixMonthAgoDate.getTime().toString();
+    var final: any = this.todayDate.getTime().toString();
+    this._httpService
+      .getValoresFiltrados(this.listVariables[1]._id, inicio, final, 'max')
+      .subscribe((data) => {
+        console.log(data);
+        this._httpService.stream_Datos(data['datos']);
+      });
+  }
+  getDaysInMonth = (year: number, month: number) =>
+    new Date(year, month, 0).getDate();
+
+  addMonths = (input: Date, months: number) => {
+    const date = new Date(input);
+    date.setDate(1);
+    date.setMonth(date.getMonth() + months);
+    date.setDate(
+      Math.min(
+        input.getDate(),
+        this.getDaysInMonth(date.getFullYear(), date.getMonth() + 1)
+      )
+    );
+    this.sixMonthAgoDate = date;
+  };
 
   expirationCheck(): void {
     this.token = sessionStorage.getItem('token')?.toString();
