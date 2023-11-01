@@ -19,6 +19,15 @@ export class RegistroFiltrado {
     this.sum = sum;
   }
 }
+export class Dato {
+  y!: number;
+  x!: number;
+
+  constructor(x: number, y: number) {
+    this.y = y;
+    this.x = x;
+  }
+}
 
 export class Variable {
   _id!: string;

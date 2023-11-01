@@ -13,10 +13,10 @@ import { Home5Component } from './components/home5/home5.component';
 
 const routes: Routes = [
   { path: '', component: ListarDatosComponent, canActivate: [authGuard] },
-  { path: 'home', component: HomeComponent, canActivate: [authGuard] },
-  { path: 'home2', component: Home2Component, canActivate: [authGuard] },
-  { path: 'home3', component: Home3Component, canActivate: [authGuard] },
-  { path: 'home4', component: Home4Component, canActivate: [authGuard] },
+  // { path: 'home', component: HomeComponent, canActivate: [authGuard] },
+  // { path: 'home2', component: Home2Component, canActivate: [authGuard] },
+  // { path: 'home3', component: Home3Component, canActivate: [authGuard] },
+  // { path: 'home4', component: Home4Component, canActivate: [authGuard] },
   { path: 'home5', component: Home5Component, canActivate: [authGuard] },
   { path: 'register', component: RegisterComponent },
   { path: 'login', component: LoginComponent },

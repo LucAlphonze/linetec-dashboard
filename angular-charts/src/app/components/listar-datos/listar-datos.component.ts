@@ -7,7 +7,7 @@ import { AuthService } from 'src/app/service/auth.service';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { FormControl, FormGroup } from '@angular/forms';
 import { UtilsService } from 'src/app/service/utils.service';
-import { RegistroFiltrado } from 'src/app/models/datos.model';
+import { Dato, RegistroFiltrado } from 'src/app/models/datos.model';
 import { Subscription } from 'rxjs';
 Chart.register(...registerables);
 
@@ -22,6 +22,7 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
   listCheckbox: any[] = [];
   todayDate: Date = new Date();
   sixMonthAgoDate!: Date;
+  dato!: Dato;
   sensor_1: string = 'sensor 1';
   sensor_2: string = 'sensor 2';
   pulsador: string = 'Pulsador';
@@ -64,25 +65,19 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
         aspectRatio: 1,
         maintainAspectRatio: false,
         animation: false,
-        // parsing: false,
+        parsing: false,
 
-        interaction: {
-          mode: 'nearest',
-          axis: 'x',
-          intersect: false,
-        },
         plugins: {
           decimation: {
             enabled: true,
-            algorithm: 'lttb',
-            samples: 200,
+            algorithm: 'min-max',
+            // samples: 200,
           },
         },
         scales: {
           y: {
             type: 'linear',
             beginAtZero: true,
-            axis: 'y',
             ticks: {
               maxRotation: 0,
               autoSkip: true,
@@ -90,7 +85,6 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
           },
           x: {
             type: 'time',
-            axis: 'x',
             adapters: {
               date: {
                 locale: es,
@@ -205,12 +199,12 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
       .subscribe((data) => {
         this.listDatos = data['datos'];
         console.log('datos: ', this.listDatos);
-        this.chart.data.labels = this.listDatos.map((x) =>
-          new Date(x._id).getTime()
+        this.chart.data.labels = console.log(
+          'despues del for each',
+          this.chart.data.labels
         );
-        console.log('despues del for each', this.chart.data.labels);
-        this.chart.data.datasets[0].data = this.listDatos.map((x) =>
-          parseInt(x.max)
+        this.chart.data.datasets[0].data = this.listDatos.map(
+          (x) => (this.dato = { y: x.max, x: new Date(x._id).getTime() })
         );
         this.chart.update();
       });

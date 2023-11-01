@@ -11,22 +11,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   AppRoutingModule: () => (/* binding */ AppRoutingModule)
 /* harmony export */ });
-/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @angular/router */ 7947);
+/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @angular/router */ 7947);
 /* harmony import */ var _components_listar_datos_listar_datos_component__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./components/listar-datos/listar-datos.component */ 3716);
-/* harmony import */ var _components_home_home_component__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./components/home/home.component */ 159);
-/* harmony import */ var _components_register_register_component__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/register/register.component */ 6560);
-/* harmony import */ var _components_login_login_component__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/login/login.component */ 6666);
-/* harmony import */ var _components_userlisting_userlisting_component__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./components/userlisting/userlisting.component */ 6720);
-/* harmony import */ var _guard_auth_guard__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./guard/auth.guard */ 4201);
-/* harmony import */ var _components_home2_home2_component__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./components/home2/home2.component */ 6076);
-/* harmony import */ var _components_home3_home3_component__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./components/home3/home3.component */ 2879);
-/* harmony import */ var _components_home4_home4_component__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./components/home4/home4.component */ 9670);
-/* harmony import */ var _components_home5_home5_component__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./components/home5/home5.component */ 919);
-/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @angular/core */ 1699);
-
-
-
-
+/* harmony import */ var _components_register_register_component__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./components/register/register.component */ 6560);
+/* harmony import */ var _components_login_login_component__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/login/login.component */ 6666);
+/* harmony import */ var _components_userlisting_userlisting_component__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/userlisting/userlisting.component */ 6720);
+/* harmony import */ var _guard_auth_guard__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./guard/auth.guard */ 4201);
+/* harmony import */ var _components_home5_home5_component__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./components/home5/home5.component */ 919);
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @angular/core */ 1699);
 
 
 
@@ -39,37 +31,26 @@ __webpack_require__.r(__webpack_exports__);
 const routes = [{
   path: '',
   component: _components_listar_datos_listar_datos_component__WEBPACK_IMPORTED_MODULE_0__.ListarDatosComponent,
-  canActivate: [_guard_auth_guard__WEBPACK_IMPORTED_MODULE_5__.authGuard]
-}, {
-  path: 'home',
-  component: _components_home_home_component__WEBPACK_IMPORTED_MODULE_1__.HomeComponent,
-  canActivate: [_guard_auth_guard__WEBPACK_IMPORTED_MODULE_5__.authGuard]
-}, {
-  path: 'home2',
-  component: _components_home2_home2_component__WEBPACK_IMPORTED_MODULE_6__.Home2Component,
-  canActivate: [_guard_auth_guard__WEBPACK_IMPORTED_MODULE_5__.authGuard]
-}, {
-  path: 'home3',
-  component: _components_home3_home3_component__WEBPACK_IMPORTED_MODULE_7__.Home3Component,
-  canActivate: [_guard_auth_guard__WEBPACK_IMPORTED_MODULE_5__.authGuard]
-}, {
-  path: 'home4',
-  component: _components_home4_home4_component__WEBPACK_IMPORTED_MODULE_8__.Home4Component,
-  canActivate: [_guard_auth_guard__WEBPACK_IMPORTED_MODULE_5__.authGuard]
-}, {
+  canActivate: [_guard_auth_guard__WEBPACK_IMPORTED_MODULE_4__.authGuard]
+},
+// { path: 'home', component: HomeComponent, canActivate: [authGuard] },
+// { path: 'home2', component: Home2Component, canActivate: [authGuard] },
+// { path: 'home3', component: Home3Component, canActivate: [authGuard] },
+// { path: 'home4', component: Home4Component, canActivate: [authGuard] },
+{
   path: 'home5',
-  component: _components_home5_home5_component__WEBPACK_IMPORTED_MODULE_9__.Home5Component,
-  canActivate: [_guard_auth_guard__WEBPACK_IMPORTED_MODULE_5__.authGuard]
+  component: _components_home5_home5_component__WEBPACK_IMPORTED_MODULE_5__.Home5Component,
+  canActivate: [_guard_auth_guard__WEBPACK_IMPORTED_MODULE_4__.authGuard]
 }, {
   path: 'register',
-  component: _components_register_register_component__WEBPACK_IMPORTED_MODULE_2__.RegisterComponent
+  component: _components_register_register_component__WEBPACK_IMPORTED_MODULE_1__.RegisterComponent
 }, {
   path: 'login',
-  component: _components_login_login_component__WEBPACK_IMPORTED_MODULE_3__.LoginComponent
+  component: _components_login_login_component__WEBPACK_IMPORTED_MODULE_2__.LoginComponent
 }, {
   path: 'user',
-  component: _components_userlisting_userlisting_component__WEBPACK_IMPORTED_MODULE_4__.UserlistingComponent,
-  canActivate: [_guard_auth_guard__WEBPACK_IMPORTED_MODULE_5__.authGuard]
+  component: _components_userlisting_userlisting_component__WEBPACK_IMPORTED_MODULE_3__.UserlistingComponent,
+  canActivate: [_guard_auth_guard__WEBPACK_IMPORTED_MODULE_4__.authGuard]
 }, {
   path: '**',
   redirectTo: 'login',
@@ -79,16 +60,16 @@ class AppRoutingModule {}
 AppRoutingModule.ɵfac = function AppRoutingModule_Factory(t) {
   return new (t || AppRoutingModule)();
 };
-AppRoutingModule.ɵmod = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_10__["ɵɵdefineNgModule"]({
+AppRoutingModule.ɵmod = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_6__["ɵɵdefineNgModule"]({
   type: AppRoutingModule
 });
-AppRoutingModule.ɵinj = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_10__["ɵɵdefineInjector"]({
-  imports: [_angular_router__WEBPACK_IMPORTED_MODULE_11__.RouterModule.forRoot(routes), _angular_router__WEBPACK_IMPORTED_MODULE_11__.RouterModule]
+AppRoutingModule.ɵinj = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_6__["ɵɵdefineInjector"]({
+  imports: [_angular_router__WEBPACK_IMPORTED_MODULE_7__.RouterModule.forRoot(routes), _angular_router__WEBPACK_IMPORTED_MODULE_7__.RouterModule]
 });
 (function () {
-  (typeof ngJitMode === "undefined" || ngJitMode) && _angular_core__WEBPACK_IMPORTED_MODULE_10__["ɵɵsetNgModuleScope"](AppRoutingModule, {
-    imports: [_angular_router__WEBPACK_IMPORTED_MODULE_11__.RouterModule],
-    exports: [_angular_router__WEBPACK_IMPORTED_MODULE_11__.RouterModule]
+  (typeof ngJitMode === "undefined" || ngJitMode) && _angular_core__WEBPACK_IMPORTED_MODULE_6__["ɵɵsetNgModuleScope"](AppRoutingModule, {
+    imports: [_angular_router__WEBPACK_IMPORTED_MODULE_7__.RouterModule],
+    exports: [_angular_router__WEBPACK_IMPORTED_MODULE_7__.RouterModule]
   });
 })();
 
@@ -1328,24 +1309,19 @@ class ListarDatosComponent {
         aspectRatio: 1,
         maintainAspectRatio: false,
         animation: false,
-        // parsing: false,
-        interaction: {
-          mode: 'nearest',
-          axis: 'x',
-          intersect: false
-        },
+        parsing: false,
         plugins: {
           decimation: {
             enabled: true,
-            algorithm: 'lttb',
-            samples: 200
+            algorithm: 'min-max'
+            // samples: 200,
           }
         },
+
         scales: {
           y: {
             type: 'linear',
             beginAtZero: true,
-            axis: 'y',
             ticks: {
               maxRotation: 0,
               autoSkip: true
@@ -1353,7 +1329,6 @@ class ListarDatosComponent {
           },
           x: {
             type: 'time',
-            axis: 'x',
             adapters: {
               date: {
                 locale: date_fns_locale__WEBPACK_IMPORTED_MODULE_5__["default"]
@@ -1459,9 +1434,11 @@ class ListarDatosComponent {
     this._httpService.getValores(this.listVariables[1]._id).subscribe(data => {
       this.listDatos = data['datos'];
       console.log('datos: ', this.listDatos);
-      this.chart.data.labels = this.listDatos.map(x => new Date(x._id).getTime());
-      console.log('despues del for each', this.chart.data.labels);
-      this.chart.data.datasets[0].data = this.listDatos.map(x => parseInt(x.max));
+      this.chart.data.labels = console.log('despues del for each', this.chart.data.labels);
+      this.chart.data.datasets[0].data = this.listDatos.map(x => this.dato = {
+        y: x.max,
+        x: new Date(x._id).getTime()
+      });
       this.chart.update();
     });
   }
@@ -1510,7 +1487,7 @@ ListarDatosComponent.ɵcmp = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE
   selectors: [["app-listar-datos"]],
   decls: 29,
   vars: 0,
-  consts: [[1, "grid", "gap-3", "grid-cols-2", "p-3", "fondo"], [1, "p-3"], ["id", "myChart"], ["id", "myChart2"], ["id", "myChart3"], ["id", "myChart4"]],
+  consts: [[1, "flex", "flex-wrap", "grid", "gap-3", "grid-cols-2", "p-3", "fondo"], [1, "p-3"], ["id", "myChart"], ["id", "myChart2"], ["id", "myChart3"], ["id", "myChart4"]],
   template: function ListarDatosComponent_Template(rf, ctx) {
     if (rf & 1) {
       _angular_core__WEBPACK_IMPORTED_MODULE_6__["ɵɵelementStart"](0, "div", 0)(1, "div", 1)(2, "mat-card")(3, "mat-card-header")(4, "h2");
