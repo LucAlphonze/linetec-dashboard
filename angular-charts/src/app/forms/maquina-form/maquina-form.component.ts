@@ -91,6 +91,12 @@ export class MaquinaFormComponent implements OnInit {
             this.toastr.warning(res.error.error);
           } else {
             this.toastr.success('Maquina registrada corectamente');
+            this.service
+              .getForm(this.apiMaquina + this.id_linea_produccion)
+              .subscribe((res: any) => {
+                console.log('res maquina: ', res);
+                this.listMaquinas = res;
+              });
           }
         },
         error: (error: any) => {

@@ -28,7 +28,6 @@ const localidadPorProvincia = async (req, res) => {
       "id_provincia",
       "nombre"
     );
-
     res.status(200).send(lpp);
   } catch (error) {
     res.status(500).json({
@@ -114,10 +113,38 @@ const borrarLocalidad = async (req, res) => {
     });
   }
 };
-
+const editarLocalidad = async (req, res) => {
+  const localidadId = req.params.localidadId;
+  const body = req.body;
+  try {
+    const existeLocalidad = await Localidad.find({
+      _id: localidadId,
+    });
+    if (existeLocalidad.length > 0) {
+      const localidad = await Localidad.findByIdAndUpdate(localidadId, body, {
+        new: true,
+      });
+      res.status(204).json({
+        ok: true,
+        datos: localidad,
+      });
+    } else {
+      res.status(404).json({
+        ok: false,
+        datos: `La localidad con el id: ${localidadId} no existe`,
+      });
+    }
+  } catch (err) {
+    res.status(500).json({
+      ok: false,
+      error: err,
+    });
+  }
+};
 module.exports = {
   obtenerLocalidades,
   localidadPorProvincia,
   crearLocalidad,
   borrarLocalidad,
+  editarLocalidad,
 };

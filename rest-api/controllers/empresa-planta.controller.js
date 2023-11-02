@@ -114,10 +114,38 @@ const borrarPlanta = async (req, res) => {
     });
   }
 };
-
+const editarPlanta = async (req, res) => {
+  const plantaId = req.params.plataId;
+  const body = req.body;
+  try {
+    const existeEmpresaPlanta = await EmpresaPlanta.find({
+      _id: plantaId,
+    });
+    if (existeEmpresaPlanta.length > 0) {
+      const planta = await EmpresaPlanta.findByIdAndUpdate(plantaId, body, {
+        new: true,
+      });
+      res.status(204).json({
+        ok: true,
+        datos: planta,
+      });
+    } else {
+      res.status(404).json({
+        ok: false,
+        datos: `La planta con el id: ${plantaId} no existe`,
+      });
+    }
+  } catch (err) {
+    res.status(500).json({
+      ok: false,
+      error: err,
+    });
+  }
+};
 module.exports = {
   obtenerEmpresasPlantas,
   plantaPorEmpresa,
   crearEmpresaPlanta,
   borrarPlanta,
+  editarPlanta,
 };

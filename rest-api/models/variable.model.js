@@ -5,6 +5,9 @@ const VariableSchema = Schema({
     type: String,
     required: true,
   },
+  descripcion: {
+    type: String,
+  },
   id_maquina: {
     type: Schema.Types.ObjectId,
     ref: "Maquina",

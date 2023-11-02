@@ -21,7 +21,7 @@ export class PaisFormComponent implements OnInit {
   apiProvincia = environment.API_URL_PROVINCIAS;
   isOptional = true;
   paisForm!: FormGroup;
-  message!: string;
+  id_pais!: string;
   message2!: any;
   subscription!: Subscription;
   subscription2!: Subscription;
@@ -32,8 +32,8 @@ export class PaisFormComponent implements OnInit {
     this.paisForm = this._formBuilder.group({
       nombre: this._formBuilder.control('', Validators.required),
     });
-    this.subscription = this.service.currentMessage.subscribe(
-      (message) => (this.message = message)
+    this.subscription = this.service.paisSelected.subscribe(
+      (message) => (this.id_pais = message)
     );
   }
   urlPaises = environment.API_URL_PAISES;
@@ -88,16 +88,18 @@ export class PaisFormComponent implements OnInit {
   setPais(id: any, nombre: any) {
     console.log('set pais', id, 'nombre', nombre);
     this.service.changeMessage(id);
+    this.service.paisSelectedSource.next(id);
+    this.GetProvinciasByPais();
   }
 
-  GetProvinciasByPais(pais_id: string) {
-    console.log('pais nombre', this.message);
+  GetProvinciasByPais() {
+    console.log('pais nombre', this.id_pais);
 
     this.service
-      .getForm(this.apiProvincia + this.message)
+      .getForm(this.apiProvincia + this.id_pais)
       .subscribe((res: any) => {
         console.log('pais form get provincias', res);
-        this.service.streamProvincias_PaisSelected(res, pais_id);
+        this.service.streamProvincias_PaisSelected(res);
       });
   }
 }

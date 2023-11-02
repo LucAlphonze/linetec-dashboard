@@ -1,4 +1,4 @@
-<mat-card>
+<mat-card class="carta">
   <mat-card-header>
     <h2>Formulario de Provincia</h2>
   </mat-card-header>
@@ -22,7 +22,7 @@
 
             <div class="m-1">
               <button class="m-3" mat-raised-button color="primary">
-                submit
+                Enviar
               </button>
             </div>
           </form>
@@ -38,12 +38,7 @@
           <mat-option
             *ngFor="let provincia of listProvinciasPais"
             [value]="provincia._id"
-            (click)="
-              [
-                setProvincia(provincia._id, provincia.nombre),
-                GetLocalidadesByProvincia(provincia._id)
-              ]
-            "
+            (click)="[setProvincia(provincia._id, provincia.nombre)]"
           >
             <p>{{ provincia.nombre }}</p>
           </mat-option>

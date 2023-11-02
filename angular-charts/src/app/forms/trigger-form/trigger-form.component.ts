@@ -19,6 +19,7 @@ export class TriggerFormComponent implements OnInit {
   apiTrigger = environment.API_URL_TRIGGER;
   triggerForm!: FormGroup;
   listTriggers: any;
+  trigger_descripcion!: string;
 
   ngOnInit(): void {
     this.GetAllTriggers();
@@ -45,6 +46,7 @@ export class TriggerFormComponent implements OnInit {
             this.toastr.warning(res.error.error);
           } else {
             this.toastr.success('Trigger registrado correctamente');
+            this.GetAllTriggers();
           }
         },
         error: (error: any) => {
@@ -75,9 +77,10 @@ export class TriggerFormComponent implements OnInit {
       },
     });
   }
-  setTrigger(id: any, nombre: any) {
+  setTrigger(id: any, nombre: any, descripcion: string) {
     console.log('set tipo', id, 'nombre', nombre);
     this.service.changeMessage(id);
+    this.trigger_descripcion = descripcion;
   }
 
   StreamTriggerSelected(trigger_id: string) {

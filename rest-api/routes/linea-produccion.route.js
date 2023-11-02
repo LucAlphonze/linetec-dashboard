@@ -8,6 +8,7 @@ const {
   crearLineaProduccion,
   borrarLinea,
   lineaProduccionPorPlanta,
+  editarLinea,
 } = require("../controllers/linea-produccion.controller");
 const { verifyToken } = require("../controllers/auth.controller");
 
@@ -18,5 +19,6 @@ router.get("/:idPlanta", verifyToken, lineaProduccionPorPlanta);
 
 router.post("/", verifyToken, crearLineaProduccion);
 router.delete("/delete/:lineaId", verifyToken, borrarLinea);
+router.patch("/edit/:lineaId", verifyToken, editarLinea);
 
 module.exports = router;

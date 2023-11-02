@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatStepper } from '@angular/material/stepper';
+import { JwtHelperService } from '@auth0/angular-jwt';
 import { Subscription } from 'rxjs';
 import { AuthService } from 'src/app/service/auth.service';
 
@@ -24,7 +25,8 @@ export class Home5Component implements OnInit {
   maquinaForm!: FormGroup;
   procesoForm!: FormGroup;
   triggerForm!: FormGroup;
-
+  timeout: any;
+  token: any;
   isTrue: boolean = false;
 
   isPaisCompleted: boolean = false;
@@ -40,9 +42,13 @@ export class Home5Component implements OnInit {
 
   subscription!: Subscription;
 
-  constructor(private service: AuthService) {}
+  constructor(
+    private service: AuthService,
+    private jwtHelper: JwtHelperService
+  ) {}
 
   ngOnInit() {
+    this.expirationCheck();
     this.subscription = this.service.paisSelected.subscribe((message) => {
       if (message != '') {
         this.isPaisCompleted = true;
@@ -115,5 +121,13 @@ export class Home5Component implements OnInit {
         this.isTriggerCompleted = false;
       }
     });
+  }
+
+  expirationCheck(): void {
+    this.token = sessionStorage.getItem('token')?.toString();
+    this.timeout =
+      this.jwtHelper.getTokenExpirationDate(this.token)!.valueOf() -
+      new Date().valueOf();
+    this.service.expirationCounter(this.timeout);
   }
 }

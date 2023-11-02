@@ -1,9 +1,14 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Datos } from 'src/app/models/datos.model';
 import { HttpServiceService } from 'src/app/service/http-service.service';
 import { Chart, registerables } from 'node_modules/chart.js';
+import 'chartjs-adapter-date-fns';
+import { es } from 'date-fns/locale';
 import { AuthService } from 'src/app/service/auth.service';
 import { JwtHelperService } from '@auth0/angular-jwt';
+import { FormControl, FormGroup } from '@angular/forms';
+import { UtilsService } from 'src/app/service/utils.service';
+import { Dato, RegistroFiltrado } from 'src/app/models/datos.model';
+import { Subscription } from 'rxjs';
 Chart.register(...registerables);
 
 @Component({
@@ -15,17 +20,26 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
   listDatos: any[] = [];
   listVariables: any[] = [];
   listCheckbox: any[] = [];
+  todayDate: Date = new Date();
+  sixMonthAgoDate!: Date;
+  dato!: Dato;
   sensor_1: string = 'sensor 1';
   sensor_2: string = 'sensor 2';
   pulsador: string = 'Pulsador';
   id: any = 0;
   chart: any;
   chart2: any;
+  chart3: any;
+  chart4: any;
   title: string = 'Prueba angular';
   timeout: any;
   token: any;
+  subscription!: Subscription;
+  listDatos2: RegistroFiltrado[] = [];
+
   constructor(
     private _httpService: HttpServiceService,
+    private utils: UtilsService,
     private authService: AuthService,
     private jwtHelper: JwtHelperService
   ) {
@@ -33,37 +47,142 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.addMonths(this.todayDate, -6);
     this.getVariables();
     this.chart = new Chart('myChart', {
       type: 'line',
       data: {
         labels: [],
-        datasets: [],
+        datasets: [
+          {
+            data: [],
+          },
+        ],
       },
       options: {
+        // hay que arreglar esto para que funcione la data decimation
+        // Turn off animations and data parsing for performance
+        aspectRatio: 1,
+        maintainAspectRatio: false,
+        animation: false,
+        parsing: false,
+
+        plugins: {
+          decimation: {
+            enabled: true,
+            algorithm: 'min-max',
+            // samples: 200,
+          },
+        },
         scales: {
           y: {
+            type: 'linear',
             beginAtZero: true,
+            ticks: {
+              maxRotation: 0,
+              autoSkip: true,
+            },
+          },
+          x: {
+            type: 'time',
+            adapters: {
+              date: {
+                locale: es,
+              },
+            },
+            ticks: {
+              source: 'auto',
+              // Disabled rotation for performance
+              maxRotation: 0,
+              autoSkip: true,
+            },
           },
         },
       },
     });
+
     this.chart2 = new Chart('myChart2', {
       type: 'bar',
       data: {
-        labels: [[new Date('2023-09-21')], [new Date('2023-09-22')]],
+        labels: [],
         datasets: [
-          { data: [500], label: 'dato de prueba' },
-          { data: [0, 800], label: 'dato de prueba2' },
+          {
+            data: [],
+            label: 'Corte total por mes',
+            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+            borderColor: 'rgb(255, 99, 132)',
+          },
         ],
       },
       options: {
-        scales: {
-          y: {
-            beginAtZero: true,
+        elements: {
+          line: {
+            borderWidth: 3,
           },
         },
+        aspectRatio: 1,
+        maintainAspectRatio: false,
       },
+    });
+    this.chart3 = new Chart('myChart3', {
+      type: 'doughnut',
+      data: {
+        labels: [],
+        datasets: [
+          {
+            data: [],
+            borderColor: this.getDataColors(),
+            backgroundColor: this.getDataColors('20'),
+          },
+        ],
+      },
+      options: {
+        plugins: {
+          legend: { position: 'left' },
+        },
+        maintainAspectRatio: false,
+      },
+    });
+    this.chart4 = new Chart('myChart4', {
+      type: 'radar',
+      data: {
+        labels: ['Max', 'Min', 'Avg'],
+        datasets: [],
+      },
+      options: {
+        elements: {
+          line: {
+            borderWidth: 3,
+          },
+        },
+        maintainAspectRatio: false,
+      },
+    });
+    this.subscription = this._httpService.listaDatos.subscribe((message) => {
+      this.chart4.data.datasets = [];
+      this.listDatos2 = message;
+      this.chart3.data.labels = this.listDatos2.map((x) => x._id);
+      this.chart3.data.datasets[0].data = this.listDatos2.map(
+        (x) => x.respuesta
+      );
+      this.chart3.update();
+      this.chart2.data.labels = this.listDatos2.map((x) => x._id);
+      this.chart2.data.datasets[0].data = this.listDatos2.map((x) => x.sum);
+      this.chart2.update();
+      // this.chart4.data.datasets[0].data = this.listDatos2.map(
+      //   (x) => x.respuesta
+      // );
+      this.listDatos2.forEach((datos) => {
+        const dsColor = this.utils.namedColor(this.chart4.data.datasets.length);
+        var newDataSet = {
+          label: datos._id,
+          backgroundColor: this.utils.transparentize(dsColor, 0.5),
+          borderColor: dsColor,
+          data: [datos.respuesta, datos.min, datos.avg],
+        };
+        this.chart4.data.datasets.push(newDataSet);
+      });
+      this.chart4.update();
     });
     this.expirationCheck();
   }
@@ -74,61 +193,21 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
     }
   }
 
-  getRegistros(value: any) {
-    this.chart.data.datasets.forEach((array: any) => {
-      array.data = [];
-    });
-    console.log(value);
-    for (let i = 0; i < this.listCheckbox.length; i++) {
-      this._httpService
-        .getValores(this.listCheckbox[i]._id)
-        .subscribe((data) => {
-          this.listDatos = data['datos'];
-          console.log('datos: ', this.listDatos);
-          for (let j = 0; j < this.chart.data.datasets.length; j++) {
-            if (
-              this.listCheckbox[i].nombre == this.chart.data.datasets[j].label
-            ) {
-              console.log(
-                'IF TRUE',
-                'check box nombre: ',
-                this.listCheckbox[i].nombre,
-                'en la posicion i:',
-                i,
-                'variable nombre: ',
-                this.chart.data.datasets[j],
-                'en la posicion: ',
-                j
-              );
-              this.chart.data.labels = this.listDatos.map(
-                (x) => x.fecha_lectura
-              );
-              console.log('despues del for each', this.chart.data.labels);
-              this.chart.data.datasets[j].data = this.listDatos.map(
-                (x) => x.valor_lectura
-              );
-            } else {
-              console.log(
-                'ELSE',
-                'check box nombre: ',
-                this.listCheckbox[i].nombre,
-                'en la posicion i:',
-                i,
-                'variable nombre: ',
-                this.chart.data.datasets[j],
-                'en la posicion: ',
-                j
-              );
-            }
-            if (j == this.chart.data.datasets.length) {
-              j = 0;
-            }
-          }
-          this.chart.update();
-        });
-      console.log(this.chart.data.datasets[i].data);
-    }
-    console.log('data label', this.chart.data.datasets);
+  getRegistros() {
+    this._httpService
+      .getValores(this.listVariables[1]._id)
+      .subscribe((data) => {
+        this.listDatos = data['datos'];
+        console.log('datos: ', this.listDatos);
+        this.chart.data.labels = console.log(
+          'despues del for each',
+          this.chart.data.labels
+        );
+        this.chart.data.datasets[0].data = this.listDatos.map(
+          (x) => (this.dato = { y: x.max, x: new Date(x._id).getTime() })
+        );
+        this.chart.update();
+      });
   }
 
   makeCheckboxArray(value: any) {
@@ -146,20 +225,39 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
   }
   getVariables() {
     this._httpService.getVariables().subscribe((data) => {
+      this._httpService.stream_Variables(data);
       this.listVariables = data;
       console.log(this.listVariables);
-
-      for (let i = 0; i < this.listVariables.length; i++) {
-        this.chart.data.datasets[i] = {
-          data: [],
-          label: [this.listVariables[i].nombre],
-          fill: false,
-          borderColor: 'rgb(255, 0, 0)',
-          tension: 0.1,
-        };
-      }
+      this.getRegistros();
+      this.chart.data.datasets[0].label = 'Corte maximo por dia';
+      this.getFiltrados();
     });
   }
+  getFiltrados() {
+    var inicio: any = this.sixMonthAgoDate.getTime().toString();
+    var final: any = this.todayDate.getTime().toString();
+    this._httpService
+      .getValoresFiltrados(this.listVariables[1]._id, inicio, final, 'max')
+      .subscribe((data) => {
+        console.log(data);
+        this._httpService.stream_Datos(data['datos']);
+      });
+  }
+  getDaysInMonth = (year: number, month: number) =>
+    new Date(year, month, 0).getDate();
+
+  addMonths = (input: Date, months: number) => {
+    const date = new Date(input);
+    date.setDate(1);
+    date.setMonth(date.getMonth() + months);
+    date.setDate(
+      Math.min(
+        input.getDate(),
+        this.getDaysInMonth(date.getFullYear(), date.getMonth() + 1)
+      )
+    );
+    this.sixMonthAgoDate = date;
+  };
 
   expirationCheck(): void {
     this.token = sessionStorage.getItem('token')?.toString();
@@ -168,4 +266,19 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
       new Date().valueOf();
     this.authService.expirationCounter(this.timeout);
   }
+  getDataColors = (opacity?: String) => {
+    const colors = [
+      '#7448c2',
+      '#21c0d7',
+      '#d99e2b',
+      '#cd3a81',
+      '#9c99cc',
+      '#e14eca',
+      '#ffffff',
+      '#ff0000',
+      '#d6ff00',
+      '#0038ff',
+    ];
+    return colors.map((color) => (opacity ? `${color + opacity}` : color));
+  };
 }

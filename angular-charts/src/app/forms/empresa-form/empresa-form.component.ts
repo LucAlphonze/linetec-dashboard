@@ -22,7 +22,8 @@ export class EmpresaFormComponent implements OnInit {
   apiEmpresas = environment.API_URL_EMPRESAS;
   apiPlantas = environment.API_URL_PLANTA;
   isOptional = true;
-  message!: string;
+  id_localidad!: string;
+  id_empresa!: string;
   empresaForm!: FormGroup;
   subscription!: Subscription;
 
@@ -37,8 +38,8 @@ export class EmpresaFormComponent implements OnInit {
       deptartamento: this.builder.control('', Validators.required),
       rubro: this.builder.control('', Validators.required),
     });
-    this.subscription = this.service.currentMessage.subscribe(
-      (message) => (this.message = message)
+    this.subscription = this.service.localidadSelected.subscribe(
+      (message) => (this.id_localidad = message)
     );
     this.subscription = this.service.listEmpresas.subscribe(
       (message) => (this.listEmpresas = message)
@@ -62,7 +63,7 @@ export class EmpresaFormComponent implements OnInit {
     if (this.empresaForm.valid) {
       console.log(this.empresaForm.value);
       let body = {
-        id_localidad: this.message,
+        id_localidad: this.id_localidad,
         razon_social: this.empresaForm.value.razon_social,
         nombre_fantasia: this.empresaForm.value.nombre_fantasia,
         calle: this.empresaForm.value.calle,
@@ -78,6 +79,12 @@ export class EmpresaFormComponent implements OnInit {
             this.toastr.warning(res.error.error);
           } else {
             this.toastr.success('Empresa registrada corectamente');
+            this.service
+              .getForm(this.apiEmpresas + 'localidad/' + this.id_localidad)
+              .subscribe((res: any) => {
+                console.log('empresas res after crear: ', res);
+                this.listEmpresas = res;
+              });
           }
         },
         error: (error: any) => {
@@ -109,15 +116,18 @@ export class EmpresaFormComponent implements OnInit {
   }
   setEmpresa(id: any, nombre: any) {
     console.log('set empresa', id, 'nombre', nombre);
+    this.id_empresa = id;
     this.service.changeMessage(id);
+    this.service.empresaSelectedSource.next(id);
+    this.GetPlantasByEmpresas();
   }
 
-  GetPlantasByEmpresas(empresa_id: string) {
+  GetPlantasByEmpresas() {
     this.service
-      .getForm(this.apiPlantas + this.message)
+      .getForm(this.apiPlantas + this.id_empresa)
       .subscribe((res: any) => {
-        console.log('empresa get plantas', res, empresa_id);
-        this.service.streamPlantas_EmpresaSelected(res, empresa_id);
+        console.log('empresa get plantas', res);
+        this.service.streamPlantas_EmpresaSelected(res);
       });
   }
 }

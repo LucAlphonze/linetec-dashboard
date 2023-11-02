@@ -1,4 +1,4 @@
-<mat-card>
+<mat-card class="carta">
   <mat-card-header>
     <h2>Formulario de Localidad</h2>
   </mat-card-header>
@@ -21,7 +21,7 @@
 
             <div class="m-1">
               <button class="m-3" mat-raised-button color="primary">
-                submit
+                Enviar
               </button>
             </div>
           </form>
@@ -36,12 +36,7 @@
           <mat-option
             *ngFor="let localidad of listLocalidades"
             [value]="localidad._id"
-            (click)="
-              [
-                setLocalidad(localidad._id, localidad.nombre),
-                GetEmpresasByLocalidad(localidad._id)
-              ]
-            "
+            (click)="[setLocalidad(localidad._id, localidad.nombre)]"
           >
             <p>{{ localidad.nombre }}</p>
           </mat-option>

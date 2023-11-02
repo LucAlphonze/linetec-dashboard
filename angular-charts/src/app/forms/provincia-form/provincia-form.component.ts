@@ -24,7 +24,8 @@ export class ProvinciaFormComponent {
   apiLocalidad = environment.API_URL_LOCALIDADES;
   isOptional = true;
   provinciaForm!: FormGroup;
-  message!: string;
+  id_pais!: string;
+  id_provincia!: string;
   subscription!: Subscription;
   subscription2!: Subscription;
 
@@ -33,9 +34,13 @@ export class ProvinciaFormComponent {
     this.provinciaForm = this.builder.group({
       nombre: this.builder.control('', Validators.required),
     });
-    this.subscription = this.service.currentMessage.subscribe(
-      (message) => (this.message = message)
+    this.subscription = this.service.paisSelected.subscribe(
+      (message) => (this.id_pais = message)
     );
+    this.subscription = this.service.provinciaSelected.subscribe(
+      (message) => (this.id_provincia = message)
+    );
+
     this.subscription2 = this.service.listProvincias.subscribe(
       (message) => (this.listProvinciasPais = message)
     );
@@ -66,13 +71,18 @@ export class ProvinciaFormComponent {
       console.log(this.provinciaForm.value);
       let body = {
         nombre: this.provinciaForm.value.nombre,
-        id_pais: this.message,
+        id_pais: this.id_pais,
       };
       this.service.postForm(this.apiProvincia, body).subscribe({
         next: (res: any) => {
           console.log('respuesta: ', res);
           if (res.status == 200) {
             this.toastr.success('provincia registrada correctamente');
+            this.service
+              .getForm(this.apiProvincia + this.id_pais)
+              .subscribe((res: any) => {
+                this.listProvinciasPais = res;
+              });
           } else if (res.status == 403) {
             this.toastr.warning('acceso denegado, token expirado');
           } else {
@@ -109,14 +119,17 @@ export class ProvinciaFormComponent {
   setProvincia(id: any, nombre: any) {
     console.log('set provincia', id, 'nombre', nombre);
     this.service.changeMessage(id);
+    this.service.provinciaSelectedSource.next(id);
+    this.GetLocalidadesByProvincia();
   }
 
-  GetLocalidadesByProvincia(provincia_id: string) {
+  GetLocalidadesByProvincia() {
     this.service
-      .getForm(this.apiLocalidad + this.message)
+      .getForm(this.apiLocalidad + this.id_provincia)
       .subscribe((res: any) => {
         console.log('provincia form get localidades', res);
-        this.service.streamLocalides_ProvinciaSelected(res, provincia_id);
+
+        this.service.streamLocalides_ProvinciaSelected(res);
       });
   }
 }

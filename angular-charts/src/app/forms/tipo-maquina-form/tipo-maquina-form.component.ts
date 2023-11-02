@@ -42,6 +42,7 @@ export class TipoMaquinaFormComponent {
               this.toastr.warning(res.error.error);
             } else {
               this.toastr.success('Tipo de maquina registrada correctamente');
+              this.GetAllTiposMaquina();
             }
           },
           error: (error: any) => {

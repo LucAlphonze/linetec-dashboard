@@ -11,6 +11,7 @@ const {
   crearVariable,
   obtenerVariableById,
   borrarVariable,
+  editarVariable,
 } = require("../controllers/variable.controller");
 const { verifyToken } = require("../controllers/auth.controller");
 
@@ -21,5 +22,6 @@ router.get("/:id", obtenerVariableById);
 
 router.post("/", verifyToken, crearVariable);
 router.delete("/delete/:variableId", verifyToken, borrarVariable);
+router.patch("/edit/:variableId", verifyToken, editarVariable);
 
 module.exports = router;

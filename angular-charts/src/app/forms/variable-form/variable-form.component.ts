@@ -38,6 +38,7 @@ export class VariableFormComponent implements OnInit {
     this.GetAllTriggers();
     this.variableForm = this._formBuilder.group({
       nombre: this._formBuilder.control('', Validators.required),
+      descripcion: this._formBuilder.control(''),
       trigger_valor: this._formBuilder.control(''),
     });
     this.subscription = this.service.maquinaSelected.subscribe(
@@ -93,6 +94,7 @@ export class VariableFormComponent implements OnInit {
             this.toastr.warning(res.error.error);
           } else {
             this.toastr.success('Variable registrada correctamente');
+            this.GetAllVariables();
           }
         },
         error: (error: any) => {

@@ -1,4 +1,4 @@
-<mat-card>
+<mat-card class="carta">
   <mat-card-header>
     <h2>Formulario de Variables</h2>
   </mat-card-header>
@@ -10,47 +10,12 @@
     >
       <div class="flex flex-col">
         <mat-form-field class="">
-          <mat-label>descripcion de la variable </mat-label>
+          <mat-label>nombre de la variable </mat-label>
           <input matInput formControlName="nombre" />
         </mat-form-field>
-
         <mat-form-field class="">
-          <mat-label>Proceso</mat-label>
-          <mat-select (click)="GetAllProcesos()" formControlName="id_proceso">
-            <mat-option value="">Elegir un proceso </mat-option>
-            <mat-option
-              *ngFor="let proceso of listProcesos"
-              [value]="proceso._id"
-            >
-              <p>{{ proceso.descripcion }}</p>
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-
-        <mat-form-field class="">
-          <mat-label>Maquina</mat-label>
-          <mat-select (click)="GetAllMaquinas()" formControlName="id_maquina">
-            <mat-option value="">Elegir una maquina </mat-option>
-            <mat-option
-              *ngFor="let maquina of listMaquina"
-              [value]="maquina._id"
-            >
-              <p>{{ maquina.nombre }}</p>
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-
-        <mat-form-field class="">
-          <mat-label>Trigger</mat-label>
-          <mat-select (click)="GetAllTriggers()" formControlName="id_trigger">
-            <mat-option value="">Elegir un trigger </mat-option>
-            <mat-option
-              *ngFor="let trigger of listTrigger"
-              [value]="trigger._id"
-            >
-              <p>{{ trigger.nombre }}</p>
-            </mat-option>
-          </mat-select>
+          <mat-label>descripcion de la variable </mat-label>
+          <input matInput formControlName="descripcion" />
         </mat-form-field>
 
         <mat-form-field class="">
@@ -83,8 +48,7 @@
       </div>
 
       <div class="m-1">
-        <button class="m-3" mat-raised-button color="primary">submit</button>
-        <button mat-button matStepperNext>Next</button>
+        <button class="m-3" mat-raised-button color="primary">Enviar</button>
       </div>
     </form>
   </mat-card-content>

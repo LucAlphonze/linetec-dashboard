@@ -64,9 +64,40 @@ const borrarTipoMaquina = async (req, res) => {
     });
   }
 };
+const editarTipoMaquina = async (req, res) => {
+  const tipoMaquinaId = req.params.tipoMaquinaId;
+  const body = req.body;
+  try {
+    const existeTipoMaquina = await TipoMaquina.find({
+      _id: tipoMaquinaId,
+    });
+    if (existeTipoMaquina.length > 0) {
+      const tipoMaquina = await TipoMaquina.findByIdAndUpdate(
+        tipoMaquinaId,
+        body,
+        { new: true }
+      );
+      res.status(204).json({
+        ok: true,
+        datos: tipoMaquina,
+      });
+    } else {
+      res.status(404).json({
+        ok: false,
+        datos: `El tipo de maquina con el id: ${tipoMaquinaId} no existe`,
+      });
+    }
+  } catch (err) {
+    res.status(500).json({
+      ok: false,
+      error: err,
+    });
+  }
+};
 
 module.exports = {
   obtenerTiposMaquinas,
   crearTipoMaquina,
   borrarTipoMaquina,
+  editarTipoMaquina,
 };

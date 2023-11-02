@@ -1,4 +1,4 @@
-<mat-card>
+<mat-card class="carta mat-elevation-z">
   <mat-card-header>
     <h2>Formulario de país</h2>
   </mat-card-header>
@@ -22,7 +22,7 @@
 
             <div class="m-1">
               <button class="m-3" mat-raised-button color="primary">
-                submit
+                Enviar
               </button>
             </div>
           </form>
@@ -38,9 +38,7 @@
           <mat-option
             *ngFor="let pais of listPaises"
             [value]="pais._id"
-            (click)="
-              [setPais(pais._id, pais.nombre), GetProvinciasByPais(pais._id)]
-            "
+            (click)="[setPais(pais._id, pais.nombre)]"
           >
             <p>{{ pais.nombre }}</p>
           </mat-option>

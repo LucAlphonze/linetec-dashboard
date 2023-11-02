@@ -44,26 +44,15 @@
     margin: 0 16px;
   }
 
-  .toolbar #twitter-logo {
-    height: 40px;
-    margin: 0 8px;
-  }
-
-  .toolbar #youtube-logo {
-    height: 40px;
-    margin: 0 16px;
-  }
-
-  .toolbar #twitter-logo:hover,
-  .toolbar #youtube-logo:hover {
-    opacity: 0.8;
-  }
-
   .content {
     margin: 82px auto 32px;
     padding: 0 32px;
     max-width: auto;
+    /* background-color: rgb(223, 215, 215); */
   }
+  /* .fondo {
+    background-color: rgb(223, 215, 215);
+  } */
 
   svg.material-icons {
     height: 24px;
@@ -89,7 +78,7 @@
     all: unset;
     border-radius: 4px;
     border: 1px solid #eee;
-    background-color: #fafafa;
+    background-color: #5f5e5e;
     height: 40px;
     width: 200px;
     margin: 0 8px 16px;
@@ -161,60 +150,7 @@
   }
 
   a:hover {
-    color: #125699;
-  }
-
-  .terminal {
-    position: relative;
-    width: 80%;
-    max-width: 600px;
-    border-radius: 6px;
-    padding-top: 45px;
-    margin-top: 8px;
-    overflow: hidden;
-    background-color: rgb(15, 15, 16);
-  }
-
-  .terminal::before {
-    content: "\2022 \2022 \2022";
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 4px;
-    background: rgb(58, 58, 58);
-    color: #c2c3c4;
-    width: 100%;
-    font-size: 2rem;
-    line-height: 0;
-    padding: 14px 0;
-    text-indent: 4px;
-  }
-
-  .terminal pre {
-    font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace;
-    color: white;
-    padding: 0 1rem 1rem;
-    margin: 0;
-  }
-
-  .circle-link {
-    height: 40px;
-    width: 40px;
-    border-radius: 40px;
-    margin: 8px;
-    background-color: white;
-    border: 1px solid #eeeeee;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
-    transition: 1s ease-out;
-  }
-
-  .circle-link:hover {
-    transform: translateY(-0.25rem);
-    box-shadow: 0px 3px 15px rgba(0, 0, 0, 0.2);
+    color: #050505;
   }
 
   footer {
@@ -227,31 +163,6 @@
   footer a {
     display: flex;
     align-items: center;
-  }
-
-  .github-star-badge {
-    color: #24292e;
-    display: flex;
-    align-items: center;
-    font-size: 12px;
-    padding: 3px 10px;
-    border: 1px solid rgba(27, 31, 35, 0.2);
-    border-radius: 3px;
-    background-image: linear-gradient(-180deg, #fafbfc, #eff3f6 90%);
-    margin-left: 4px;
-    font-weight: 600;
-  }
-
-  .github-star-badge:hover {
-    background-image: linear-gradient(-180deg, #f0f3f6, #e6ebf1 90%);
-    border-color: rgba(27, 31, 35, 0.35);
-    background-position: -0.5em;
-  }
-
-  .github-star-badge .material-icons {
-    height: 16px;
-    width: 16px;
-    margin-right: 4px;
   }
 
   svg#clouds {
@@ -291,33 +202,57 @@
     }
   }
 </style>
+<!-- fechas ahora estan puestas en el app component antes en listar datos
+vamos a hacer un cambio grande del programa para poder mandar los datos y que funcionen bien 
+en el otro componente
+-->
+<mat-sidenav-container class="example-container">
+  <mat-sidenav #sidenav mode="side" [(opened)]="opened">
+    <mat-form-field>
+      <mat-label>Por favor elija 2 fechas </mat-label>
+      <mat-date-range-input [formGroup]="range" [rangePicker]="picker">
+        <input matStartDate formControlName="start" placeholder="Start date" />
+        <input matEndDate formControlName="end" placeholder="End date" />
+      </mat-date-range-input>
+      <mat-datepicker-toggle
+        matIconSuffix
+        [for]="picker"
+      ></mat-datepicker-toggle>
+      <mat-date-range-picker #picker>
+        <mat-date-range-picker-actions>
+          <button mat-button matDateRangePickerCancel>Cancel</button>
+          <button
+            mat-raised-button
+            color="primary"
+            (click)="getFiltrados()"
+            matDateRangePickerApply
+          >
+            Apply
+          </button>
+        </mat-date-range-picker-actions>
+      </mat-date-range-picker>
+    </mat-form-field>
+  </mat-sidenav>
+  <mat-sidenav-content class="fondo">
+    <div class="toolbar" *ngIf="isMenuRequired" role="banner">
+      <button mat-icon-button (click)="sidenav.toggle()">
+        <mat-icon>menu</mat-icon>
+      </button>
 
-<!-- Toolbar -->
-<div class="toolbar" *ngIf="isMenuRequired" role="banner">
-  <img
-    width="40"
-    alt="Angular Logo"
-    src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg=="
-  />
-  <a routerLink="/">Graficos</a>
-  <!-- <a *ngIf="isAdminUser" routerLink="/home2">Pais form</a>
-  <a *ngIf="isAdminUser" routerLink="/home">Empresa form</a>
-  <a *ngIf="isAdminUser" routerLink="/home3">Linea form</a>
-  <a *ngIf="isAdminUser" routerLink="/home4">Variable form</a> -->
-  <a *ngIf="isAdminUser" routerLink="/home5">Formularios</a>
-  <a *ngIf="isAdminUser" routerLink="/user">Usuarios</a>
-  <div class="spacer"></div>
-  <a style="cursor: pointer" (click)="logOut()">Logout</a>
-</div>
+      <a routerLink="/">Graficos</a>
+      <!-- <a *ngIf="isAdminUser" routerLink="/home2">Pais form</a>
+    <a *ngIf="isAdminUser" routerLink="/home">Empresa form</a>
+    <a *ngIf="isAdminUser" routerLink="/home3">Linea form</a>
+    <a *ngIf="isAdminUser" routerLink="/home4">Variable form</a> -->
+      <a *ngIf="isAdminUser" routerLink="/home5">Formularios</a>
+      <a *ngIf="isAdminUser" routerLink="/user">Usuarios</a>
+      <div class="spacer"></div>
+      <a style="cursor: pointer" (click)="logOut()">Logout</a>
+    </div>
 
-<div class="content" role="main">
-  <router-outlet></router-outlet>
-</div>
-
-<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
-<!-- * * * * * * * * * * * The content above * * * * * * * * * * * -->
-<!-- * * * * * * * * * * is only a placeholder * * * * * * * * * * -->
-<!-- * * * * * * * * * * and can be replaced. * * * * * * * * * * * -->
-<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
-<!-- * * * * * * * * * * End of Placeholder * * * * * * * * * * * -->
-<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
+    <div class="content" role="main">
+      <router-outlet></router-outlet>
+    </div>
+  </mat-sidenav-content>
+  <!-- Toolbar -->
+</mat-sidenav-container>

@@ -117,9 +117,39 @@ const borrarMaquina = async (req, res) => {
   }
 };
 
+const editarMaquina = async (req, res) => {
+  const maquinaId = req.params.maquinaId;
+  const body = req.body;
+  try {
+    const existeMaquina = await Maquina.find({
+      _id: maquinaId,
+    });
+    if (existeMaquina.length > 0) {
+      const maquina = await Maquina.findByIdAndUpdate(maquinaId, body, {
+        new: true,
+      });
+      res.status(204).json({
+        ok: true,
+        datos: maquina,
+      });
+    } else {
+      res.status(404).json({
+        ok: false,
+        datos: `la maquina con el id: ${maquinaId} no existe`,
+      });
+    }
+  } catch (err) {
+    res.status(500).json({
+      ok: false,
+      error: err,
+    });
+  }
+};
+
 module.exports = {
   obtenerMaquinas,
   maquinasPorLinea,
   crearMaquina,
   borrarMaquina,
+  editarMaquina,
 };

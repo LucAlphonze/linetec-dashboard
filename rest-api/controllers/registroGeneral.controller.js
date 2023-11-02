@@ -1,16 +1,37 @@
+const mongoose = require("mongoose");
 const RegistroGeneral = require("../models/registroGeneral.model");
 const Variable = require("../models/variable.model");
 const { filtradoPost } = require("./middleware.controller");
 
 const obtenerTodos = async (req, res) => {
   try {
-    let variable = req.params.variable;
-    const registrosGenerales = await RegistroGeneral.find({
-      id_variable: variable,
-    })
-      .limit(20)
-      .sort({ fecha_lectura: -1 })
-      .populate("id_variable", "nombre");
+    const variable = req.params.variable;
+    const registrosGenerales = await RegistroGeneral.aggregate([
+      {
+        $match: {
+          id_variable: new mongoose.Types.ObjectId(variable),
+        },
+      },
+      {
+        $group: {
+          _id: {
+            $dateToString: {
+              format: "%Y-%m-%d",
+              date: "$time_stamp",
+            },
+          },
+          max: {
+            $max: "$valor_lectura",
+          },
+        },
+      },
+      {
+        $sort: {
+          _id: 1,
+        },
+      },
+    ]);
+
     res.status(200).json({
       ok: true,
       datos: registrosGenerales,
@@ -40,13 +61,13 @@ const getTodos = async (req, res) => {
   }
 };
 
-const obtenerRegistrosGenerales = async (req, res) => {
+const obtenerRegistrosGeneral = async (req, res) => {
   try {
-    var medidas = req.params.idVariable;
+    var idVariable = req.params.idVariable;
     const registrosGenerales = await RegistroGeneral.findOne({
-      id_variable: medidas,
+      id_variable: idVariable,
     })
-      .sort({ fecha_lectura: -1 })
+      .sort({ fecha_lectura: 1 })
       .populate("id_variable", "nombre");
     res.status(200).json({
       ok: true,
@@ -59,73 +80,6 @@ const obtenerRegistrosGenerales = async (req, res) => {
     });
   }
 };
-
-// const filtrarRegistrosGenerales = async (req, res) => {
-//   try {
-//     var medidas = req.params.idVariable
-//     var sti = req.params.startdate;
-//     var stf = req.params.enddate;
-//     const registrosFiltrados = await RegistroGeneral.aggregate(
-//       [
-//         {
-//           '$match': {
-//             'id_variable': new mongoose.Types.ObjectId(medidas)
-//           }
-//         }, {
-//           '$match': {
-//             'fecha_lectura': {
-//               '$gte': new Date(parseInt(sti)),
-//               '$lte': new Date(parseInt(stf))
-//             }
-//           }
-//         }, {
-//           '$group': {
-//             '_id': {
-//               'month': {
-//                 '$month': {
-//                   'date': '$fecha_lectura',
-//                   'timezone': '-03:00'
-//                 }
-//               },
-//               'day': {
-//                 '$dayOfMonth': {
-//                   'date': '$fecha_lectura',
-//                   'timezone': '-03:00'
-//                 }
-//               },
-//               'hour': {
-//                 '$hour': {
-//                   'date': '$fecha_lectura',
-//                   'timezone': '-03:00'
-//                 }
-//               },
-//               "interval": {
-//                 "$subtract": [
-//                   { "$minute": "$fecha_lectura" },
-//                   { "$mod": [{ "$minute": "$fecha_lectura" }, 15] }
-//                 ]
-//               }
-//             },
-//             'potencia': {
-//               '$avg': '$valor_lectura'
-//             }
-//           }
-//         }, {
-//           '$sort': {
-//             '_id': 1
-//           }
-//         }
-//       ]
-//     )
-//     res.status(200).send(registrosFiltrados);
-
-//   } catch (error) {
-//     res.status(500).json({
-//       ok: false,
-//       error
-//     });
-//   }
-// };
 
 const crearRegistroGeneral = async (req, res) => {
   const registroGeneral = new RegistroGeneral(req.body);
@@ -150,7 +104,16 @@ const crearRegistroGeneral = async (req, res) => {
       "registro nuevo: ",
       registroGeneral
     );
-
+    if (RegistroGeneral.find(registroGeneral.time_stamp).length > 0) {
+      console.log(
+        "registro general post error, ya existe un documento con este timestamp "
+      );
+      res.status(500).json({
+        ok: false,
+        datos: "ya existe un documento con este timestamp",
+      });
+      return;
+    }
     let filtrado = await filtradoPost(
       variable,
       registroGeneral,
@@ -173,10 +136,108 @@ const crearRegistroGeneral = async (req, res) => {
   }
 };
 
+const filtrarRegistrosGenerales = async (req, res) => {
+  var idVariable = req.params.idVariable;
+  var sti = req.params.startdate;
+  var stf = req.params.enddate;
+  var operacion = req.params.operacion;
+  const resultado = determinarOperacion(operacion);
+  console.log("resultado: ", resultado, "operacion: ", operacion);
+  try {
+    const registrosFiltrados = await RegistroGeneral.aggregate([
+      {
+        $match: {
+          id_variable: new mongoose.Types.ObjectId(idVariable),
+        },
+      },
+      {
+        $match: {
+          time_stamp: {
+            $gte: new Date(parseInt(sti)),
+            $lte: new Date(parseInt(stf)),
+          },
+        },
+      },
+      {
+        $group: {
+          _id: {
+            $dateToString: {
+              format: "%Y-%m",
+              date: "$time_stamp",
+            },
+          },
+          respuesta: { $max: "$valor_lectura" },
+          min: { $min: "$valor_lectura" },
+          avg: { $avg: "$valor_lectura" },
+          sum: { $sum: "$valor_lectura" },
+        },
+      },
+      {
+        $sort: {
+          _id: 1,
+        },
+      },
+    ]);
+    res.status(200).json({
+      ok: true,
+      datos: registrosFiltrados,
+    });
+  } catch (error) {
+    res.status(500).json({
+      ok: false,
+      error: error,
+    });
+  }
+};
+
+function determinarOperacion(operacion) {
+  let resultado;
+  switch (operacion) {
+    case "min":
+      resultado = '{"$min": "$valor_lectura"}';
+      if (resultado != "") {
+        resultado = JSON.parse(resultado);
+        return resultado;
+      }
+      break;
+
+    case "max":
+      resultado = '{"$max": "$valor_lectura"}';
+      if (resultado != "") {
+        resultado = JSON.parse(resultado);
+        return resultado;
+      }
+      break;
+
+    case "sum":
+      resultado = '{"$sum": "$valor_lectura"}';
+      if (resultado != "") {
+        resultado = JSON.parse(resultado);
+        return resultado;
+      }
+      break;
+
+    case "avg":
+      resultado = '{"$avg": "$valor_lectura"}';
+      if (resultado != "") {
+        resultado = JSON.parse(resultado);
+        return resultado;
+      }
+      break;
+
+    default:
+      resultado = "caso no encontrado";
+      if (resultado != "") {
+        return resultado;
+      }
+      break;
+  }
+  console.log("resultado: ", resultado, "operacion: ", operacion);
+}
 module.exports = {
   obtenerTodos,
-  obtenerRegistrosGenerales,
+  obtenerRegistrosGeneral,
   crearRegistroGeneral,
   getTodos,
-  // renderRegistros,
+  filtrarRegistrosGenerales,
 };

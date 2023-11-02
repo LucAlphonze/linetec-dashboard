@@ -45,16 +45,16 @@ export class AuthService {
   private maquinaSource = new BehaviorSubject('');
 
   //observables que recogen la opcion seleccionada
-  private paisSelectedSource = new BehaviorSubject('');
-  private provinciaSelectedSource = new BehaviorSubject('');
-  private localidadSelectedSource = new BehaviorSubject('');
-  private empresaSelectedSource = new BehaviorSubject('');
-  private plantaSelectedSource = new BehaviorSubject('');
-  private lineaSelectedSource = new BehaviorSubject('');
-  private tipoMaquinaSelectedSource = new BehaviorSubject('');
-  private maquinaSelectedSource = new BehaviorSubject('');
-  private procesoSelectedSource = new BehaviorSubject('');
-  private triggerSelectedSource = new BehaviorSubject('');
+  paisSelectedSource = new BehaviorSubject('');
+  provinciaSelectedSource = new BehaviorSubject('');
+  localidadSelectedSource = new BehaviorSubject('');
+  empresaSelectedSource = new BehaviorSubject('');
+  plantaSelectedSource = new BehaviorSubject('');
+  lineaSelectedSource = new BehaviorSubject('');
+  tipoMaquinaSelectedSource = new BehaviorSubject('');
+  maquinaSelectedSource = new BehaviorSubject('');
+  procesoSelectedSource = new BehaviorSubject('');
+  triggerSelectedSource = new BehaviorSubject('');
 
   currentMessage = this.messageSource.asObservable();
 
@@ -254,44 +254,32 @@ export class AuthService {
     console.log('change message: ', message);
     this.messageSource.next(message);
   }
-  streamProvincias_PaisSelected(provincias: string, paisSelected: string) {
-    console.log('change message: ', provincias, paisSelected);
+  streamProvincias_PaisSelected(provincias: string) {
+    console.log('change message: ', provincias);
     this.provinciasSource.next(provincias);
-    this.paisSelectedSource.next(paisSelected);
   }
 
-  streamLocalides_ProvinciaSelected(
-    localidades: string,
-    provinciaSelected: string
-  ) {
+  streamLocalides_ProvinciaSelected(localidades: string) {
     console.log('change message: ', localidades);
     this.localidadesSource.next(localidades);
-    this.provinciaSelectedSource.next(provinciaSelected);
   }
 
-  streamEmpresas_LocalidadSelected(
-    empresas: string,
-    localidadSelected: string
-  ) {
+  streamEmpresas_LocalidadSelected(empresas: string) {
     console.log('change message: ', empresas);
     this.empresasSource.next(empresas);
-    this.localidadSelectedSource.next(localidadSelected);
   }
-  streamPlantas_EmpresaSelected(plantas: string, empresaSelected: string) {
+  streamPlantas_EmpresaSelected(plantas: string) {
     console.log('change message: ', plantas);
     this.plantasSource.next(plantas);
-    this.empresaSelectedSource.next(empresaSelected);
   }
 
-  streamLinea_PlantaSelected(linea: string, plantaSelected: string) {
+  streamLinea_PlantaSelected(linea: string) {
     console.log('change message: ', linea);
     this.lineaSource.next(linea);
-    this.plantaSelectedSource.next(plantaSelected);
   }
-  streamMaquinas_LineaSelected(Maquinas: string, LineaSelected: string) {
+  streamMaquinas_LineaSelected(Maquinas: string) {
     console.log('change message: ', Maquinas);
     this.maquinaSource.next(Maquinas);
-    this.lineaSelectedSource.next(LineaSelected);
   }
   streamTipoSelected(TipoMaquina: string) {
     console.log('tipo maquina selected: ', TipoMaquina);
