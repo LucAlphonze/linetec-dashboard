@@ -32,7 +32,7 @@ async function filtradoPost(variable, nuevoRegistro, ultimoRegistro) {
     case "cambio-valor":
       if (
         (ultimoRegistro =
-          null || ultimoRegistro?.valor_lectura != nuevoRegistro.valor_lectura)
+          null || ultimoRegistro.valor_lectura != nuevoRegistro.valor_lectura)
       ) {
         console.log("cambio-valor ", nuevoRegistro);
         return nuevoRegistro;

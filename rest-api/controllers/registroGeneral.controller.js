@@ -84,6 +84,7 @@ const obtenerRegistrosGeneral = async (req, res) => {
 const crearRegistroGeneral = async (req, res) => {
   const registroGeneral = new RegistroGeneral(req.body);
   const id_variable = registroGeneral.id_variable;
+  const time_stamp = registroGeneral.time_stamp;
 
   try {
     const variable = await Variable.findOne({
@@ -104,9 +105,15 @@ const crearRegistroGeneral = async (req, res) => {
       "registro nuevo: ",
       registroGeneral
     );
-    if (RegistroGeneral.find(registroGeneral.time_stamp).length > 0) {
+    const existeTimestamp = await RegistroGeneral.find({
+      time_stamp: time_stamp,
+      id_variable: id_variable,
+    });
+
+    if (existeTimestamp.length > 0) {
       console.log(
-        "registro general post error, ya existe un documento con este timestamp "
+        "registro general post error, ya existe un documento con este timestamp: ",
+        existeTimestamp
       );
       res.status(500).json({
         ok: false,

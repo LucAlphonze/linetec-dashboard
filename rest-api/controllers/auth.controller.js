@@ -12,7 +12,7 @@ function genTokens(User) {
 }
 
 function verifyToken(req, res, next) {
-  console.log("verify token handler: ", req.body);
+  // console.log("verify token handler: ", req.body);
   const authHeader = req.headers["authorization"];
   const token = authHeader && authHeader.split(" ")[1];
   if (token == null) return res.sendStatus(401);
