@@ -1,4 +1,8 @@
-<mat-stepper orientation="horizontal" [linear]="isLinear" #stepper>
+<mat-stepper
+  [orientation]="(stepperOrientation | async)!"
+  [linear]="isLinear"
+  #stepper
+>
   <mat-step [stepControl]="paisForm">
     <ng-template matStepLabel>
       <div class="text-center">

@@ -1,0 +1,6 @@
+.carta {
+  max-width: 700px;
+  margin: auto;
+  width: 100%;
+  overflow-x: auto;
+}
