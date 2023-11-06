@@ -1286,6 +1286,40 @@ class ListarDatosComponent {
     this.id = 0;
     this.title = 'Prueba angular';
     this.listDatos2 = [];
+    this.canvasBackgroundColor = {
+      id: 'canvasBackgroundColor',
+      beforeDraw(chart, args, pluginOptions) {
+        const {
+          ctx,
+          chartArea: {
+            top,
+            bottom,
+            left,
+            right,
+            width
+          },
+          scales: {
+            x,
+            y
+          }
+        } = chart;
+        function bgColors(bracketLow, bracketHigh, color) {
+          ctx.fillStyle = color;
+          ctx.fillRect(left, y.getPixelForValue(bracketHigh), width, y.getPixelForValue(bracketLow) - y.getPixelForValue(bracketHigh));
+        }
+        bgColors(26.5, 30, 'rgba(255, 26, 104, 0.2)');
+        bgColors(24, 26.5, 'rgba(75, 192, 192, 0.2)');
+        bgColors(0, 24, 'rgba(255, 206, 86, 0.2)');
+        console.log(chart);
+      }
+    };
+    this.decimation = {
+      id: 'decimation',
+      enabled: true,
+      algorithm: 'lttb',
+      samples: 100,
+      threshold: 50
+    };
     this.getDaysInMonth = (year, month) => new Date(year, month, 0).getDate();
     this.addMonths = (input, months) => {
       const date = new Date(input);
@@ -1310,8 +1344,14 @@ class ListarDatosComponent {
         labels: [],
         datasets: [{
           data: []
+          // borderColor: function (context) {
+          //   const index = context.dataIndex;
+          //   const value = context.dataset.data[index] as number;
+          //   return value > 26.5 ? 'red' : value < 24.5 ? 'yellow' : 'blue';
+          // },
         }]
       },
+
       options: {
         // hay que arreglar esto para que funcione la data decimation
         // Turn off animations and data parsing for performance
@@ -1320,20 +1360,26 @@ class ListarDatosComponent {
         animation: false,
         parsing: false,
         plugins: {
-          decimation: {
-            enabled: true,
-            algorithm: 'min-max'
-            // samples: 200,
-          }
+          decimation: this.decimation
         },
-
         scales: {
           y: {
             type: 'linear',
             beginAtZero: true,
-            ticks: {
-              maxRotation: 0,
-              autoSkip: true
+            ticks: {},
+            max: 30,
+            grid: {
+              // @ts-ignore
+              // color: (context) => {
+              //   if (context.tick.value >= 26.5) {
+              //     return '#eb4034';
+              //   } else if (context.tick.value <= 24.5) {
+              //     return '#ebc034';
+              //   } else {
+              //     return 'rgba(0, 0, 0, 0.1)';
+              //   }
+              //   console.log(context);
+              // },
             }
           },
           x: {
@@ -1351,7 +1397,8 @@ class ListarDatosComponent {
             }
           }
         }
-      }
+      },
+      plugins: [this.canvasBackgroundColor]
     });
     this.chart2 = new node_modules_chart_js__WEBPACK_IMPORTED_MODULE_4__.Chart('myChart2', {
       type: 'bar',
@@ -1359,7 +1406,7 @@ class ListarDatosComponent {
         labels: [],
         datasets: [{
           data: [],
-          label: 'Corte total por mes',
+          label: 'Valor máximo por mes',
           backgroundColor: 'rgba(255, 99, 132, 0.2)',
           borderColor: 'rgb(255, 99, 132)'
         }]
@@ -1393,45 +1440,46 @@ class ListarDatosComponent {
         maintainAspectRatio: false
       }
     });
-    this.chart4 = new node_modules_chart_js__WEBPACK_IMPORTED_MODULE_4__.Chart('myChart4', {
-      type: 'radar',
-      data: {
-        labels: ['Max', 'Min', 'Avg'],
-        datasets: []
-      },
-      options: {
-        elements: {
-          line: {
-            borderWidth: 3
-          }
-        },
-        maintainAspectRatio: false
-      }
-    });
+    // this.chart4 = new Chart('myChart4', {
+    //   type: 'radar',
+    //   data: {
+    //     labels: ['Max', 'Min', 'Avg'],
+    //     datasets: [],
+    //   },
+    //   options: {
+    //     elements: {
+    //       line: {
+    //         borderWidth: 3,
+    //       },
+    //     },
+    //     maintainAspectRatio: false,
+    //   },
+    // });
     this.subscription = this._httpService.listaDatos.subscribe(message => {
-      this.chart4.data.datasets = [];
+      // this.chart4.data.datasets = [];
       this.listDatos2 = message;
       this.chart3.data.labels = this.listDatos2.map(x => x._id);
-      this.chart3.data.datasets[0].data = this.listDatos2.map(x => x.respuesta);
+      this.chart3.data.datasets[0].data = this.listDatos2.map(x => x.avg);
       this.chart3.update();
       this.chart2.data.labels = this.listDatos2.map(x => x._id);
-      this.chart2.data.datasets[0].data = this.listDatos2.map(x => x.sum);
+      this.chart2.data.datasets[0].data = this.listDatos2.map(x => x.respuesta);
       this.chart2.update();
       // this.chart4.data.datasets[0].data = this.listDatos2.map(
       //   (x) => x.respuesta
       // );
-      this.listDatos2.forEach(datos => {
-        const dsColor = this.utils.namedColor(this.chart4.data.datasets.length);
-        var newDataSet = {
-          label: datos._id,
-          backgroundColor: this.utils.transparentize(dsColor, 0.5),
-          borderColor: dsColor,
-          data: [datos.respuesta, datos.min, datos.avg]
-        };
-        this.chart4.data.datasets.push(newDataSet);
-      });
-      this.chart4.update();
+      // this.listDatos2.forEach((datos) => { esto no lo vamos a ver
+      //   const dsColor = this.utils.namedColor(this.chart4.data.datasets.length);
+      //   var newDataSet = {
+      //     label: datos._id,
+      //     backgroundColor: this.utils.transparentize(dsColor, 0.5),
+      //     borderColor: dsColor,
+      //     data: [datos.respuesta, datos.min, datos.avg],
+      //   };
+      //   this.chart4.data.datasets.push(newDataSet);
+      // });
+      // this.chart4.update();
     });
+
     this.expirationCheck();
   }
   ngOnDestroy() {
@@ -1445,8 +1493,10 @@ class ListarDatosComponent {
       console.log('datos: ', this.listDatos);
       this.chart.data.labels = console.log('despues del for each', this.chart.data.labels);
       this.chart.data.datasets[0].data = this.listDatos.map(x => this.dato = {
-        y: x.max,
+        y: parseFloat(x.max.toFixed(2)),
         x: new Date(x._id).getTime()
+      }).filter(x => {
+        return x.x > new Date('2023-05-21').getTime();
       });
       this.chart.update();
     });
@@ -1470,12 +1520,12 @@ class ListarDatosComponent {
       this.listVariables = data;
       console.log(this.listVariables);
       this.getRegistros();
-      this.chart.data.datasets[0].label = 'Corte maximo por dia';
+      this.chart.data.datasets[0].label = 'Pressione estrusione max';
       this.getFiltrados();
     });
   }
   getFiltrados() {
-    var inicio = this.sixMonthAgoDate.getTime().toString();
+    var inicio = new Date('2023-05-01').getTime().toString();
     var final = this.todayDate.getTime().toString();
     this._httpService.getValoresFiltrados(this.listVariables[1]._id, inicio, final, 'max').subscribe(data => {
       console.log(data);
@@ -1494,34 +1544,28 @@ ListarDatosComponent.ɵfac = function ListarDatosComponent_Factory(t) {
 ListarDatosComponent.ɵcmp = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_6__["ɵɵdefineComponent"]({
   type: ListarDatosComponent,
   selectors: [["app-listar-datos"]],
-  decls: 29,
+  decls: 22,
   vars: 0,
-  consts: [[1, "grid", "grid-flow-row", "grid-cols-1", "sm:grid-cols-2", "p-3", "fondo"], [1, "p-3"], ["id", "myChart"], ["id", "myChart2"], ["id", "myChart3"], ["id", "myChart4"]],
+  consts: [[1, "grid", "grid-flow-row", "grid-cols-1", "sm:grid-cols-2", "p-3", "fondo"], [1, "p-3"], ["id", "myChart"], ["id", "myChart2"], ["id", "myChart3"]],
   template: function ListarDatosComponent_Template(rf, ctx) {
     if (rf & 1) {
       _angular_core__WEBPACK_IMPORTED_MODULE_6__["ɵɵelementStart"](0, "div", 0)(1, "div", 1)(2, "mat-card")(3, "mat-card-header")(4, "h2");
-      _angular_core__WEBPACK_IMPORTED_MODULE_6__["ɵɵtext"](5, "Corte Extrusora");
+      _angular_core__WEBPACK_IMPORTED_MODULE_6__["ɵɵtext"](5, "Estrusione");
       _angular_core__WEBPACK_IMPORTED_MODULE_6__["ɵɵelementEnd"]()();
       _angular_core__WEBPACK_IMPORTED_MODULE_6__["ɵɵelementStart"](6, "mat-card-content");
       _angular_core__WEBPACK_IMPORTED_MODULE_6__["ɵɵelement"](7, "canvas", 2);
       _angular_core__WEBPACK_IMPORTED_MODULE_6__["ɵɵelementEnd"]()()();
       _angular_core__WEBPACK_IMPORTED_MODULE_6__["ɵɵelementStart"](8, "div", 1)(9, "mat-card")(10, "mat-card-header")(11, "h2");
-      _angular_core__WEBPACK_IMPORTED_MODULE_6__["ɵɵtext"](12, "Corte Extrusora");
+      _angular_core__WEBPACK_IMPORTED_MODULE_6__["ɵɵtext"](12, "Estrusione valor maximo por mes");
       _angular_core__WEBPACK_IMPORTED_MODULE_6__["ɵɵelementEnd"]()();
       _angular_core__WEBPACK_IMPORTED_MODULE_6__["ɵɵelementStart"](13, "mat-card-content");
       _angular_core__WEBPACK_IMPORTED_MODULE_6__["ɵɵelement"](14, "canvas", 3);
       _angular_core__WEBPACK_IMPORTED_MODULE_6__["ɵɵelementEnd"]()()();
       _angular_core__WEBPACK_IMPORTED_MODULE_6__["ɵɵelementStart"](15, "div", 1)(16, "mat-card")(17, "mat-card-header")(18, "h2");
-      _angular_core__WEBPACK_IMPORTED_MODULE_6__["ɵɵtext"](19, "Corte Extrusora");
+      _angular_core__WEBPACK_IMPORTED_MODULE_6__["ɵɵtext"](19, "Presi\u00F3n promedio por mes");
       _angular_core__WEBPACK_IMPORTED_MODULE_6__["ɵɵelementEnd"]()();
       _angular_core__WEBPACK_IMPORTED_MODULE_6__["ɵɵelementStart"](20, "mat-card-content");
       _angular_core__WEBPACK_IMPORTED_MODULE_6__["ɵɵelement"](21, "canvas", 4);
-      _angular_core__WEBPACK_IMPORTED_MODULE_6__["ɵɵelementEnd"]()()();
-      _angular_core__WEBPACK_IMPORTED_MODULE_6__["ɵɵelementStart"](22, "div", 1)(23, "mat-card")(24, "mat-card-header")(25, "h2");
-      _angular_core__WEBPACK_IMPORTED_MODULE_6__["ɵɵtext"](26, "Corte Extrusora");
-      _angular_core__WEBPACK_IMPORTED_MODULE_6__["ɵɵelementEnd"]()();
-      _angular_core__WEBPACK_IMPORTED_MODULE_6__["ɵɵelementStart"](27, "mat-card-content");
-      _angular_core__WEBPACK_IMPORTED_MODULE_6__["ɵɵelement"](28, "canvas", 5);
       _angular_core__WEBPACK_IMPORTED_MODULE_6__["ɵɵelementEnd"]()()()();
     }
   },
