@@ -9,7 +9,7 @@ import { UtilsService } from 'src/app/service/utils.service';
 import { Dato, RegistroFiltrado } from 'src/app/models/datos.model';
 import { Subscription } from 'rxjs';
 import zoomPlugin from 'chartjs-plugin-zoom';
-Chart.register(...registerables, zoomPlugin);
+Chart.register(...registerables);
 
 @Component({
   selector: 'app-listar-datos',
@@ -105,21 +105,21 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
         parsing: false,
         plugins: {
           decimation: this.decimation,
-          zoom: {
-            pan: {
-              enabled: true,
-              mode: 'xy',
-            },
-            zoom: {
-              wheel: {
-                enabled: true,
-              },
-              pinch: {
-                enabled: true,
-              },
-              mode: 'xy',
-            },
-          },
+          // zoom: {
+          //   pan: {
+          //     enabled: true,
+          //     mode: 'xy',
+          //   },
+          //   zoom: {
+          //     wheel: {
+          //       enabled: true,
+          //     },
+          //     pinch: {
+          //       enabled: true,
+          //     },
+          //     mode: 'xy',
+          //   },
+          // },
         },
         scales: {
           y: {

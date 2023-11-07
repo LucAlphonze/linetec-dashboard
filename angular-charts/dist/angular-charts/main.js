@@ -1355,23 +1355,24 @@ class ListarDatosComponent {
         animation: false,
         parsing: false,
         plugins: {
-          decimation: this.decimation,
-          zoom: {
-            pan: {
-              enabled: true,
-              mode: 'xy'
-            },
-            zoom: {
-              wheel: {
-                enabled: true
-              },
-              pinch: {
-                enabled: true
-              },
-              mode: 'xy'
-            }
-          }
+          decimation: this.decimation
+          // zoom: {
+          //   pan: {
+          //     enabled: true,
+          //     mode: 'xy',
+          //   },
+          //   zoom: {
+          //     wheel: {
+          //       enabled: true,
+          //     },
+          //     pinch: {
+          //       enabled: true,
+          //     },
+          //     mode: 'xy',
+          //   },
+          // },
         },
+
         scales: {
           y: {
             type: 'linear',
