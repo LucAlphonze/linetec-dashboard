@@ -275,7 +275,7 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
             (x) =>
               (this.dato = {
                 y: parseFloat(x.min.toFixed(2)),
-                x: new Date(x._id).getTime(),
+                x: new Date(x._id).getTime() + 10800000,
               })
           )
           .filter((x) => {
