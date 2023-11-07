@@ -16,12 +16,15 @@ const obtenerTodos = async (req, res) => {
         $group: {
           _id: {
             $dateToString: {
-              format: "%Y-%m-%d",
+              format: "%Y-%m-%dT%H:00:00",
               date: "$time_stamp",
             },
           },
           max: {
             $max: "$valor_lectura",
+          },
+          min: {
+            $min: "$valor_lectura",
           },
         },
       },

@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { HttpServiceService } from 'src/app/service/http-service.service';
 import { Chart, registerables } from 'node_modules/chart.js';
 import 'chartjs-adapter-date-fns';
-import { es } from 'date-fns/locale';
+import {} from 'date-fns/locale';
 import { AuthService } from 'src/app/service/auth.service';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { UtilsService } from 'src/app/service/utils.service';
@@ -59,8 +59,6 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
       bgColors(26.5, 30, 'rgba(255, 26, 104, 0.2)');
       bgColors(24, 26.5, 'rgba(75, 192, 192, 0.2)');
       bgColors(0, 24, 'rgba(255, 206, 86, 0.2)');
-
-      console.log(chart);
     },
   };
   decimation: any = {
@@ -91,11 +89,9 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
         datasets: [
           {
             data: [],
-            // borderColor: function (context) {
-            //   const index = context.dataIndex;
-            //   const value = context.dataset.data[index] as number;
-            //   return value > 26.5 ? 'red' : value < 24.5 ? 'yellow' : 'blue';
-            // },
+          },
+          {
+            data: [],
           },
         ],
       },
@@ -131,11 +127,7 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
           },
           x: {
             type: 'time',
-            adapters: {
-              date: {
-                locale: es,
-              },
-            },
+
             ticks: {
               source: 'auto',
               // Disabled rotation for performance
@@ -262,6 +254,17 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
           .filter((x) => {
             return x.x > new Date('2023-05-21').getTime();
           });
+        this.chart.data.datasets[1].data = this.listDatos
+          .map(
+            (x) =>
+              (this.dato = {
+                y: parseFloat(x.min.toFixed(2)),
+                x: new Date(x._id).getTime(),
+              })
+          )
+          .filter((x) => {
+            return x.x > new Date('2023-05-21').getTime();
+          });
         this.chart.update();
       });
   }
@@ -286,6 +289,7 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
       console.log(this.listVariables);
       this.getRegistros();
       this.chart.data.datasets[0].label = 'Pressione estrusione max';
+      this.chart.data.datasets[1].label = 'Pressione estrusione min';
       this.getFiltrados();
     });
   }
