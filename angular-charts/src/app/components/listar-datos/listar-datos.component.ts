@@ -8,7 +8,8 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 import { UtilsService } from 'src/app/service/utils.service';
 import { Dato, RegistroFiltrado } from 'src/app/models/datos.model';
 import { Subscription } from 'rxjs';
-Chart.register(...registerables);
+import zoomPlugin from 'chartjs-plugin-zoom';
+Chart.register(...registerables, zoomPlugin);
 
 @Component({
   selector: 'app-listar-datos',
@@ -64,8 +65,8 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
   decimation: any = {
     id: 'decimation',
     enabled: true,
-    algorithm: 'lttb',
-    samples: 100,
+    algorithm: 'min-max',
+    // samples: 100,
     threshold: 50,
   };
 
@@ -104,6 +105,21 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
         parsing: false,
         plugins: {
           decimation: this.decimation,
+          zoom: {
+            pan: {
+              enabled: true,
+              mode: 'xy',
+            },
+            zoom: {
+              wheel: {
+                enabled: true,
+              },
+              pinch: {
+                enabled: true,
+              },
+              mode: 'xy',
+            },
+          },
         },
         scales: {
           y: {
@@ -238,7 +254,7 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
       .getValores(this.listVariables[1]._id)
       .subscribe((data) => {
         this.listDatos = data['datos'];
-        console.log('datos: ', this.listDatos);
+
         this.chart.data.labels = console.log(
           'despues del for each',
           this.chart.data.labels
@@ -248,7 +264,7 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
             (x) =>
               (this.dato = {
                 y: parseFloat(x.max.toFixed(2)),
-                x: new Date(x._id).getTime(),
+                x: new Date(x._id).getTime() + 10800000,
               })
           )
           .filter((x) => {
@@ -266,6 +282,7 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
             return x.x > new Date('2023-05-21').getTime();
           });
         this.chart.update();
+        console.log('datos: ', this.chart.data.datasets[0].data);
       });
   }
 

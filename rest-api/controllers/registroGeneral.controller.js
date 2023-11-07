@@ -16,7 +16,7 @@ const obtenerTodos = async (req, res) => {
         $group: {
           _id: {
             $dateToString: {
-              format: "%Y-%m-%dT%H:00:00",
+              format: "%Y-%m-%d",
               date: "$time_stamp",
             },
           },
