@@ -1313,8 +1313,8 @@ class ListarDatosComponent {
     this.decimation = {
       id: 'decimation',
       enabled: true,
-      algorithm: 'min-max',
-      // samples: 100,
+      algorithm: 'lttb',
+      samples: 100,
       threshold: 50
     };
     this.getDaysInMonth = (year, month) => new Date(year, month, 0).getDate();
@@ -5088,7 +5088,7 @@ const environment = {
   production: false,
   API_URL_USERS: 'http://automatismopalmar.ddns.net:3001/api/users/',
   API_URL_ROLES: 'http://automatismopalmar.ddns.net:3001/api/role/',
-  API_URL_RGENERAL: 'http://automatismopalmar.ddns.net:3001/api/registro-general//',
+  API_URL_RGENERAL: 'http://automatismopalmar.ddns.net:3001/api/registro-general/',
   API_URL_VARIABLES: 'http://automatismopalmar.ddns.net:3001/api/variables/',
   API_URL_PAISES: 'http://automatismopalmar.ddns.net:3001/api/paises/',
   API_URL_PROVINCIAS: 'http://automatismopalmar.ddns.net:3001/api/provincias/',

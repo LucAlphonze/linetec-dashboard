@@ -2,7 +2,7 @@ export const environment = {
   production: true,
   API_URL_USERS: 'http://3.139.132.46:3001/api/users/',
   API_URL_ROLES: 'http://3.139.132.46:3001/api/role/',
-  API_URL_RGENERAL: 'http://3.139.132.46:3001/api/registro-general//',
+  API_URL_RGENERAL: 'http://3.139.132.46:3001/api/registro-general/',
   API_URL_VARIABLES: 'http://3.139.132.46:3001/api/variables/',
   API_URL_PAISES: 'http://3.139.132.46:3001/api/paises/',
   API_URL_PROVINCIAS: 'http://3.139.132.46:3001/api/provincias/',

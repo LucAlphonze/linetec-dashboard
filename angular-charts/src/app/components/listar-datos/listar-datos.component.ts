@@ -65,8 +65,8 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
   decimation: any = {
     id: 'decimation',
     enabled: true,
-    algorithm: 'min-max',
-    // samples: 100,
+    algorithm: 'lttb',
+    samples: 100,
     threshold: 50,
   };
 

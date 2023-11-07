@@ -3,7 +3,7 @@ export const environment = {
   API_URL_USERS: 'http://automatismopalmar.ddns.net:3001/api/users/',
   API_URL_ROLES: 'http://automatismopalmar.ddns.net:3001/api/role/',
   API_URL_RGENERAL:
-    'http://automatismopalmar.ddns.net:3001/api/registro-general//',
+    'http://automatismopalmar.ddns.net:3001/api/registro-general/',
   API_URL_VARIABLES: 'http://automatismopalmar.ddns.net:3001/api/variables/',
   API_URL_PAISES: 'http://automatismopalmar.ddns.net:3001/api/paises/',
   API_URL_PROVINCIAS: 'http://automatismopalmar.ddns.net:3001/api/provincias/',
