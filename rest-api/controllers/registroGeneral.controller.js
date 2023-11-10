@@ -154,20 +154,6 @@ const crearRegistroGeneralArray = async (req, res, next) => {
 
   const registroGeneralArray = req.body["data"];
   for (let i = 0; i <= registroGeneralArray.length; i++) {
-    if (i == registroGeneralArray.length && yaTermino.error == false) {
-      res.status(200).json({
-        ok: true,
-      });
-      return;
-    } else if (i == registroGeneralArray.length && yaTermino.error == true) {
-      res.status(409).json({
-        ok: false,
-        datos: yaTermino.documentosConError,
-      });
-      console.log("Documentos que pasaron: ", yaTermino.documentosQuePasaron);
-      return;
-    }
-
     const id_variable = registroGeneralArray[i].id_variable;
     const time_stamp = registroGeneralArray[i].time_stamp;
 
@@ -182,21 +168,12 @@ const crearRegistroGeneralArray = async (req, res, next) => {
       const ultimoRegistro = await RegistroGeneral.findOne({
         id_variable: id_variable,
       }).sort({ fecha_lectura: -1 });
-      // console.log(
-      //   "ultimo registro : ",
-      //   ultimoRegistro,
-      //   "variable: ",
-      //   variable,
-      //   "registro nuevo: ",
-      //   registroGeneralArray[i]
-      // );
       const existeTimestamp = await RegistroGeneral.find({
         time_stamp: time_stamp,
         id_variable: id_variable,
       });
 
       if (existeTimestamp.length > 0) {
-        yaTermino.error = true;
         yaTermino.documentosConError.push(registroGeneralArray[i]);
         continue;
       }
@@ -208,8 +185,15 @@ const crearRegistroGeneralArray = async (req, res, next) => {
       console.log("respuesta ", filtrado);
 
       console.log("indice: ", i, "array.length: ", registroGeneralArray.length);
-      await filtrado.save();
       yaTermino.documentosQuePasaron.push(filtrado);
+
+      if (i == registroGeneralArray.length - 1) {
+        await RegistroGeneral.insertMany(yaTermino.documentosQuePasaron);
+
+        return res.status(200).json({
+          ok: true,
+        });
+      }
     } catch (error) {
       console.log("registro general post error: ", error);
       res.status(500).json({
