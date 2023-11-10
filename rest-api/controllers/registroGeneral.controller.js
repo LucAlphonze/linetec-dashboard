@@ -3,6 +3,12 @@ const RegistroGeneral = require("../models/registroGeneral.model");
 const Variable = require("../models/variable.model");
 const { filtradoPost } = require("./middleware.controller");
 
+var yaTermino = {
+  error: false,
+  documentosConError: [],
+  documentosQuePasaron: [],
+};
+
 const obtenerTodos = async (req, res) => {
   try {
     const variable = req.params.variable;
@@ -145,6 +151,76 @@ const crearRegistroGeneral = async (req, res) => {
     return;
   }
 };
+const crearRegistroGeneralArray = async (req, res, next) => {
+  const registroGeneralArray = req.body["data"];
+  for (let i = 0; i <= registroGeneralArray.length; i++) {
+    if (i == registroGeneralArray.length && yaTermino.error == false) {
+      res.status(200).json({
+        ok: true,
+        datos: yaTermino.documentosQuePasaron,
+      });
+      return;
+    } else if (i == registroGeneralArray.length && yaTermino.error == true) {
+      res.status(409).json({
+        ok: false,
+        datos: yaTermino.documentosConError,
+      });
+      console.log("Documentos que pasaron: ", yaTermino.documentosQuePasaron);
+      return;
+    }
+
+    const id_variable = registroGeneralArray[i].id_variable;
+    const time_stamp = registroGeneralArray[i].time_stamp;
+
+    try {
+      const variable = await Variable.findOne({
+        _id: id_variable,
+      })
+        .populate("id_maquina", "nombre modelo")
+        .populate("id_proceso", "descripcion")
+        .populate("id_trigger", "nombre descripcion");
+
+      const ultimoRegistro = await RegistroGeneral.findOne({
+        id_variable: id_variable,
+      }).sort({ fecha_lectura: -1 });
+      // console.log(
+      //   "ultimo registro : ",
+      //   ultimoRegistro,
+      //   "variable: ",
+      //   variable,
+      //   "registro nuevo: ",
+      //   registroGeneralArray[i]
+      // );
+      const existeTimestamp = await RegistroGeneral.find({
+        time_stamp: time_stamp,
+        id_variable: id_variable,
+      });
+
+      if (existeTimestamp.length > 0) {
+        yaTermino.error = true;
+        yaTermino.documentosConError.push(registroGeneralArray[i]);
+        continue;
+      }
+      let filtrado = await filtradoPost(
+        variable,
+        new RegistroGeneral(registroGeneralArray[i]),
+        ultimoRegistro
+      );
+      console.log("respuesta ", filtrado);
+
+      console.log("indice: ", i, "array.length: ", registroGeneralArray.length);
+      await filtrado.save();
+      yaTermino.documentosQuePasaron.push(filtrado);
+    } catch (error) {
+      console.log("registro general post error: ", error);
+      res.status(500).json({
+        ok: false,
+        datos: error,
+      });
+      return;
+    }
+  }
+};
 
 const filtrarRegistrosGenerales = async (req, res) => {
   var idVariable = req.params.idVariable;
@@ -248,6 +324,7 @@ module.exports = {
   obtenerTodos,
   obtenerRegistrosGeneral,
   crearRegistroGeneral,
+  crearRegistroGeneralArray,
   getTodos,
   filtrarRegistrosGenerales,
 };

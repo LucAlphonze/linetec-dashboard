@@ -18,6 +18,8 @@ Chart.register(...registerables);
 })
 export class ListarDatosComponent implements OnInit, OnDestroy {
   listDatos: any[] = [];
+  listDatos2: RegistroFiltrado[] = [];
+  listDatos3: any[] = [];
   listVariables: any[] = [];
   listCheckbox: any[] = [];
   todayDate: Date = new Date();
@@ -35,7 +37,6 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
   timeout: any;
   token: any;
   subscription!: Subscription;
-  listDatos2: RegistroFiltrado[] = [];
   canvasBackgroundColor = {
     id: 'canvasBackgroundColor',
     beforeDraw(chart: any, args: any, pluginOptions: any) {
@@ -57,7 +58,7 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
           y.getPixelForValue(bracketLow) - y.getPixelForValue(bracketHigh)
         );
       }
-      bgColors(26.5, 30, 'rgba(255, 26, 104, 0.2)');
+      bgColors(26.5, 35, 'rgba(255, 26, 104, 0.2)');
       bgColors(24, 26.5, 'rgba(75, 192, 192, 0.2)');
       bgColors(0, 24, 'rgba(255, 206, 86, 0.2)');
     },
@@ -89,9 +90,14 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
         labels: [],
         datasets: [
           {
+            yAxisID: 'y',
             data: [],
           },
           {
+            data: [],
+          },
+          {
+            yAxisID: 'second-y-axis',
             data: [],
           },
         ],
@@ -126,20 +132,12 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
             type: 'linear',
             beginAtZero: true,
             ticks: {},
-            max: 30,
-            grid: {
-              // @ts-ignore
-              // color: (context) => {
-              //   if (context.tick.value >= 26.5) {
-              //     return '#eb4034';
-              //   } else if (context.tick.value <= 24.5) {
-              //     return '#ebc034';
-              //   } else {
-              //     return 'rgba(0, 0, 0, 0.1)';
-              //   }
-              //   console.log(context);
-              // },
-            },
+            max: 35,
+            grid: {},
+          },
+          'second-y-axis': {
+            type: 'linear',
+            position: 'right',
           },
           x: {
             type: 'time',
@@ -254,11 +252,6 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
       .getValores(this.listVariables[1]._id)
       .subscribe((data) => {
         this.listDatos = data['datos'];
-
-        this.chart.data.labels = console.log(
-          'despues del for each',
-          this.chart.data.labels
-        );
         this.chart.data.datasets[0].data = this.listDatos
           .map(
             (x) =>
@@ -268,7 +261,7 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
               })
           )
           .filter((x) => {
-            return x.x > new Date('2023-05-21').getTime();
+            return x.x > new Date('2023-04-30').getTime();
           });
         this.chart.data.datasets[1].data = this.listDatos
           .map(
@@ -279,10 +272,27 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
               })
           )
           .filter((x) => {
-            return x.x > new Date('2023-05-21').getTime();
+            return x.x > new Date('2023-04-30').getTime();
           });
         this.chart.update();
         console.log('datos: ', this.chart.data.datasets[0].data);
+      });
+    this._httpService
+      .getValores(this.listVariables[4]._id)
+      .subscribe((data) => {
+        this.listDatos3 = data['datos'];
+        this.chart.data.datasets[2].data = this.listDatos3.map(
+          (x) =>
+            (this.dato = {
+              y: parseFloat(x.max.toFixed(2)),
+              x: new Date(x._id).getTime() + 10800000,
+            })
+        );
+        // .filter((x) => {
+        //   return x.x > new Date('2023-05-21').getTime();
+        // });
+        this.chart.update();
+        console.log('datos: ', this.chart.data.datasets[2].data);
       });
   }
 
@@ -307,6 +317,7 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
       this.getRegistros();
       this.chart.data.datasets[0].label = 'Pressione estrusione max';
       this.chart.data.datasets[1].label = 'Pressione estrusione min';
+      this.chart.data.datasets[2].label = 'Corrente motore estrusore max';
       this.getFiltrados();
     });
   }

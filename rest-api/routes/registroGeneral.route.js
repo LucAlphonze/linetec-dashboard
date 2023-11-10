@@ -13,6 +13,7 @@ const {
   crearRegistroGeneral,
   getTodos,
   filtrarRegistrosGenerales,
+  crearRegistroGeneralArray,
 } = require("../controllers/registroGeneral.controller");
 const { verifyToken } = require("../controllers/auth.controller");
 
@@ -25,5 +26,6 @@ router.get(
 );
 router.get("/:idVariable", obtenerRegistrosGeneral);
 router.post("/", verifyToken, crearRegistroGeneral);
+router.post("/array", verifyToken, crearRegistroGeneralArray);
 
 module.exports = router;
