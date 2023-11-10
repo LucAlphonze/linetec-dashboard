@@ -157,7 +157,6 @@ const crearRegistroGeneralArray = async (req, res, next) => {
     if (i == registroGeneralArray.length && yaTermino.error == false) {
       res.status(200).json({
         ok: true,
-        datos: yaTermino.documentosQuePasaron,
       });
       return;
     } else if (i == registroGeneralArray.length && yaTermino.error == true) {
