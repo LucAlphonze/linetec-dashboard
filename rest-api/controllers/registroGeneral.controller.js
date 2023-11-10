@@ -3,12 +3,6 @@ const RegistroGeneral = require("../models/registroGeneral.model");
 const Variable = require("../models/variable.model");
 const { filtradoPost } = require("./middleware.controller");
 
-var yaTermino = {
-  error: false,
-  documentosConError: [],
-  documentosQuePasaron: [],
-};
-
 const obtenerTodos = async (req, res) => {
   try {
     const variable = req.params.variable;
@@ -152,6 +146,12 @@ const crearRegistroGeneral = async (req, res) => {
   }
 };
 const crearRegistroGeneralArray = async (req, res, next) => {
+  const yaTermino = {
+    error: false,
+    documentosConError: [],
+    documentosQuePasaron: [],
+  };
+
   const registroGeneralArray = req.body["data"];
   for (let i = 0; i <= registroGeneralArray.length; i++) {
     if (i == registroGeneralArray.length && yaTermino.error == false) {
