@@ -145,54 +145,86 @@ const crearRegistroGeneral = async (req, res) => {
     return;
   }
 };
-const crearRegistroGeneralArray = async (req, res, next) => {
+const crearRegistroGeneralArray = async (req, res) => {
   const yaTermino = {
     error: false,
     documentosConError: [],
     documentosQuePasaron: [],
   };
-
+  // hay que mandar los datos ordenados por fecha(time_stamp) y todos los datos deben pertenecer a la misma variable
   const registroGeneralArray = req.body["data"];
-  for (let i = 0; i <= registroGeneralArray.length; i++) {
-    const id_variable = registroGeneralArray[i].id_variable;
-    const time_stamp = registroGeneralArray[i].time_stamp;
+  const id_variable = registroGeneralArray[0].id_variable;
+  const documentosDBSinfiltrar = await RegistroGeneral.find({
+    id_variable: id_variable,
+  });
+  const documentosFiltrados = filterArray2(
+    registroGeneralArray,
+    documentosDBSinfiltrar
+  );
+  const variable = await Variable.findOne({
+    _id: id_variable,
+  })
+    .populate("id_maquina", "nombre modelo")
+    .populate("id_proceso", "descripcion")
+    .populate("id_trigger", "nombre descripcion");
+  // const ultimoRegistro = await RegistroGeneral.findOne({
+  //   id_variable: id_variable,
+  // }).sort({ time_stamp: -1 });
 
+  if (documentosFiltrados.length == 0) {
+    console.log(yaTermino.documentosQuePasaron);
+
+    res.status(409).json({
+      ok: false,
+    });
+    return;
+  } else {
     try {
-      const variable = await Variable.findOne({
-        _id: id_variable,
-      })
-        .populate("id_maquina", "nombre modelo")
-        .populate("id_proceso", "descripcion")
-        .populate("id_trigger", "nombre descripcion");
+      for (let i = 0; i < documentosFiltrados.length; i++) {
+        var ultimoRegistro =
+          yaTermino.documentosQuePasaron[
+            yaTermino.documentosQuePasaron.length - 1
+          ];
+        if (i == 0) {
+          ultimoRegistro = await RegistroGeneral.findOne({
+            id_variable: id_variable,
+            time_stamp: { $lt: documentosFiltrados[0].time_stamp },
+          }).sort({ time_stamp: -1 });
 
-      const ultimoRegistro = await RegistroGeneral.findOne({
-        id_variable: id_variable,
-      }).sort({ fecha_lectura: -1 });
-      const existeTimestamp = await RegistroGeneral.find({
-        time_stamp: time_stamp,
-        id_variable: id_variable,
-      });
+          // console.log("ultimo registro i = 0: ", ultimoRegistro);
+          // console.log(
+          //   "documento filtrado posicion 0: ",
+          //   documentosFiltrados[0]
+          // );
+        }
+        console.log("indice: ", i);
+        let filtrado = await filtradoPost(
+          variable,
+          new RegistroGeneral(documentosFiltrados[i]),
+          ultimoRegistro
+        );
 
-      if (existeTimestamp.length > 0) {
-        yaTermino.documentosConError.push(registroGeneralArray[i]);
-        continue;
-      }
-      let filtrado = await filtradoPost(
-        variable,
-        new RegistroGeneral(registroGeneralArray[i]),
-        ultimoRegistro
-      );
-      console.log("respuesta ", filtrado);
+        if (filtrado != 0) {
+          yaTermino.documentosQuePasaron.push(filtrado);
+          // console.log(
+          //   "ultimo registro: ",
+          //   ultimoRegistro,
+          //   "documentos que pasaron: ",
+          //   yaTermino.documentosQuePasaron
+          // );
+        }
 
-      console.log("indice: ", i, "array.length: ", registroGeneralArray.length);
-      yaTermino.documentosQuePasaron.push(filtrado);
+        if (i == documentosFiltrados.length - 1) {
+          console.log("Documentos que pasaron", yaTermino.documentosQuePasaron);
+          await RegistroGeneral.insertMany(yaTermino.documentosQuePasaron);
 
-      if (i == registroGeneralArray.length - 1) {
-        await RegistroGeneral.insertMany(yaTermino.documentosQuePasaron);
-
-        return res.status(200).json({
-          ok: true,
-        });
+          res.status(200).json({
+            ok: true,
+            // datos: yaTermino.documentosQuePasaron,
+            documentosInsertados: yaTermino.documentosQuePasaron.length,
+          });
+          return;
+        }
       }
     } catch (error) {
       console.log("registro general post error: ", error);
@@ -303,6 +335,16 @@ function determinarOperacion(operacion) {
   }
   console.log("resultado: ", resultado, "operacion: ", operacion);
 }
+
+function filterArray2(source, removals) {
+  const removeSet = new Set(
+    removals.map((entry) => new Date(entry.time_stamp).toISOString())
+  );
+  return source.filter(
+    (entry) => !removeSet.has(new Date(entry.time_stamp).toISOString())
+  );
+}
+
 module.exports = {
   obtenerTodos,
   obtenerRegistrosGeneral,

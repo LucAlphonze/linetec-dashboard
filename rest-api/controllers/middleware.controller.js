@@ -11,13 +11,15 @@ async function filtradoPost(variable, nuevoRegistro, ultimoRegistro) {
           time_stamp_milis > old_time_stamp_milis + millis ||
           old_time_stamp_milis == null
         ) {
-          console.log(
-            "cambio-tiempo: ",
-            nuevoRegistro,
-            "old-value: ",
-            ultimoRegistro
-          );
+          // console.log(
+          //   "cambio-tiempo: ",
+          //   nuevoRegistro,
+          //   "old-value: ",
+          //   ultimoRegistro
+          // );
           return nuevoRegistro;
+        } else {
+          return (nuevoRegistro = 0);
         }
       } catch (error) {
         console.log(error);
@@ -28,27 +30,41 @@ async function filtradoPost(variable, nuevoRegistro, ultimoRegistro) {
       break;
 
     case "cambio-valor":
-      if (
-        (ultimoRegistro =
-          null || ultimoRegistro.valor_lectura != nuevoRegistro.valor_lectura)
-      ) {
-        console.log("cambio-valor ", nuevoRegistro);
-        return nuevoRegistro;
+      try {
+        if (
+          ultimoRegistro?.valor_lectura == null ||
+          ultimoRegistro.valor_lectura != nuevoRegistro.valor_lectura
+        ) {
+          // console.log(
+          //   "cambio-valor: ",
+          //   nuevoRegistro,
+          //   "ultimo-registro: ",
+          //   ultimoRegistro
+          // );
+          return nuevoRegistro;
+        } else {
+          return (nuevoRegistro = 0);
+        }
+      } catch (error) {
+        console.log(error);
+        console.log("despues del post: ", ultimoRegistro);
+        return error;
       }
+
       break;
     case "cambio-porcentaje":
       var x_porciento =
-        (ultimoRegistro?.valor_lectura_ / 100) *
+        (ultimoRegistro?.valor_lectura / 100) *
         parseInt(variable.trigger_valor);
       if (
-        (ultimoRegistro =
-          null ||
-          Math.abs(
-            ultimoRegistro?.valor_lectura - nuevoRegistro.valor_lectura
-          ) >= x_porciento)
+        ultimoRegistro == null ||
+        Math.abs(ultimoRegistro?.valor_lectura - nuevoRegistro.valor_lectura) >=
+          x_porciento
       ) {
-        console.log("cambio-porcentaje: ", nuevoRegistro);
+        // console.log("cambio-porcentaje: ", nuevoRegistro);
         return nuevoRegistro;
+      } else {
+        return (nuevoRegistro = 0);
       }
       break;
     case "sin-filtro":
