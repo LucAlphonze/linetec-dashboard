@@ -201,6 +201,14 @@ class AppComponent {
       console.log(data);
       this._httpService.stream_Datos(data['datos']);
     });
+    this._httpService.getValoresFiltrados2(this.listVariables[1]._id, inicio, final).subscribe(data => {
+      console.log(data);
+      this._httpService.stream_Datos2(data['datos']);
+    });
+    this._httpService.getValoresFiltrados2(this.listVariables[4]._id, inicio, final).subscribe(data => {
+      console.log(data);
+      this._httpService.stream_Datos3(data['datos']);
+    });
     this.opened = false;
   }
 }
@@ -1267,6 +1275,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+// import zoomPlugin from 'chartjs-plugin-zoom';
 node_modules_chart_js__WEBPACK_IMPORTED_MODULE_4__.Chart.register(...node_modules_chart_js__WEBPACK_IMPORTED_MODULE_4__.registerables);
 class ListarDatosComponent {
   constructor(_httpService, utils, authService, jwtHelper) {
@@ -1482,6 +1491,25 @@ class ListarDatosComponent {
     });
 
     this.expirationCheck();
+    this.subscription = this._httpService.listaDatos2.subscribe(message => {
+      this.listDatos = message;
+      this.chart.data.datasets[0].data = this.listDatos.map(x => this.dato = {
+        y: parseFloat(x.max.toFixed(2)),
+        x: new Date(x._id).getTime() + 10800000
+      });
+      this.chart.data.datasets[1].data = this.listDatos.map(x => this.dato = {
+        y: parseFloat(x.min.toFixed(2)),
+        x: new Date(x._id).getTime() + 10800000
+      });
+    });
+    this.subscription = this._httpService.listaDatos3.subscribe(message => {
+      this.listDatos3 = message;
+      this.chart.data.datasets[2].data = this.listDatos3.map(x => this.dato = {
+        y: parseFloat(x.max.toFixed(2)),
+        x: new Date(x._id).getTime() + 10800000
+      });
+      this.chart.update();
+    });
   }
   ngOnDestroy() {
     if (this.id) {
@@ -1511,10 +1539,9 @@ class ListarDatosComponent {
       this.chart.data.datasets[2].data = this.listDatos3.map(x => this.dato = {
         y: parseFloat(x.max.toFixed(2)),
         x: new Date(x._id).getTime() + 10800000
+      }).filter(x => {
+        return x.x > new Date('2023-04-30').getTime();
       });
-      // .filter((x) => {
-      //   return x.x > new Date('2023-05-21').getTime();
-      // });
       this.chart.update();
       console.log('datos: ', this.chart.data.datasets[2].data);
     });
@@ -4993,8 +5020,12 @@ class HttpServiceService {
     this.variables = src_environments_environment__WEBPACK_IMPORTED_MODULE_0__.environment.API_URL_VARIABLES;
     this.listaVariablesSource = new rxjs__WEBPACK_IMPORTED_MODULE_1__.BehaviorSubject([]);
     this.listaDatosSource = new rxjs__WEBPACK_IMPORTED_MODULE_1__.BehaviorSubject([]);
+    this.listaDatosSource2 = new rxjs__WEBPACK_IMPORTED_MODULE_1__.BehaviorSubject([]);
+    this.listaDatosSource3 = new rxjs__WEBPACK_IMPORTED_MODULE_1__.BehaviorSubject([]);
     this.listaVariables = this.listaVariablesSource.asObservable();
     this.listaDatos = this.listaDatosSource.asObservable();
+    this.listaDatos2 = this.listaDatosSource2.asObservable();
+    this.listaDatos3 = this.listaDatosSource3.asObservable();
   }
   getValores(variable) {
     return this.http.get(this.registroGeneral + 'all/' + variable, {
@@ -5005,6 +5036,13 @@ class HttpServiceService {
   }
   getValoresFiltrados(variable, inicio, fin, operacion) {
     return this.http.get(this.registroGeneral + `filter/${variable}/${inicio}/${fin}/${operacion}`, {
+      headers: {
+        Authorization: 'Bearer ' + sessionStorage.getItem('token')?.toString()
+      }
+    });
+  }
+  getValoresFiltrados2(variable, inicio, fin) {
+    return this.http.get(this.registroGeneral + `filter/${variable}/${inicio}/${fin}/`, {
       headers: {
         Authorization: 'Bearer ' + sessionStorage.getItem('token')?.toString()
       }
@@ -5024,6 +5062,13 @@ class HttpServiceService {
   stream_Datos(datos) {
     console.log('stream datos: ', datos);
     this.listaDatosSource.next(datos);
+  }
+  stream_Datos2(datoGeneral) {
+    console.log('stream datos: ');
+    this.listaDatosSource2.next(datoGeneral);
+  }
+  stream_Datos3(datoGeneral) {
+    this.listaDatosSource3.next(datoGeneral);
   }
 }
 HttpServiceService.ɵfac = function HttpServiceService_Factory(t) {

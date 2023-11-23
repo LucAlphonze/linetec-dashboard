@@ -12,8 +12,12 @@ export class HttpServiceService {
   variables = environment.API_URL_VARIABLES;
   private listaVariablesSource = new BehaviorSubject(<Variable[]>[]);
   private listaDatosSource = new BehaviorSubject(<RegistroFiltrado[]>[]);
+  private listaDatosSource2 = new BehaviorSubject(<[]>[]);
+  private listaDatosSource3 = new BehaviorSubject(<[]>[]);
   listaVariables = this.listaVariablesSource.asObservable();
   listaDatos = this.listaDatosSource.asObservable();
+  listaDatos2 = this.listaDatosSource2.asObservable();
+  listaDatos3 = this.listaDatosSource3.asObservable();
 
   constructor(private http: HttpClient) {}
 
@@ -40,6 +44,21 @@ export class HttpServiceService {
       }
     );
   }
+  getValoresFiltrados2(
+    variable: String,
+    inicio: String,
+    fin: String
+  ): Observable<any> {
+    return this.http.get(
+      this.registroGeneral + `filter/${variable}/${inicio}/${fin}/`,
+      {
+        headers: {
+          Authorization:
+            'Bearer ' + sessionStorage.getItem('token')?.toString(),
+        },
+      }
+    );
+  }
   getVariables(): Observable<any> {
     return this.http.get(this.variables, {
       headers: {
@@ -54,5 +73,12 @@ export class HttpServiceService {
   stream_Datos(datos: RegistroFiltrado[]) {
     console.log('stream datos: ', datos);
     this.listaDatosSource.next(datos);
+  }
+  stream_Datos2(datoGeneral: any) {
+    console.log('stream datos: ');
+    this.listaDatosSource2.next(datoGeneral);
+  }
+  stream_Datos3(datoGeneral: any) {
+    this.listaDatosSource3.next(datoGeneral);
   }
 }

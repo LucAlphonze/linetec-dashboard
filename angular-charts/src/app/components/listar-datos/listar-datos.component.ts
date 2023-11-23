@@ -8,7 +8,7 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 import { UtilsService } from 'src/app/service/utils.service';
 import { Dato, RegistroFiltrado } from 'src/app/models/datos.model';
 import { Subscription } from 'rxjs';
-import zoomPlugin from 'chartjs-plugin-zoom';
+// import zoomPlugin from 'chartjs-plugin-zoom';
 Chart.register(...registerables);
 
 @Component({
@@ -222,6 +222,7 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
         (x) => x.respuesta
       );
       this.chart2.update();
+
       // this.chart4.data.datasets[0].data = this.listDatos2.map(
       //   (x) => x.respuesta
       // );
@@ -239,6 +240,37 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
       // this.chart4.update();
     });
     this.expirationCheck();
+
+    this.subscription = this._httpService.listaDatos2.subscribe((message) => {
+      this.listDatos = message;
+
+      this.chart.data.datasets[0].data = this.listDatos.map(
+        (x) =>
+          (this.dato = {
+            y: parseFloat(x.max.toFixed(2)),
+            x: new Date(x._id).getTime() + 10800000,
+          })
+      );
+      this.chart.data.datasets[1].data = this.listDatos.map(
+        (x) =>
+          (this.dato = {
+            y: parseFloat(x.min.toFixed(2)),
+            x: new Date(x._id).getTime() + 10800000,
+          })
+      );
+    });
+    this.subscription = this._httpService.listaDatos3.subscribe((message) => {
+      this.listDatos3 = message;
+
+      this.chart.data.datasets[2].data = this.listDatos3.map(
+        (x) =>
+          (this.dato = {
+            y: parseFloat(x.max.toFixed(2)),
+            x: new Date(x._id).getTime() + 10800000,
+          })
+      );
+      this.chart.update();
+    });
   }
 
   ngOnDestroy(): void {
@@ -281,16 +313,17 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
       .getValores(this.listVariables[4]._id)
       .subscribe((data) => {
         this.listDatos3 = data['datos'];
-        this.chart.data.datasets[2].data = this.listDatos3.map(
-          (x) =>
-            (this.dato = {
-              y: parseFloat(x.max.toFixed(2)),
-              x: new Date(x._id).getTime() + 10800000,
-            })
-        );
-        // .filter((x) => {
-        //   return x.x > new Date('2023-05-21').getTime();
-        // });
+        this.chart.data.datasets[2].data = this.listDatos3
+          .map(
+            (x) =>
+              (this.dato = {
+                y: parseFloat(x.max.toFixed(2)),
+                x: new Date(x._id).getTime() + 10800000,
+              })
+          )
+          .filter((x) => {
+            return x.x > new Date('2023-04-30').getTime();
+          });
         this.chart.update();
         console.log('datos: ', this.chart.data.datasets[2].data);
       });

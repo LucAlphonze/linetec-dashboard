@@ -61,6 +61,18 @@ export class AppComponent implements DoCheck, OnInit {
         console.log(data);
         this._httpService.stream_Datos(data['datos']);
       });
+    this._httpService
+      .getValoresFiltrados2(this.listVariables[1]._id, inicio, final)
+      .subscribe((data) => {
+        console.log(data);
+        this._httpService.stream_Datos2(data['datos']);
+      });
+    this._httpService
+      .getValoresFiltrados2(this.listVariables[4]._id, inicio, final)
+      .subscribe((data) => {
+        console.log(data);
+        this._httpService.stream_Datos3(data['datos']);
+      });
     this.opened = false;
   }
 }
