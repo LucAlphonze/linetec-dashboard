@@ -14,6 +14,7 @@ const {
   getTodos,
   filtrarRegistrosGenerales,
   crearRegistroGeneralArray,
+  filtrarRegistrosGenerales2,
 } = require("../controllers/registroGeneral.controller");
 const { verifyToken } = require("../controllers/auth.controller");
 
@@ -23,6 +24,10 @@ router.get("/", verifyToken, getTodos);
 router.get(
   "/filter/:idVariable/:startdate/:enddate/:operacion",
   filtrarRegistrosGenerales
+);
+router.get(
+  "/filter/:idVariable/:startdate/:enddate/",
+  filtrarRegistrosGenerales2
 );
 router.get("/:idVariable", obtenerRegistrosGeneral);
 router.post("/", verifyToken, crearRegistroGeneral);

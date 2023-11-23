@@ -156,6 +156,12 @@ const crearRegistroGeneralArray = async (req, res) => {
   const id_variable = registroGeneralArray[0].id_variable;
   const documentosDBSinfiltrar = await RegistroGeneral.find({
     id_variable: id_variable,
+    time_stamp: {
+      $gte: new Date(registroGeneralArray[0].time_stamp),
+      $lte: new Date(
+        registroGeneralArray[registroGeneralArray.length - 1].time_stamp
+      ),
+    },
   });
   const documentosFiltrados = filterArray2(
     registroGeneralArray,
@@ -215,9 +221,8 @@ const crearRegistroGeneralArray = async (req, res) => {
         }
 
         if (i == documentosFiltrados.length - 1) {
-          console.log("Documentos que pasaron", yaTermino.documentosQuePasaron);
+          // console.log("Documentos que pasaron", yaTermino.documentosQuePasaron);
           await RegistroGeneral.insertMany(yaTermino.documentosQuePasaron);
-
           res.status(200).json({
             ok: true,
             // datos: yaTermino.documentosQuePasaron,
@@ -268,6 +273,56 @@ const filtrarRegistrosGenerales = async (req, res) => {
             },
           },
           respuesta: { $max: "$valor_lectura" },
+          min: { $min: "$valor_lectura" },
+          avg: { $avg: "$valor_lectura" },
+          sum: { $sum: "$valor_lectura" },
+        },
+      },
+      {
+        $sort: {
+          _id: 1,
+        },
+      },
+    ]);
+    res.status(200).json({
+      ok: true,
+      datos: registrosFiltrados,
+    });
+  } catch (error) {
+    res.status(500).json({
+      ok: false,
+      error: error,
+    });
+  }
+};
+const filtrarRegistrosGenerales2 = async (req, res) => {
+  var idVariable = req.params.idVariable;
+  var sti = req.params.startdate;
+  var stf = req.params.enddate;
+  try {
+    const registrosFiltrados = await RegistroGeneral.aggregate([
+      {
+        $match: {
+          id_variable: new mongoose.Types.ObjectId(idVariable),
+        },
+      },
+      {
+        $match: {
+          time_stamp: {
+            $gte: new Date(parseInt(sti)),
+            $lte: new Date(parseInt(stf)),
+          },
+        },
+      },
+      {
+        $group: {
+          _id: {
+            $dateToString: {
+              format: "%Y-%m-%d",
+              date: "$time_stamp",
+            },
+          },
+          max: { $max: "$valor_lectura" },
           min: { $min: "$valor_lectura" },
           avg: { $avg: "$valor_lectura" },
           sum: { $sum: "$valor_lectura" },
@@ -352,4 +407,5 @@ module.exports = {
   crearRegistroGeneralArray,
   getTodos,
   filtrarRegistrosGenerales,
+  filtrarRegistrosGenerales2,
 };
