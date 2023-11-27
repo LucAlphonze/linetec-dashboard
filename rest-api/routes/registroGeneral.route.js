@@ -15,11 +15,13 @@ const {
   filtrarRegistrosGenerales,
   crearRegistroGeneralArray,
   filtrarRegistrosGenerales2,
+  getAllInRange,
 } = require("../controllers/registroGeneral.controller");
 const { verifyToken } = require("../controllers/auth.controller");
 
 const router = Router();
 router.get("/all/:variable", obtenerTodos);
+router.get("/all/:idVariable/:startdate/:enddate/", getAllInRange);
 router.get("/", verifyToken, getTodos);
 router.get(
   "/filter/:idVariable/:startdate/:enddate/:operacion",

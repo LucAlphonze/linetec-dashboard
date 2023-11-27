@@ -145,6 +145,7 @@ const crearRegistroGeneral = async (req, res) => {
     return;
   }
 };
+
 const crearRegistroGeneralArray = async (req, res) => {
   const yaTermino = {
     error: false,
@@ -295,6 +296,7 @@ const filtrarRegistrosGenerales = async (req, res) => {
     });
   }
 };
+
 const filtrarRegistrosGenerales2 = async (req, res) => {
   var idVariable = req.params.idVariable;
   var sti = req.params.startdate;
@@ -337,6 +339,31 @@ const filtrarRegistrosGenerales2 = async (req, res) => {
     res.status(200).json({
       ok: true,
       datos: registrosFiltrados,
+    });
+  } catch (error) {
+    res.status(500).json({
+      ok: false,
+      error: error,
+    });
+  }
+};
+
+const getAllInRange = async (req, res) => {
+  var idVariable = req.params.idVariable;
+  var sti = req.params.startdate;
+  var stf = req.params.enddate;
+
+  try {
+    const allInRange = await RegistroGeneral.find({
+      id_variable: idVariable,
+      time_stamp: {
+        $gte: new Date(parseInt(sti)),
+        $lte: new Date(parseInt(stf)),
+      },
+    }).sort({ time_stamp: 1 });
+    res.status(200).json({
+      ok: true,
+      datos: allInRange,
     });
   } catch (error) {
     res.status(500).json({
@@ -408,4 +435,5 @@ module.exports = {
   getTodos,
   filtrarRegistrosGenerales,
   filtrarRegistrosGenerales2,
+  getAllInRange,
 };
