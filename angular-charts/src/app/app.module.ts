@@ -32,6 +32,7 @@ import { JwtModule } from '@auth0/angular-jwt';
 import { TriggerFormComponent } from './forms/trigger-form/trigger-form.component';
 import { Home5Component } from './components/home5/home5.component';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
+import { TablaComponent } from './components/tabla/tabla.component';
 
 export function tokenGetter() {
   return localStorage.getItem('token');
@@ -61,6 +62,7 @@ export function tokenGetter() {
     VariableFormComponent,
     TriggerFormComponent,
     Home5Component,
+    TablaComponent,
   ],
   imports: [
     BrowserModule,

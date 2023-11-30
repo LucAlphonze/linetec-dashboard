@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { HttpServiceService } from 'src/app/service/http-service.service';
+import { HttpService } from 'src/app/service/http.service';
 import { Chart, registerables } from 'node_modules/chart.js';
 import 'chartjs-adapter-date-fns';
 import {} from 'date-fns/locale';
@@ -72,7 +72,7 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
   };
 
   constructor(
-    private _httpService: HttpServiceService,
+    private _httpService: HttpService,
     private utils: UtilsService,
     private authService: AuthService,
     private jwtHelper: JwtHelperService
@@ -154,29 +154,29 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
       plugins: [this.canvasBackgroundColor],
     });
 
-    this.chart2 = new Chart('myChart2', {
-      type: 'bar',
-      data: {
-        labels: [],
-        datasets: [
-          {
-            data: [],
-            label: 'Valor máximo por mes',
-            backgroundColor: 'rgba(255, 99, 132, 0.2)',
-            borderColor: 'rgb(255, 99, 132)',
-          },
-        ],
-      },
-      options: {
-        elements: {
-          line: {
-            borderWidth: 3,
-          },
-        },
-        aspectRatio: 1,
-        maintainAspectRatio: false,
-      },
-    });
+    // this.chart2 = new Chart('myChart2', {
+    //   type: 'bar',
+    //   data: {
+    //     labels: [],
+    //     datasets: [
+    //       {
+    //         data: [],
+    //         label: 'Valor máximo por mes',
+    //         backgroundColor: 'rgba(255, 99, 132, 0.2)',
+    //         borderColor: 'rgb(255, 99, 132)',
+    //       },
+    //     ],
+    //   },
+    //   options: {
+    //     elements: {
+    //       line: {
+    //         borderWidth: 3,
+    //       },
+    //     },
+    //     aspectRatio: 1,
+    //     maintainAspectRatio: false,
+    //   },
+    // });
     this.chart3 = new Chart('myChart3', {
       type: 'doughnut',
       data: {
@@ -211,54 +211,59 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
     //     maintainAspectRatio: false,
     //   },
     // });
-    this.subscription = this._httpService.listaDatos.subscribe((message) => {
-      // this.chart4.data.datasets = [];
-      this.listDatos2 = message;
-      this.chart3.data.labels = this.listDatos2.map((x) => x._id);
-      this.chart3.data.datasets[0].data = this.listDatos2.map((x) => x.avg);
-      this.chart3.update();
-      this.chart2.data.labels = this.listDatos2.map((x) => x._id);
-      this.chart2.data.datasets[0].data = this.listDatos2.map(
-        (x) => x.respuesta
-      );
-      this.chart2.update();
+    this.subscription = this._httpService.listaRegistroFiltrado.subscribe(
+      (message) => {
+        // this.chart4.data.datasets = [];
+        this.listDatos2 = message;
+        this.chart3.data.labels = this.listDatos2.map((x) => x._id);
+        this.chart3.data.datasets[0].data = this.listDatos2.map((x) => x.avg);
+        this.chart3.update();
 
-      // this.chart4.data.datasets[0].data = this.listDatos2.map(
-      //   (x) => x.respuesta
-      // );
+        //bar chart
+        // this.chart2.data.labels = this.listDatos2.map((x) => x._id);
+        // this.chart2.data.datasets[0].data = this.listDatos2.map(
+        //   (x) => x.respuesta
+        // );
+        // this.chart2.update();
 
-      // this.listDatos2.forEach((datos) => { esto no lo vamos a ver
-      //   const dsColor = this.utils.namedColor(this.chart4.data.datasets.length);
-      //   var newDataSet = {
-      //     label: datos._id,
-      //     backgroundColor: this.utils.transparentize(dsColor, 0.5),
-      //     borderColor: dsColor,
-      //     data: [datos.respuesta, datos.min, datos.avg],
-      //   };
-      //   this.chart4.data.datasets.push(newDataSet);
-      // });
-      // this.chart4.update();
-    });
+        // this.chart4.data.datasets[0].data = this.listDatos2.map(
+        //   (x) => x.respuesta
+        // );
+        // this.listDatos2.forEach((datos) => { esto no lo vamos a ver
+        //   const dsColor = this.utils.namedColor(this.chart4.data.datasets.length);
+        //   var newDataSet = {
+        //     label: datos._id,
+        //     backgroundColor: this.utils.transparentize(dsColor, 0.5),
+        //     borderColor: dsColor,
+        //     data: [datos.respuesta, datos.min, datos.avg],
+        //   };
+        //   this.chart4.data.datasets.push(newDataSet);
+        // });
+        // this.chart4.update();
+      }
+    );
     this.expirationCheck();
 
-    this.subscription = this._httpService.listaDatos2.subscribe((message) => {
-      this.listDatos = message;
+    this.subscription = this._httpService.listaRegistroFiltrado2.subscribe(
+      (message) => {
+        this.listDatos = message;
 
-      this.chart.data.datasets[0].data = this.listDatos.map(
-        (x) =>
-          (this.dato = {
-            y: parseFloat(x.max.toFixed(2)),
-            x: new Date(x._id).getTime() + 10800000,
-          })
-      );
-      this.chart.data.datasets[1].data = this.listDatos.map(
-        (x) =>
-          (this.dato = {
-            y: parseFloat(x.min.toFixed(2)),
-            x: new Date(x._id).getTime() + 10800000,
-          })
-      );
-    });
+        this.chart.data.datasets[0].data = this.listDatos.map(
+          (x) =>
+            (this.dato = {
+              y: parseFloat(x.max.toFixed(2)),
+              x: new Date(x._id).getTime() + 10800000,
+            })
+        );
+        this.chart.data.datasets[1].data = this.listDatos.map(
+          (x) =>
+            (this.dato = {
+              y: parseFloat(x.min.toFixed(2)),
+              x: new Date(x._id).getTime() + 10800000,
+            })
+        );
+      }
+    );
     this.subscription = this._httpService.listaDatos3.subscribe((message) => {
       this.listDatos3 = message;
 
@@ -355,13 +360,13 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
     });
   }
   getFiltrados() {
-    var inicio: any = new Date('2023-05-01').getTime().toString();
+    var inicio: any = this.sixMonthAgoDate.getTime().toString();
     var final: any = this.todayDate.getTime().toString();
     this._httpService
       .getValoresFiltrados(this.listVariables[1]._id, inicio, final, 'max')
       .subscribe((data) => {
         console.log(data);
-        this._httpService.stream_Datos(data['datos']);
+        this._httpService.stream_RegistroFiltrado(data['datos']);
       });
   }
   getDaysInMonth = (year: number, month: number) =>

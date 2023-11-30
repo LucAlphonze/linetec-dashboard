@@ -227,11 +227,27 @@ en el otro componente
             (click)="getFiltrados()"
             matDateRangePickerApply
           >
-            Apply
+            Aplicar
           </button>
         </mat-date-range-picker-actions>
       </mat-date-range-picker>
     </mat-form-field>
+    <form class="example-form" [formGroup]="valor" (ngSubmit)="getFiltrados()">
+      <mat-form-field>
+        <mat-label>Elegir valor limite </mat-label>
+        <input matInput formControlName formControlName="threshold" />
+      </mat-form-field>
+      <div class="m-1">
+        <button
+          class="m-3"
+          [disabled]="!range.value.start && !range.value.end"
+          mat-raised-button
+          color="primary"
+        >
+          Enviar
+        </button>
+      </div>
+    </form>
   </mat-sidenav>
   <mat-sidenav-content class="fondo">
     <div class="toolbar" *ngIf="isMenuRequired" role="banner">

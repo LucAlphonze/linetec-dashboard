@@ -1,23 +1,27 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, catchError } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { RegistroFiltrado, Variable } from '../models/datos.model';
 
 @Injectable({
   providedIn: 'root',
 })
-export class HttpServiceService {
+export class HttpService {
   registroGeneral = environment.API_URL_RGENERAL;
   variables = environment.API_URL_VARIABLES;
   private listaVariablesSource = new BehaviorSubject(<Variable[]>[]);
-  private listaDatosSource = new BehaviorSubject(<RegistroFiltrado[]>[]);
-  private listaDatosSource2 = new BehaviorSubject(<[]>[]);
+  private listaRegistroFiltradoSource = new BehaviorSubject(
+    <RegistroFiltrado[]>[]
+  );
+  private listaRegistroFiltrado2Source = new BehaviorSubject(<[]>[]);
   private listaDatosSource3 = new BehaviorSubject(<[]>[]);
+  private listaDatosInRangeSource = new BehaviorSubject(<[]>[]);
   listaVariables = this.listaVariablesSource.asObservable();
-  listaDatos = this.listaDatosSource.asObservable();
-  listaDatos2 = this.listaDatosSource2.asObservable();
+  listaRegistroFiltrado = this.listaRegistroFiltradoSource.asObservable();
+  listaRegistroFiltrado2 = this.listaRegistroFiltrado2Source.asObservable();
   listaDatos3 = this.listaDatosSource3.asObservable();
+  listaDatosInRange = this.listaDatosInRangeSource.asObservable();
 
   constructor(private http: HttpClient) {}
 
@@ -59,6 +63,21 @@ export class HttpServiceService {
       }
     );
   }
+  getAllInRange(
+    variable: String,
+    inicio: String,
+    fin: String
+  ): Observable<any> {
+    return this.http.get(
+      this.registroGeneral + `all/${variable}/${inicio}/${fin}/`,
+      {
+        headers: {
+          Authorization:
+            'Bearer ' + sessionStorage.getItem('token')?.toString(),
+        },
+      }
+    );
+  }
   getVariables(): Observable<any> {
     return this.http.get(this.variables, {
       headers: {
@@ -70,15 +89,17 @@ export class HttpServiceService {
     console.log('stream variables: ', variables);
     this.listaVariablesSource.next(variables);
   }
-  stream_Datos(datos: RegistroFiltrado[]) {
-    console.log('stream datos: ', datos);
-    this.listaDatosSource.next(datos);
+  stream_RegistroFiltrado(datos: RegistroFiltrado[]) {
+    console.log('stream registro filtrado: ', datos);
+    this.listaRegistroFiltradoSource.next(datos);
   }
-  stream_Datos2(datoGeneral: any) {
-    console.log('stream datos: ');
-    this.listaDatosSource2.next(datoGeneral);
+  stream_RegistroFiltrado2(datoGeneral: any) {
+    this.listaRegistroFiltrado2Source.next(datoGeneral);
   }
   stream_Datos3(datoGeneral: any) {
     this.listaDatosSource3.next(datoGeneral);
+  }
+  stream_DatosInRange(datoGeneral: any) {
+    this.listaDatosInRangeSource.next(datoGeneral);
   }
 }
