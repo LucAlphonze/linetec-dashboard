@@ -2060,31 +2060,17 @@ class TablaComponent {
     this.service = service;
     this.exceedList = [];
     this.listVariables = [];
-    this.notExceedList = [];
-    this.notExceedList2 = [];
-    this.listDatos = [];
     this.displayedColumns = ['exceed_value', 'timestamp', 'NE_Time_Stamp', 'exceed_time'];
   }
   ngOnInit() {
     this.subscription = this.service.listaDatosInRange.subscribe(message => {
       this.exceedList = message;
-      console.log('tabla componente: ', message);
-      this.dataSource = new _angular_material_table__WEBPACK_IMPORTED_MODULE_2__.MatTableDataSource(this.exceedList);
+      // console.log('prueba filter: ', this.removeDuplicates(this.exceedList));
+      this.dataSource = new _angular_material_table__WEBPACK_IMPORTED_MODULE_2__.MatTableDataSource(this.removeDuplicates(this.exceedList));
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
     });
   }
-  // absDifference = (arr1: any, arr2: any) => {
-  //   const res = [];
-  //   for (let i = 0; i < arr1.length; i++) {
-  //     const el = Math.abs(
-  //       (new Date(arr2[i].time_stamp).getTime() || 0) -
-  //         (new Date(arr1[i].time_stamp).getTime() || 0)
-  //     );
-  //     res[i] = el;
-  //   }
-  //   return res;
-  // };
   formatTime(notExceed, exceed) {
     var seconds = (notExceed - exceed) / 1000;
     const hours = Math.floor(seconds / 3600);
@@ -2094,6 +2080,15 @@ class TablaComponent {
     const formattedMinutes = String(minutes).padStart(2, '0');
     const formattedSeconds = String(remainingSeconds).padStart(2, '0');
     return `${formattedHours}H ${formattedMinutes}M ${formattedSeconds}S`;
+  }
+  removeDuplicates(data) {
+    const ids = data.map(({
+      cTime_stamp
+    }) => cTime_stamp);
+    const filtered = data.filter(({
+      cTime_stamp
+    }, index) => ids.includes(cTime_stamp, index + 1));
+    return filtered;
   }
 }
 TablaComponent.ɵfac = function TablaComponent_Factory(t) {

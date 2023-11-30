@@ -16,34 +16,23 @@ export class TablaComponent implements OnInit {
   dataSource: any;
   listVariables: any = [];
   subscription!: Subscription;
-  notExceedList: any = [];
-  notExceedList2: any = [];
-
-  listDatos: any = [];
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   ngOnInit(): void {
     this.subscription = this.service.listaDatosInRange.subscribe((message) => {
       this.exceedList = message;
-      console.log('tabla componente: ', message);
 
-      this.dataSource = new MatTableDataSource(this.exceedList);
+      // console.log('prueba filter: ', this.removeDuplicates(this.exceedList));
+
+      this.dataSource = new MatTableDataSource(
+        this.removeDuplicates(this.exceedList)
+      );
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
     });
   }
-  // absDifference = (arr1: any, arr2: any) => {
-  //   const res = [];
-  //   for (let i = 0; i < arr1.length; i++) {
-  //     const el = Math.abs(
-  //       (new Date(arr2[i].time_stamp).getTime() || 0) -
-  //         (new Date(arr1[i].time_stamp).getTime() || 0)
-  //     );
-  //     res[i] = el;
-  //   }
-  //   return res;
-  // };
+
   formatTime(notExceed: number, exceed: number) {
     var seconds = (notExceed - exceed) / 1000;
     const hours = Math.floor(seconds / 3600);
@@ -55,6 +44,17 @@ export class TablaComponent implements OnInit {
     const formattedSeconds = String(remainingSeconds).padStart(2, '0');
 
     return `${formattedHours}H ${formattedMinutes}M ${formattedSeconds}S`;
+  }
+  removeDuplicates(data: any) {
+    const ids = data.map(
+      ({ cTime_stamp }: { cTime_stamp: any }) => cTime_stamp
+    );
+    const filtered = data.filter(
+      ({ cTime_stamp }: { cTime_stamp: any }, index: number) =>
+        ids.includes(cTime_stamp, index + 1)
+    );
+
+    return filtered;
   }
 
   displayedColumns: string[] = [
