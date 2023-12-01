@@ -48,7 +48,7 @@ export class AppComponent implements DoCheck, OnInit {
 
     this.subscription2 = this._httpService.listaDatosInRange.subscribe(
       (message) => {
-        console.log('app component datos in range: ', message);
+        // console.log('app component datos in range: ', message);
       }
     );
   }
@@ -117,12 +117,14 @@ export class AppComponent implements DoCheck, OnInit {
                 ).getTime(),
                 new Date(e.time_stamp).getTime()
               );
-              e.cTime_stamp =
+              e.cTime_stamp = this.formatDate(
                 notExceedList[
                   index < notExceedList.length
                     ? index
                     : notExceedList.length - 1
-                ].time_stamp;
+                ].time_stamp
+              );
+              e.time_stamp = this.formatDate(e.time_stamp);
             });
             this._httpService.stream_DatosInRange(this.exceedList);
           }
@@ -182,5 +184,25 @@ export class AppComponent implements DoCheck, OnInit {
     const formattedSeconds = String(remainingSeconds).padStart(2, '0');
 
     return `${formattedHours}H ${formattedMinutes}M ${formattedSeconds}S`;
+  }
+  padTo2Digits(num: number) {
+    return num.toString().padStart(2, '0');
+  }
+
+  formatDate(data: string) {
+    const date = new Date(data);
+    return (
+      [
+        date.getFullYear(),
+        this.padTo2Digits(date.getMonth() + 1),
+        this.padTo2Digits(date.getDate()),
+      ].join('-') +
+      ' ' +
+      [
+        this.padTo2Digits(date.getHours()),
+        this.padTo2Digits(date.getMinutes()),
+        this.padTo2Digits(date.getSeconds()),
+      ].join(':')
+    );
   }
 }

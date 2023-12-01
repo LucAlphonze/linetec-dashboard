@@ -28,6 +28,25 @@ export class Dato {
     this.x = x;
   }
 }
+export class CSVDato {
+  [index: number]: string;
+  valor_lectura: number;
+  tiempo_inicio: string;
+  tiempo_fin: string;
+  diferencia: string;
+
+  constructor(
+    valor_lectura: number,
+    diferencia: string,
+    tiempo_fin: string,
+    tiempo_inicio: string
+  ) {
+    this.valor_lectura = valor_lectura;
+    this.tiempo_inicio = tiempo_inicio;
+    this.tiempo_fin = tiempo_fin;
+    this.diferencia = diferencia;
+  }
+}
 
 export class Variable {
   _id!: string;

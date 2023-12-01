@@ -508,6 +508,9 @@ video {
 .flex-wrap {
   flex-wrap: wrap;
 }
+.justify-between {
+  justify-content: space-between;
+}
 .border {
   border-width: 1px;
 }
