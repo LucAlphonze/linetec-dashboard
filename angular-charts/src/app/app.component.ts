@@ -5,6 +5,7 @@ import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { HttpService } from './service/http.service';
 import { Subscription, catchError } from 'rxjs';
 import { RegistroFiltrado, Variable } from './models/datos.model';
+import { SpinnerService } from './service/spinner.service';
 
 @Component({
   selector: 'app-root',
@@ -35,7 +36,8 @@ export class AppComponent implements DoCheck, OnInit {
     private builder: FormBuilder,
     private router: Router,
     private service: AuthService,
-    private _httpService: HttpService
+    private _httpService: HttpService,
+    private spinnerService: SpinnerService
   ) {}
   ngOnInit(): void {
     this.valor = this.builder.group({
@@ -74,6 +76,8 @@ export class AppComponent implements DoCheck, OnInit {
   getFiltrados() {
     var inicio: any = this.range.value.start?.getTime().toString();
     var final: any = this.range.value.end?.getTime().toString();
+    this.spinnerService.llamarSpinner('tabla');
+    this.spinnerService.llamarSpinner('grafico');
     const notExceedList: any = [];
     this._httpService
       .getValoresFiltrados(this.listVariables[1]._id, inicio, final, 'max')

@@ -1,9 +1,9 @@
-import { NgModule } from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 
 // Import FusionCharts library and chart modules
 import { ListarDatosComponent } from './components/listar-datos/listar-datos.component';
@@ -31,8 +31,9 @@ import { VariableFormComponent } from './forms/variable-form/variable-form.compo
 import { JwtModule } from '@auth0/angular-jwt';
 import { TriggerFormComponent } from './forms/trigger-form/trigger-form.component';
 import { Home5Component } from './components/home5/home5.component';
-import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { TablaComponent } from './components/tabla/tabla.component';
+import { NgxSpinnerModule } from 'ngx-spinner';
+import { InterceptorService } from './service/interceptor.service';
 
 export function tokenGetter() {
   return localStorage.getItem('token');
@@ -68,6 +69,7 @@ export function tokenGetter() {
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
+    NgxSpinnerModule,
     JwtModule.forRoot({
       config: {
         tokenGetter: tokenGetter,
@@ -80,7 +82,7 @@ export function tokenGetter() {
     MaterialModule,
     ToastrModule.forRoot(),
   ],
-  providers: [{ provide: MAT_DATE_LOCALE, useValue: 'en-GB' }],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

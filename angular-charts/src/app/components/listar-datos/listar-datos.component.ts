@@ -8,6 +8,7 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 import { UtilsService } from 'src/app/service/utils.service';
 import { Dato, RegistroFiltrado } from 'src/app/models/datos.model';
 import { Subscription } from 'rxjs';
+import { SpinnerService } from 'src/app/service/spinner.service';
 // import zoomPlugin from 'chartjs-plugin-zoom';
 Chart.register(...registerables);
 
@@ -75,7 +76,8 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
     private _httpService: HttpService,
     private utils: UtilsService,
     private authService: AuthService,
-    private jwtHelper: JwtHelperService
+    private jwtHelper: JwtHelperService,
+    private spinnerService: SpinnerService
   ) {
     // Preparing the chart data
   }
@@ -247,7 +249,9 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
     this.subscription = this._httpService.listaRegistroFiltrado2.subscribe(
       (message) => {
         this.listDatos = message;
-
+        if (this.listDatos.length != 0) {
+          this.spinnerService.detenerSpinner('grafico');
+        }
         this.chart.data.datasets[0].data = this.listDatos.map(
           (x) =>
             (this.dato = {

@@ -5,6 +5,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Subscription } from 'rxjs';
 import { CSVDato } from 'src/app/models/datos.model';
 import { HttpService } from 'src/app/service/http.service';
+import { SpinnerService } from 'src/app/service/spinner.service';
 
 @Component({
   selector: 'app-tabla',
@@ -12,7 +13,10 @@ import { HttpService } from 'src/app/service/http.service';
   styleUrls: ['./tabla.component.css'],
 })
 export class TablaComponent implements OnInit {
-  constructor(private service: HttpService) {}
+  constructor(
+    private service: HttpService,
+    private spinnerService: SpinnerService
+  ) {}
   exceedList: any = [];
   dataSource: any;
   listVariables: any = [];
@@ -30,6 +34,9 @@ export class TablaComponent implements OnInit {
       this.dataSource = new MatTableDataSource(
         this.removeDuplicates(this.exceedList)
       );
+      if (this.exceedList.length != 0) {
+        this.spinnerService.detenerSpinner('tabla');
+      }
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
     });

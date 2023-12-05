@@ -764,5 +764,848 @@ button.toast-close-button {
   }
 }
 
+/*!*************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[5].rules[0].oneOf[0].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[5].rules[0].oneOf[0].use[2]!./node_modules/ngx-spinner/animations/ball-clip-rotate-multiple.css?ngGlobalStyle ***!
+  \*************************************************************************************************************************************************************************************************************************************************************************/
+/*!
+ * Load Awesome v1.1.0 (http://github.danielcardoso.net/load-awesome/)
+ * Copyright 2015 Daniel Cardoso <@DanielCardoso>
+ * Licensed under MIT
+ */
+.la-ball-clip-rotate-multiple,
+.la-ball-clip-rotate-multiple > div {
+    position: relative;
+    box-sizing: border-box;
+}
+
+.la-ball-clip-rotate-multiple {
+    display: block;
+    font-size: 0;
+    color: #fff;
+}
+
+.la-ball-clip-rotate-multiple.la-dark {
+    color: #333;
+}
+
+.la-ball-clip-rotate-multiple > div {
+    display: inline-block;
+    float: none;
+    background-color: currentColor;
+    border: 0 solid currentColor;
+}
+
+.la-ball-clip-rotate-multiple {
+    width: 32px;
+    height: 32px;
+}
+
+.la-ball-clip-rotate-multiple > div {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    background: transparent;
+    border-style: solid;
+    border-width: 2px;
+    border-radius: 100%;
+    animation: ball-clip-rotate-multiple-rotate 1s ease-in-out infinite;
+}
+
+.la-ball-clip-rotate-multiple > div:first-child {
+    position: absolute;
+    width: 32px;
+    height: 32px;
+    border-right-color: transparent;
+    border-left-color: transparent;
+}
+
+.la-ball-clip-rotate-multiple > div:last-child {
+    width: 16px;
+    height: 16px;
+    border-top-color: transparent;
+    border-bottom-color: transparent;
+    animation-duration: .5s;
+    animation-direction: reverse;
+}
+
+.la-ball-clip-rotate-multiple.la-sm {
+    width: 16px;
+    height: 16px;
+}
+
+.la-ball-clip-rotate-multiple.la-sm > div {
+    border-width: 1px;
+}
+
+.la-ball-clip-rotate-multiple.la-sm > div:first-child {
+    width: 16px;
+    height: 16px;
+}
+
+.la-ball-clip-rotate-multiple.la-sm > div:last-child {
+    width: 8px;
+    height: 8px;
+}
+
+.la-ball-clip-rotate-multiple.la-2x {
+    width: 64px;
+    height: 64px;
+}
+
+.la-ball-clip-rotate-multiple.la-2x > div {
+    border-width: 4px;
+}
+
+.la-ball-clip-rotate-multiple.la-2x > div:first-child {
+    width: 64px;
+    height: 64px;
+}
+
+.la-ball-clip-rotate-multiple.la-2x > div:last-child {
+    width: 32px;
+    height: 32px;
+}
+
+.la-ball-clip-rotate-multiple.la-3x {
+    width: 96px;
+    height: 96px;
+}
+
+.la-ball-clip-rotate-multiple.la-3x > div {
+    border-width: 6px;
+}
+
+.la-ball-clip-rotate-multiple.la-3x > div:first-child {
+    width: 96px;
+    height: 96px;
+}
+
+.la-ball-clip-rotate-multiple.la-3x > div:last-child {
+    width: 48px;
+    height: 48px;
+}
+
+/*
+ * Animation
+ */
+@keyframes ball-clip-rotate-multiple-rotate {
+    0% {
+        transform: translate(-50%, -50%) rotate(0deg);
+    }
+    50% {
+        transform: translate(-50%, -50%) rotate(180deg);
+    }
+    100% {
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
+}
+
+/*!************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[5].rules[0].oneOf[0].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[5].rules[0].oneOf[0].use[2]!./node_modules/ngx-spinner/animations/ball-fussion.css?ngGlobalStyle ***!
+  \************************************************************************************************************************************************************************************************************************************************************/
+/*!
+ * Load Awesome v1.1.0 (http://github.danielcardoso.net/load-awesome/)
+ * Copyright 2015 Daniel Cardoso <@DanielCardoso>
+ * Licensed under MIT
+ */
+.la-ball-fussion,
+.la-ball-fussion > div {
+    position: relative;
+    box-sizing: border-box;
+}
+
+.la-ball-fussion {
+    display: block;
+    font-size: 0;
+    color: #fff;
+}
+
+.la-ball-fussion.la-dark {
+    color: #333;
+}
+
+.la-ball-fussion > div {
+    display: inline-block;
+    float: none;
+    background-color: currentColor;
+    border: 0 solid currentColor;
+}
+
+.la-ball-fussion {
+    width: 8px;
+    height: 8px;
+}
+
+.la-ball-fussion > div {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    border-radius: 100%;
+    transform: translate(-50%, -50%);
+    animation: ball-fussion-ball1 1s 0s ease infinite;
+}
+
+.la-ball-fussion > div:nth-child(1) {
+    top: 0;
+    left: 50%;
+    z-index: 1;
+}
+
+.la-ball-fussion > div:nth-child(2) {
+    top: 50%;
+    left: 100%;
+    z-index: 2;
+    animation-name: ball-fussion-ball2;
+}
+
+.la-ball-fussion > div:nth-child(3) {
+    top: 100%;
+    left: 50%;
+    z-index: 1;
+    animation-name: ball-fussion-ball3;
+}
+
+.la-ball-fussion > div:nth-child(4) {
+    top: 50%;
+    left: 0;
+    z-index: 2;
+    animation-name: ball-fussion-ball4;
+}
+
+.la-ball-fussion.la-sm {
+    width: 4px;
+    height: 4px;
+}
+
+.la-ball-fussion.la-sm > div {
+    width: 6px;
+    height: 6px;
+}
+
+.la-ball-fussion.la-2x {
+    width: 16px;
+    height: 16px;
+}
+
+.la-ball-fussion.la-2x > div {
+    width: 24px;
+    height: 24px;
+}
+
+.la-ball-fussion.la-3x {
+    width: 24px;
+    height: 24px;
+}
+
+.la-ball-fussion.la-3x > div {
+    width: 36px;
+    height: 36px;
+}
+
+/*
+ * Animations
+ */
+@keyframes ball-fussion-ball1 {
+    0% {
+        opacity: .35;
+    }
+    50% {
+        top: -100%;
+        left: 200%;
+        opacity: 1;
+    }
+    100% {
+        top: 50%;
+        left: 100%;
+        z-index: 2;
+        opacity: .35;
+    }
+}
+
+@keyframes ball-fussion-ball2 {
+    0% {
+        opacity: .35;
+    }
+    50% {
+        top: 200%;
+        left: 200%;
+        opacity: 1;
+    }
+    100% {
+        top: 100%;
+        left: 50%;
+        z-index: 1;
+        opacity: .35;
+    }
+}
+
+@keyframes ball-fussion-ball3 {
+    0% {
+        opacity: .35;
+    }
+    50% {
+        top: 200%;
+        left: -100%;
+        opacity: 1;
+    }
+    100% {
+        top: 50%;
+        left: 0;
+        z-index: 2;
+        opacity: .35;
+    }
+}
+
+@keyframes ball-fussion-ball4 {
+    0% {
+        opacity: .35;
+    }
+    50% {
+        top: -100%;
+        left: -100%;
+        opacity: 1;
+    }
+    100% {
+        top: 0;
+        left: 50%;
+        z-index: 1;
+        opacity: .35;
+    }
+}
+
+/*!*******************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[5].rules[0].oneOf[0].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[5].rules[0].oneOf[0].use[2]!./node_modules/ngx-spinner/animations/ball-spin-clockwise.css?ngGlobalStyle ***!
+  \*******************************************************************************************************************************************************************************************************************************************************************/
+/*!
+ * Load Awesome v1.1.0 (http://github.danielcardoso.net/load-awesome/)
+ * Copyright 2015 Daniel Cardoso <@DanielCardoso>
+ * Licensed under MIT
+ */
+.la-ball-spin-clockwise,
+.la-ball-spin-clockwise > div {
+    position: relative;
+    box-sizing: border-box;
+}
+
+.la-ball-spin-clockwise {
+    display: block;
+    font-size: 0;
+    color: #fff;
+}
+
+.la-ball-spin-clockwise.la-dark {
+    color: #333;
+}
+
+.la-ball-spin-clockwise > div {
+    display: inline-block;
+    float: none;
+    background-color: currentColor;
+    border: 0 solid currentColor;
+}
+
+.la-ball-spin-clockwise {
+    width: 32px;
+    height: 32px;
+}
+
+.la-ball-spin-clockwise > div {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 8px;
+    height: 8px;
+    margin-top: -4px;
+    margin-left: -4px;
+    border-radius: 100%;
+    animation: ball-spin-clockwise 1s infinite ease-in-out;
+}
+
+.la-ball-spin-clockwise > div:nth-child(1) {
+    top: 5%;
+    left: 50%;
+    animation-delay: -.875s;
+}
+
+.la-ball-spin-clockwise > div:nth-child(2) {
+    top: 18.1801948466%;
+    left: 81.8198051534%;
+    animation-delay: -.75s;
+}
+
+.la-ball-spin-clockwise > div:nth-child(3) {
+    top: 50%;
+    left: 95%;
+    animation-delay: -.625s;
+}
+
+.la-ball-spin-clockwise > div:nth-child(4) {
+    top: 81.8198051534%;
+    left: 81.8198051534%;
+    animation-delay: -.5s;
+}
+
+.la-ball-spin-clockwise > div:nth-child(5) {
+    top: 94.9999999966%;
+    left: 50.0000000005%;
+    animation-delay: -.375s;
+}
+
+.la-ball-spin-clockwise > div:nth-child(6) {
+    top: 81.8198046966%;
+    left: 18.1801949248%;
+    animation-delay: -.25s;
+}
+
+.la-ball-spin-clockwise > div:nth-child(7) {
+    top: 49.9999750815%;
+    left: 5.0000051215%;
+    animation-delay: -.125s;
+}
+
+.la-ball-spin-clockwise > div:nth-child(8) {
+    top: 18.179464974%;
+    left: 18.1803700518%;
+    animation-delay: 0s;
+}
+
+.la-ball-spin-clockwise.la-sm {
+    width: 16px;
+    height: 16px;
+}
+
+.la-ball-spin-clockwise.la-sm > div {
+    width: 4px;
+    height: 4px;
+    margin-top: -2px;
+    margin-left: -2px;
+}
+
+.la-ball-spin-clockwise.la-2x {
+    width: 64px;
+    height: 64px;
+}
+
+.la-ball-spin-clockwise.la-2x > div {
+    width: 16px;
+    height: 16px;
+    margin-top: -8px;
+    margin-left: -8px;
+}
+
+.la-ball-spin-clockwise.la-3x {
+    width: 96px;
+    height: 96px;
+}
+
+.la-ball-spin-clockwise.la-3x > div {
+    width: 24px;
+    height: 24px;
+    margin-top: -12px;
+    margin-left: -12px;
+}
+
+/*
+ * Animation
+ */
+@keyframes ball-spin-clockwise {
+    0%,
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    20% {
+        opacity: 1;
+    }
+    80% {
+        opacity: 0;
+        transform: scale(0);
+    }
+}
+
+/*!***************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[5].rules[0].oneOf[0].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[5].rules[0].oneOf[0].use[2]!./node_modules/ngx-spinner/animations/cog.css?ngGlobalStyle ***!
+  \***************************************************************************************************************************************************************************************************************************************************/
+/*!
+ * Load Awesome v1.1.0 (http://github.danielcardoso.net/load-awesome/)
+ * Copyright 2015 Daniel Cardoso <@DanielCardoso>
+ * Licensed under MIT
+ */
+.la-cog,
+.la-cog > div {
+    position: relative;
+    box-sizing: border-box;
+}
+
+.la-cog {
+    display: block;
+    font-size: 0;
+    color: #fff;
+}
+
+.la-cog.la-dark {
+    color: #333;
+}
+
+.la-cog > div {
+    display: inline-block;
+    float: none;
+    background-color: currentColor;
+    border: 0 solid currentColor;
+}
+
+.la-cog {
+    width: 31px;
+    height: 31px;
+}
+
+.la-cog > div {
+    width: 100%;
+    height: 100%;
+    background-color: transparent;
+    border-style: dashed;
+    border-width: 2px;
+    border-radius: 100%;
+    animation: cog-rotate 4s linear infinite;
+}
+
+.la-cog > div:after {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    content: "";
+    border: 2px solid currentColor;
+    border-radius: 100%;
+}
+
+.la-cog.la-sm {
+    width: 15px;
+    height: 15px;
+}
+
+.la-cog.la-sm > div {
+    border-width: 1px;
+}
+
+.la-cog.la-sm > div:after {
+    border-width: 1px;
+}
+
+.la-cog.la-2x {
+    width: 61px;
+    height: 61px;
+}
+
+.la-cog.la-2x > div {
+    border-width: 4px;
+}
+
+.la-cog.la-2x > div:after {
+    border-width: 4px;
+}
+
+.la-cog.la-3x {
+    width: 91px;
+    height: 91px;
+}
+
+.la-cog.la-3x > div {
+    border-width: 6px;
+}
+
+.la-cog.la-3x > div:after {
+    border-width: 6px;
+}
+
+/*
+ * Animation
+ */
+@keyframes cog-rotate {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/*!****************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[5].rules[0].oneOf[0].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[5].rules[0].oneOf[0].use[2]!./node_modules/ngx-spinner/animations/square-jelly-box.css?ngGlobalStyle ***!
+  \****************************************************************************************************************************************************************************************************************************************************************/
+/*!
+ * Load Awesome v1.1.0 (http://github.danielcardoso.net/load-awesome/)
+ * Copyright 2015 Daniel Cardoso <@DanielCardoso>
+ * Licensed under MIT
+ */
+.la-square-jelly-box,
+.la-square-jelly-box > div {
+    position: relative;
+    box-sizing: border-box;
+}
+
+.la-square-jelly-box {
+    display: block;
+    font-size: 0;
+    color: #fff;
+}
+
+.la-square-jelly-box.la-dark {
+    color: #333;
+}
+
+.la-square-jelly-box > div {
+    display: inline-block;
+    float: none;
+    background-color: currentColor;
+    border: 0 solid currentColor;
+}
+
+.la-square-jelly-box {
+    width: 32px;
+    height: 32px;
+}
+
+.la-square-jelly-box > div:nth-child(1),
+.la-square-jelly-box > div:nth-child(2) {
+    position: absolute;
+    left: 0;
+    width: 100%;
+}
+
+.la-square-jelly-box > div:nth-child(1) {
+    top: -25%;
+    z-index: 1;
+    height: 100%;
+    border-radius: 10%;
+    animation: square-jelly-box-animate .6s -.1s linear infinite;
+}
+
+.la-square-jelly-box > div:nth-child(2) {
+    bottom: -9%;
+    height: 10%;
+    background: #000;
+    border-radius: 50%;
+    opacity: .2;
+    animation: square-jelly-box-shadow .6s -.1s linear infinite;
+}
+
+.la-square-jelly-box.la-sm {
+    width: 16px;
+    height: 16px;
+}
+
+.la-square-jelly-box.la-2x {
+    width: 64px;
+    height: 64px;
+}
+
+.la-square-jelly-box.la-3x {
+    width: 96px;
+    height: 96px;
+}
+
+/*
+ * Animations
+ */
+@keyframes square-jelly-box-animate {
+    17% {
+        border-bottom-right-radius: 10%;
+    }
+    25% {
+        transform: translateY(25%) rotate(22.5deg);
+    }
+    50% {
+        border-bottom-right-radius: 100%;
+        transform: translateY(50%) scale(1, .9) rotate(45deg);
+    }
+    75% {
+        transform: translateY(25%) rotate(67.5deg);
+    }
+    100% {
+        transform: translateY(0) rotate(90deg);
+    }
+}
+
+@keyframes square-jelly-box-shadow {
+    50% {
+        transform: scale(1.25, 1);
+    }
+}
+
+/*!*****************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[5].rules[0].oneOf[0].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[5].rules[0].oneOf[0].use[2]!./node_modules/ngx-spinner/animations/timer.css?ngGlobalStyle ***!
+  \*****************************************************************************************************************************************************************************************************************************************************/
+/*!
+ * Load Awesome v1.1.0 (http://github.danielcardoso.net/load-awesome/)
+ * Copyright 2015 Daniel Cardoso <@DanielCardoso>
+ * Licensed under MIT
+ */
+.la-timer,
+.la-timer > div {
+    position: relative;
+    box-sizing: border-box;
+}
+
+.la-timer {
+    display: block;
+    font-size: 0;
+    color: #fff;
+}
+
+.la-timer.la-dark {
+    color: #333;
+}
+
+.la-timer > div {
+    display: inline-block;
+    float: none;
+    background-color: currentColor;
+    border: 0 solid currentColor;
+}
+
+.la-timer {
+    width: 32px;
+    height: 32px;
+}
+
+.la-timer > div {
+    width: 32px;
+    height: 32px;
+    background: transparent;
+    border-width: 2px;
+    border-radius: 100%;
+}
+
+.la-timer > div:before,
+.la-timer > div:after {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    display: block;
+    width: 2px;
+    margin-top: -1px;
+    margin-left: -1px;
+    content: "";
+    background: currentColor;
+    border-radius: 2px;
+    transform-origin: 1px 1px 0;
+    animation: timer-loader 1250ms infinite linear;
+    animation-delay: -625ms;
+}
+
+.la-timer > div:before {
+    height: 12px;
+}
+
+.la-timer > div:after {
+    height: 8px;
+    animation-duration: 15s;
+    animation-delay: -7.5s;
+}
+
+.la-timer.la-sm {
+    width: 16px;
+    height: 16px;
+}
+
+.la-timer.la-sm > div {
+    width: 16px;
+    height: 16px;
+    border-width: 1px;
+}
+
+.la-timer.la-sm > div:before,
+.la-timer.la-sm > div:after {
+    top: 7px;
+    left: 7px;
+    width: 1px;
+    margin-top: -.5px;
+    margin-left: -.5px;
+    border-radius: 1px;
+    transform-origin: .5px .5px 0;
+}
+
+.la-timer.la-sm > div:before {
+    height: 6px;
+}
+
+.la-timer.la-sm > div:after {
+    height: 4px;
+}
+
+.la-timer.la-2x {
+    width: 64px;
+    height: 64px;
+}
+
+.la-timer.la-2x > div {
+    width: 64px;
+    height: 64px;
+    border-width: 4px;
+}
+
+.la-timer.la-2x > div:before,
+.la-timer.la-2x > div:after {
+    top: 28px;
+    left: 28px;
+    width: 4px;
+    margin-top: -2px;
+    margin-left: -2px;
+    border-radius: 4px;
+    transform-origin: 2px 2px 0;
+}
+
+.la-timer.la-2x > div:before {
+    height: 24px;
+}
+
+.la-timer.la-2x > div:after {
+    height: 16px;
+}
+
+.la-timer.la-3x {
+    width: 96px;
+    height: 96px;
+}
+
+.la-timer.la-3x > div {
+    width: 96px;
+    height: 96px;
+    border-width: 6px;
+}
+
+.la-timer.la-3x > div:before,
+.la-timer.la-3x > div:after {
+    top: 42px;
+    left: 42px;
+    width: 6px;
+    margin-top: -3px;
+    margin-left: -3px;
+    border-radius: 6px;
+    transform-origin: 3px 3px 0;
+}
+
+.la-timer.la-3x > div:before {
+    height: 36px;
+}
+
+.la-timer.la-3x > div:after {
+    height: 24px;
+}
+
+/*
+ * Animation
+ */
+@keyframes timer-loader {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
 
 /*# sourceMappingURL=styles.css.map*/
