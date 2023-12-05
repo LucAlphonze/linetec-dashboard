@@ -31,9 +31,8 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
   pulsador: string = 'Pulsador';
   id: any = 0;
   chart: any;
-  chart2: any;
   chart3: any;
-  chart4: any;
+
   title: string = 'Prueba angular';
   timeout: any;
   token: any;
@@ -78,9 +77,7 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
     private authService: AuthService,
     private jwtHelper: JwtHelperService,
     private spinnerService: SpinnerService
-  ) {
-    // Preparing the chart data
-  }
+  ) {}
 
   ngOnInit(): void {
     this.addMonths(this.todayDate, -6);
@@ -113,21 +110,6 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
         parsing: false,
         plugins: {
           decimation: this.decimation,
-          // zoom: {
-          //   pan: {
-          //     enabled: true,
-          //     mode: 'xy',
-          //   },
-          //   zoom: {
-          //     wheel: {
-          //       enabled: true,
-          //     },
-          //     pinch: {
-          //       enabled: true,
-          //     },
-          //     mode: 'xy',
-          //   },
-          // },
         },
         scales: {
           y: {
@@ -156,29 +138,6 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
       plugins: [this.canvasBackgroundColor],
     });
 
-    // this.chart2 = new Chart('myChart2', {
-    //   type: 'bar',
-    //   data: {
-    //     labels: [],
-    //     datasets: [
-    //       {
-    //         data: [],
-    //         label: 'Valor máximo por mes',
-    //         backgroundColor: 'rgba(255, 99, 132, 0.2)',
-    //         borderColor: 'rgb(255, 99, 132)',
-    //       },
-    //     ],
-    //   },
-    //   options: {
-    //     elements: {
-    //       line: {
-    //         borderWidth: 3,
-    //       },
-    //     },
-    //     aspectRatio: 1,
-    //     maintainAspectRatio: false,
-    //   },
-    // });
     this.chart3 = new Chart('myChart3', {
       type: 'doughnut',
       data: {
@@ -198,50 +157,14 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
         maintainAspectRatio: false,
       },
     });
-    // this.chart4 = new Chart('myChart4', {
-    //   type: 'radar',
-    //   data: {
-    //     labels: ['Max', 'Min', 'Avg'],
-    //     datasets: [],
-    //   },
-    //   options: {
-    //     elements: {
-    //       line: {
-    //         borderWidth: 3,
-    //       },
-    //     },
-    //     maintainAspectRatio: false,
-    //   },
-    // });
     this.subscription = this._httpService.listaRegistroFiltrado.subscribe(
       (message) => {
-        // this.chart4.data.datasets = [];
         this.listDatos2 = message;
         this.chart3.data.labels = this.listDatos2.map((x) => x._id);
         this.chart3.data.datasets[0].data = this.listDatos2.map((x) => x.avg);
         this.chart3.update();
 
         //bar chart
-        // this.chart2.data.labels = this.listDatos2.map((x) => x._id);
-        // this.chart2.data.datasets[0].data = this.listDatos2.map(
-        //   (x) => x.respuesta
-        // );
-        // this.chart2.update();
-
-        // this.chart4.data.datasets[0].data = this.listDatos2.map(
-        //   (x) => x.respuesta
-        // );
-        // this.listDatos2.forEach((datos) => { esto no lo vamos a ver
-        //   const dsColor = this.utils.namedColor(this.chart4.data.datasets.length);
-        //   var newDataSet = {
-        //     label: datos._id,
-        //     backgroundColor: this.utils.transparentize(dsColor, 0.5),
-        //     borderColor: dsColor,
-        //     data: [datos.respuesta, datos.min, datos.avg],
-        //   };
-        //   this.chart4.data.datasets.push(newDataSet);
-        // });
-        // this.chart4.update();
       }
     );
     this.expirationCheck();

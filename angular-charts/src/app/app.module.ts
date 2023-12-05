@@ -12,21 +12,17 @@ import { MaterialModule } from 'src/material.module';
 import { ToastrModule } from 'ngx-toastr';
 import { RegisterComponent } from './components/register/register.component';
 import { LoginComponent } from './components/login/login.component';
-import { HomeComponent } from './components/home/home.component';
 import { UpdatepopupComponent } from './components/updatepopup/updatepopup.component';
 import { UserlistingComponent } from './components/userlisting/userlisting.component';
 import { PaisFormComponent } from './forms/pais-form/pais-form.component';
 import { ProvinciaFormComponent } from './forms/provincia-form/provincia-form.component';
 import { LocalidadFormComponent } from './forms/localidad-form/localidad-form.component';
-import { Home2Component } from './components/home2/home2.component';
 import { EmpresaFormComponent } from './forms/empresa-form/empresa-form.component';
 import { EmpresaPlantaFormComponent } from './forms/empresa-planta-form/empresa-planta-form.component';
 import { MaquinaFormComponent } from './forms/maquina-form/maquina-form.component';
 import { TipoMaquinaFormComponent } from './forms/tipo-maquina-form/tipo-maquina-form.component';
 import { LineaProduccionFormComponent } from './forms/linea-produccion-form/linea-produccion-form.component';
-import { Home3Component } from './components/home3/home3.component';
 import { ProcesoFormComponent } from './forms/proceso-form/proceso-form.component';
-import { Home4Component } from './components/home4/home4.component';
 import { VariableFormComponent } from './forms/variable-form/variable-form.component';
 import { JwtModule } from '@auth0/angular-jwt';
 import { TriggerFormComponent } from './forms/trigger-form/trigger-form.component';
@@ -45,21 +41,17 @@ export function tokenGetter() {
     ListarDatosComponent,
     RegisterComponent,
     LoginComponent,
-    HomeComponent,
     UpdatepopupComponent,
     UserlistingComponent,
     PaisFormComponent,
     ProvinciaFormComponent,
     LocalidadFormComponent,
-    Home2Component,
     EmpresaFormComponent,
     EmpresaPlantaFormComponent,
     MaquinaFormComponent,
     TipoMaquinaFormComponent,
     LineaProduccionFormComponent,
-    Home3Component,
     ProcesoFormComponent,
-    Home4Component,
     VariableFormComponent,
     TriggerFormComponent,
     Home5Component,

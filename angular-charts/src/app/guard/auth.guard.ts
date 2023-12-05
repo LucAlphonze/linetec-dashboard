@@ -11,7 +11,7 @@ export const authGuard: CanActivateFn = (route, state) => {
   if (service.IsLoggedIn()) {
     if (route.url.length > 0) {
       let menu = route.url[0].path;
-      if (menu == 'user' || 'home' || 'home2' || 'home3') {
+      if (menu == 'user') {
         if (service.getUserRole() == 'admin') {
           return true;
         } else {

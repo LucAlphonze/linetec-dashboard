@@ -33,13 +33,6 @@ export class LoginComponent {
       switch (this.userData.status) {
         case 200:
           if (this.userData['datos'].isActive) {
-            // sessionStorage.setItem('token', this.userData.token);
-            // sessionStorage.setItem('username', this.userData['datos'].username);
-            // sessionStorage.setItem(
-            //   'userrole',
-            //   this.userData['datos'].role.name
-            // );
-            // console.log(sessionStorage.getItem('userrole')?.toString());
             this.toastr.success('acceso concedido');
             this.service.storeUserData(
               this.userData.token,
@@ -70,25 +63,3 @@ export class LoginComponent {
     });
   }
 }
-
-// if (
-//   this.userData['datos'].username === this.loginForm.value.username &&
-//   this.userData['datos'].password === this.loginForm.value.password
-// ) {
-//   if (this.userData['datos'].isActive) {
-//     sessionStorage.setItem('token', this.userData.token);
-//     sessionStorage.setItem('username', this.userData['datos'].username);
-//     sessionStorage.setItem('userrole', this.userData['datos'].role.name);
-//     this.router.navigate(['']);
-//     this.toastr.success('acceso concedido');
-//     console.log(sessionStorage.getItem('userrole')?.toString());
-//   } else {
-//     this.toastr.error('Contactar con administrador', 'usuario inactivo');
-//   }
-// } else if (this.userData.status == 403) {
-//   console.log('else if');
-//   this.toastr.error(
-//     'Credenciales invalidas',
-//     'usuario o contraseña incorrecta'
-//   );
-// }

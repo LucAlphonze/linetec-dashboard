@@ -143,28 +143,28 @@ export class AppComponent implements DoCheck, OnInit {
               continue myBlock;
             }
           }
-          if (i == this.exceedList.length) {
-            // console.log('not exceed list: ', notExceedList);
-            this.exceedList.map((e: any, index: number) => {
-              e.time = this.formatTime(
-                new Date(
-                  notExceedList[
-                    index < notExceedList.length
-                      ? index
-                      : notExceedList.length - 1
-                  ].time_stamp
-                ).getTime(),
-                new Date(e.time_stamp).getTime()
-              );
-              e.cTime_stamp =
-                notExceedList[
-                  index < notExceedList.length
-                    ? index
-                    : notExceedList.length - 1
-                ].time_stamp;
-            });
-            this._httpService.stream_DatosInRange(this.exceedList);
-          }
+          // if (i == this.exceedList.length) {
+          //   // console.log('not exceed list: ', notExceedList);
+          //   this.exceedList.map((e: any, index: number) => {
+          //     e.time = this.formatTime(
+          //       new Date(
+          //         notExceedList[
+          //           index < notExceedList.length
+          //             ? index
+          //             : notExceedList.length - 1
+          //         ].time_stamp
+          //       ).getTime(),
+          //       new Date(e.time_stamp).getTime()
+          //     );
+          //     e.cTime_stamp =
+          //       notExceedList[
+          //         index < notExceedList.length
+          //           ? index
+          //           : notExceedList.length - 1
+          //       ].time_stamp;
+          //   });
+          //   this._httpService.stream_DatosInRange(this.exceedList);
+          // }
         }
       });
     this._httpService
