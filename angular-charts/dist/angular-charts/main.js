@@ -210,15 +210,24 @@ class AppComponent {
     this._httpService.getValoresFiltrados(this.listVariables[1]._id, inicio, final, 'max').subscribe(data => {
       // console.log(data);
       this._httpService.stream_RegistroFiltrado(data['datos']);
+      if (data['datos'].length == 0) {
+        this.spinnerService.detenerSpinner('grafico');
+      }
     });
     this._httpService.getValoresFiltrados2(this.listVariables[1]._id, inicio, final).subscribe(data => {
       // console.log(data);
       this._httpService.stream_RegistroFiltrado2(data['datos']);
+      if (data['datos'].length == 0) {
+        this.spinnerService.detenerSpinner('grafico');
+      }
     });
     this.getInRangeTabla();
     this._httpService.getValoresFiltrados2(this.listVariables[4]._id, inicio, final).subscribe(data => {
       console.log(data);
       this._httpService.stream_Datos3(data['datos']);
+      if (data['datos'].length == 0) {
+        this.spinnerService.detenerSpinner('grafico');
+      }
     });
     this.opened = false;
   }
@@ -235,6 +244,10 @@ class AppComponent {
         return n.valor_lectura < this.valor.value.threshold;
       });
       console.log('exceed: ', this.exceedList.length, 'not exceed: ', this.notExceedList2.length);
+      if (data['datos'].length == 0) {
+        this.spinnerService.detenerSpinner('tabla');
+        this._httpService.stream_DatosInRange(this.exceedList);
+      }
       myBlock: for (let i = 0; i < this.exceedList.length; i++) {
         // console.log('i es ', i);
         if (i == this.exceedList.length - 1) {
