@@ -208,36 +208,47 @@ en el otro componente
 -->
 <mat-sidenav-container class="example-container">
   <mat-sidenav #sidenav mode="side" [(opened)]="opened">
-    <mat-form-field>
-      <mat-label>Por favor elija 2 fechas </mat-label>
-      <mat-date-range-input [formGroup]="range" [rangePicker]="picker">
-        <input matStartDate formControlName="start" placeholder="Start date" />
-        <input matEndDate formControlName="end" placeholder="End date" />
-      </mat-date-range-input>
-      <mat-datepicker-toggle
-        matIconSuffix
-        [for]="picker"
-      ></mat-datepicker-toggle>
-      <mat-date-range-picker #picker>
-        <mat-date-range-picker-actions>
-          <button mat-button matDateRangePickerCancel>Cancel</button>
-          <button
-            mat-raised-button
-            color="primary"
-            (click)="getFiltrados()"
-            matDateRangePickerApply
-          >
-            Aplicar
-          </button>
-        </mat-date-range-picker-actions>
-      </mat-date-range-picker>
-    </mat-form-field>
-    <form class="example-form" [formGroup]="valor" (ngSubmit)="getFiltrados()">
+    <div class="p-3">
       <mat-form-field>
-        <mat-label>Elegir valor limite </mat-label>
-        <input matInput formControlName formControlName="threshold" />
+        <mat-label>Elegir 2 fechas </mat-label>
+        <mat-date-range-input [formGroup]="range" [rangePicker]="picker">
+          <input
+            matStartDate
+            formControlName="start"
+            placeholder="Start date"
+          />
+          <input matEndDate formControlName="end" placeholder="End date" />
+        </mat-date-range-input>
+        <mat-datepicker-toggle
+          matIconSuffix
+          [for]="picker"
+        ></mat-datepicker-toggle>
+        <mat-date-range-picker #picker>
+          <mat-date-range-picker-actions>
+            <button mat-button matDateRangePickerCancel>Cancel</button>
+            <button
+              mat-raised-button
+              color="primary"
+              (click)="getFiltrados()"
+              matDateRangePickerApply
+            >
+              Aplicar
+            </button>
+          </mat-date-range-picker-actions>
+        </mat-date-range-picker>
       </mat-form-field>
-      <div class="m-1">
+    </div>
+
+    <div class="p-3">
+      <form
+        class="example-form"
+        [formGroup]="valor"
+        (ngSubmit)="getInRangeTabla()"
+      >
+        <mat-form-field>
+          <mat-label>Elegir valor limite </mat-label>
+          <input matInput formControlName formControlName="threshold" />
+        </mat-form-field>
         <button
           class="m-3"
           [disabled]="!range.value.start && !range.value.end"
@@ -246,8 +257,8 @@ en el otro componente
         >
           Enviar
         </button>
-      </div>
-    </form>
+      </form>
+    </div>
   </mat-sidenav>
   <mat-sidenav-content class="fondo">
     <div class="toolbar" *ngIf="isMenuRequired" role="banner">

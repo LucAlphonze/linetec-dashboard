@@ -76,9 +76,8 @@ export class AppComponent implements DoCheck, OnInit {
   getFiltrados() {
     var inicio: any = this.range.value.start?.getTime().toString();
     var final: any = this.range.value.end?.getTime().toString();
-    this.spinnerService.llamarSpinner('tabla');
     this.spinnerService.llamarSpinner('grafico');
-    const notExceedList: any = [];
+
     this._httpService
       .getValoresFiltrados(this.listVariables[1]._id, inicio, final, 'max')
       .subscribe((data) => {
@@ -91,6 +90,22 @@ export class AppComponent implements DoCheck, OnInit {
         // console.log(data);
         this._httpService.stream_RegistroFiltrado2(data['datos']);
       });
+    this.getInRangeTabla();
+    this._httpService
+      .getValoresFiltrados2(this.listVariables[4]._id, inicio, final)
+      .subscribe((data) => {
+        console.log(data);
+        this._httpService.stream_Datos3(data['datos']);
+      });
+
+    this.opened = false;
+  }
+
+  getInRangeTabla() {
+    const notExceedList: any = [];
+    this.spinnerService.llamarSpinner('tabla');
+    var inicio: any = this.range.value.start?.getTime().toString();
+    var final: any = this.range.value.end?.getTime().toString();
     this._httpService
       .getAllInRange(this.listVariables[1]._id, inicio, final)
       .subscribe((data) => {
@@ -143,37 +158,8 @@ export class AppComponent implements DoCheck, OnInit {
               continue myBlock;
             }
           }
-          // if (i == this.exceedList.length) {
-          //   // console.log('not exceed list: ', notExceedList);
-          //   this.exceedList.map((e: any, index: number) => {
-          //     e.time = this.formatTime(
-          //       new Date(
-          //         notExceedList[
-          //           index < notExceedList.length
-          //             ? index
-          //             : notExceedList.length - 1
-          //         ].time_stamp
-          //       ).getTime(),
-          //       new Date(e.time_stamp).getTime()
-          //     );
-          //     e.cTime_stamp =
-          //       notExceedList[
-          //         index < notExceedList.length
-          //           ? index
-          //           : notExceedList.length - 1
-          //       ].time_stamp;
-          //   });
-          //   this._httpService.stream_DatosInRange(this.exceedList);
-          // }
         }
       });
-    this._httpService
-      .getValoresFiltrados2(this.listVariables[4]._id, inicio, final)
-      .subscribe((data) => {
-        console.log(data);
-        this._httpService.stream_Datos3(data['datos']);
-      });
-
     this.opened = false;
   }
 
