@@ -87,12 +87,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _service_http_service__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./service/http.service */ 9558);
 /* harmony import */ var _service_spinner_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./service/spinner.service */ 7944);
 /* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @angular/common */ 6575);
-/* harmony import */ var _angular_material_input__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @angular/material/input */ 26);
-/* harmony import */ var _angular_material_form_field__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @angular/material/form-field */ 1333);
-/* harmony import */ var _angular_material_button__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @angular/material/button */ 895);
-/* harmony import */ var _angular_material_icon__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @angular/material/icon */ 6515);
-/* harmony import */ var _angular_material_datepicker__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @angular/material/datepicker */ 2226);
-/* harmony import */ var _angular_material_sidenav__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @angular/material/sidenav */ 1465);
+/* harmony import */ var _angular_material_tooltip__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @angular/material/tooltip */ 702);
+/* harmony import */ var _angular_material_input__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @angular/material/input */ 26);
+/* harmony import */ var _angular_material_form_field__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @angular/material/form-field */ 1333);
+/* harmony import */ var _angular_material_button__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @angular/material/button */ 895);
+/* harmony import */ var _angular_material_icon__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @angular/material/icon */ 6515);
+/* harmony import */ var _angular_material_datepicker__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @angular/material/datepicker */ 2226);
+/* harmony import */ var _angular_material_sidenav__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! @angular/material/sidenav */ 1465);
 
 
 
@@ -107,25 +108,26 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-function AppComponent_div_27_a_6_Template(rf, ctx) {
+
+function AppComponent_div_31_a_6_Template(rf, ctx) {
   if (rf & 1) {
-    _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵelementStart"](0, "a", 24);
+    _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵelementStart"](0, "a", 26);
     _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵtext"](1, "Formularios");
     _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵelementEnd"]();
   }
 }
-function AppComponent_div_27_a_7_Template(rf, ctx) {
+function AppComponent_div_31_a_7_Template(rf, ctx) {
   if (rf & 1) {
-    _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵelementStart"](0, "a", 25);
+    _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵelementStart"](0, "a", 27);
     _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵtext"](1, "Usuarios");
     _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵelementEnd"]();
   }
 }
-function AppComponent_div_27_Template(rf, ctx) {
+function AppComponent_div_31_Template(rf, ctx) {
   if (rf & 1) {
     const _r6 = _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵgetCurrentView"]();
-    _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵelementStart"](0, "div", 17)(1, "button", 18);
-    _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵlistener"]("click", function AppComponent_div_27_Template_button_click_1_listener() {
+    _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵelementStart"](0, "div", 19)(1, "button", 20);
+    _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵlistener"]("click", function AppComponent_div_31_Template_button_click_1_listener() {
       _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵrestoreView"](_r6);
       _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵnextContext"]();
       const _r0 = _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵreference"](2);
@@ -134,14 +136,14 @@ function AppComponent_div_27_Template(rf, ctx) {
     _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵelementStart"](2, "mat-icon");
     _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵtext"](3, "menu");
     _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵelementEnd"]()();
-    _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵelementStart"](4, "a", 19);
+    _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵelementStart"](4, "a", 21);
     _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵtext"](5, "Graficos");
     _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵelementEnd"]();
-    _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵtemplate"](6, AppComponent_div_27_a_6_Template, 2, 0, "a", 20);
-    _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵtemplate"](7, AppComponent_div_27_a_7_Template, 2, 0, "a", 21);
-    _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵelement"](8, "div", 22);
-    _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵelementStart"](9, "a", 23);
-    _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵlistener"]("click", function AppComponent_div_27_Template_a_click_9_listener() {
+    _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵtemplate"](6, AppComponent_div_31_a_6_Template, 2, 0, "a", 22);
+    _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵtemplate"](7, AppComponent_div_31_a_7_Template, 2, 0, "a", 23);
+    _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵelement"](8, "div", 24);
+    _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵelementStart"](9, "a", 25);
+    _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵlistener"]("click", function AppComponent_div_31_Template_a_click_9_listener() {
       _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵrestoreView"](_r6);
       const ctx_r7 = _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵnextContext"]();
       return _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵresetView"](ctx_r7.logOut());
@@ -293,9 +295,9 @@ AppComponent.ɵfac = function AppComponent_Factory(t) {
 AppComponent.ɵcmp = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵdefineComponent"]({
   type: AppComponent,
   selectors: [["app-root"]],
-  decls: 30,
+  decls: 34,
   vars: 7,
-  consts: [[1, "example-container"], ["mode", "side", 3, "opened", "openedChange"], ["sidenav", ""], [1, "p-3"], [3, "formGroup", "rangePicker"], ["matStartDate", "", "formControlName", "start", "placeholder", "Start date"], ["matEndDate", "", "formControlName", "end", "placeholder", "End date"], ["matIconSuffix", "", 3, "for"], ["picker", ""], ["mat-button", "", "matDateRangePickerCancel", ""], ["mat-raised-button", "", "color", "primary", "matDateRangePickerApply", "", 3, "click"], [1, "example-form", 3, "formGroup", "ngSubmit"], ["matInput", "", "formControlName", "", "formControlName", "threshold"], ["mat-raised-button", "", "color", "primary", 1, "m-3", 3, "disabled"], [1, "fondo"], ["class", "toolbar", "role", "banner", 4, "ngIf"], ["role", "main", 1, "content"], ["role", "banner", 1, "toolbar"], ["mat-icon-button", "", 3, "click"], ["routerLink", "/"], ["routerLink", "/home5", 4, "ngIf"], ["routerLink", "/user", 4, "ngIf"], [1, "spacer"], [2, "cursor", "pointer", 3, "click"], ["routerLink", "/home5"], ["routerLink", "/user"]],
+  consts: [[1, "example-container"], ["mode", "side", 3, "opened", "openedChange"], ["sidenav", ""], [1, "p-3"], [3, "formGroup", "rangePicker"], ["matStartDate", "", "formControlName", "start", "placeholder", "Start date"], ["matEndDate", "", "formControlName", "end", "placeholder", "End date"], ["matIconSuffix", "", 3, "for"], ["picker", ""], ["mat-button", "", "matDateRangePickerCancel", ""], ["mat-raised-button", "", "color", "primary", "matDateRangePickerApply", "", 3, "click"], ["matTooltip", "Seleccionar 2 fechas para actualizar los contenidos del grafico y la tabla de alertas "], [1, "example-form", 3, "formGroup", "ngSubmit"], ["matInput", "", "formControlName", "", "formControlName", "threshold"], ["matTooltip", "Luego de seleccionar las dos fechas estara disponible el boton para cambiar los limites de la tabla "], ["mat-raised-button", "", "color", "primary", 1, "m-3", 3, "disabled"], [1, "fondo"], ["class", "toolbar", "role", "banner", 4, "ngIf"], ["role", "main", 1, "content"], ["role", "banner", 1, "toolbar"], ["mat-icon-button", "", 3, "click"], ["routerLink", "/"], ["routerLink", "/home5", 4, "ngIf"], ["routerLink", "/user", 4, "ngIf"], [1, "spacer"], [2, "cursor", "pointer", 3, "click"], ["routerLink", "/home5"], ["routerLink", "/user"]],
   template: function AppComponent_Template(rf, ctx) {
     if (rf & 1) {
       _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵelementStart"](0, "mat-sidenav-container", 0)(1, "mat-sidenav", 1, 2);
@@ -317,23 +319,29 @@ AppComponent.ɵcmp = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵ
         return ctx.getFiltrados();
       });
       _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵtext"](17, " Aplicar ");
-      _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵelementEnd"]()()()()();
-      _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵelementStart"](18, "div", 3)(19, "form", 11);
-      _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵlistener"]("ngSubmit", function AppComponent_Template_form_ngSubmit_19_listener() {
+      _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵelementEnd"]()()()();
+      _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵelementStart"](18, "mat-icon", 11);
+      _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵtext"](19, " help ");
+      _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵelementEnd"]()();
+      _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵelementStart"](20, "div", 3)(21, "form", 12);
+      _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵlistener"]("ngSubmit", function AppComponent_Template_form_ngSubmit_21_listener() {
         return ctx.getInRangeTabla();
       });
-      _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵelementStart"](20, "mat-form-field")(21, "mat-label");
-      _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵtext"](22, "Elegir valor limite ");
+      _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵelementStart"](22, "mat-form-field")(23, "mat-label");
+      _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵtext"](24, "Elegir valor limite ");
       _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵelementEnd"]();
-      _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵelement"](23, "input", 12);
+      _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵelement"](25, "input", 13);
       _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵelementEnd"]();
-      _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵelementStart"](24, "button", 13);
-      _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵtext"](25, " Enviar ");
+      _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵelementStart"](26, "mat-icon", 14);
+      _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵtext"](27, " help ");
+      _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵelementEnd"]();
+      _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵelementStart"](28, "button", 15);
+      _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵtext"](29, " Enviar ");
       _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵelementEnd"]()()()();
-      _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵelementStart"](26, "mat-sidenav-content", 14);
-      _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵtemplate"](27, AppComponent_div_27_Template, 11, 2, "div", 15);
-      _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵelementStart"](28, "div", 16);
-      _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵelement"](29, "router-outlet");
+      _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵelementStart"](30, "mat-sidenav-content", 16);
+      _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵtemplate"](31, AppComponent_div_31_Template, 11, 2, "div", 17);
+      _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵelementStart"](32, "div", 18);
+      _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵelement"](33, "router-outlet");
       _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵelementEnd"]()()();
     }
     if (rf & 2) {
@@ -344,15 +352,15 @@ AppComponent.ɵcmp = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵ
       _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵproperty"]("formGroup", ctx.range)("rangePicker", _r1);
       _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵadvance"](3);
       _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵproperty"]("for", _r1);
-      _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵadvance"](9);
+      _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵadvance"](11);
       _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵproperty"]("formGroup", ctx.valor);
-      _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵadvance"](5);
+      _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵadvance"](7);
       _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵproperty"]("disabled", !ctx.range.value.start && !ctx.range.value.end);
       _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵadvance"](3);
       _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵproperty"]("ngIf", ctx.isMenuRequired);
     }
   },
-  dependencies: [_angular_common__WEBPACK_IMPORTED_MODULE_6__.NgIf, _angular_router__WEBPACK_IMPORTED_MODULE_5__.RouterOutlet, _angular_router__WEBPACK_IMPORTED_MODULE_5__.RouterLink, _angular_forms__WEBPACK_IMPORTED_MODULE_4__["ɵNgNoValidate"], _angular_forms__WEBPACK_IMPORTED_MODULE_4__.DefaultValueAccessor, _angular_forms__WEBPACK_IMPORTED_MODULE_4__.NgControlStatus, _angular_forms__WEBPACK_IMPORTED_MODULE_4__.NgControlStatusGroup, _angular_forms__WEBPACK_IMPORTED_MODULE_4__.FormGroupDirective, _angular_forms__WEBPACK_IMPORTED_MODULE_4__.FormControlName, _angular_material_input__WEBPACK_IMPORTED_MODULE_7__.MatInput, _angular_material_form_field__WEBPACK_IMPORTED_MODULE_8__.MatFormField, _angular_material_form_field__WEBPACK_IMPORTED_MODULE_8__.MatLabel, _angular_material_form_field__WEBPACK_IMPORTED_MODULE_8__.MatSuffix, _angular_material_button__WEBPACK_IMPORTED_MODULE_9__.MatButton, _angular_material_button__WEBPACK_IMPORTED_MODULE_9__.MatIconButton, _angular_material_icon__WEBPACK_IMPORTED_MODULE_10__.MatIcon, _angular_material_datepicker__WEBPACK_IMPORTED_MODULE_11__.MatDatepickerToggle, _angular_material_datepicker__WEBPACK_IMPORTED_MODULE_11__.MatDateRangeInput, _angular_material_datepicker__WEBPACK_IMPORTED_MODULE_11__.MatStartDate, _angular_material_datepicker__WEBPACK_IMPORTED_MODULE_11__.MatEndDate, _angular_material_datepicker__WEBPACK_IMPORTED_MODULE_11__.MatDateRangePicker, _angular_material_datepicker__WEBPACK_IMPORTED_MODULE_11__.MatDatepickerActions, _angular_material_datepicker__WEBPACK_IMPORTED_MODULE_11__.MatDatepickerCancel, _angular_material_datepicker__WEBPACK_IMPORTED_MODULE_11__.MatDatepickerApply, _angular_material_sidenav__WEBPACK_IMPORTED_MODULE_12__.MatSidenav, _angular_material_sidenav__WEBPACK_IMPORTED_MODULE_12__.MatSidenavContainer, _angular_material_sidenav__WEBPACK_IMPORTED_MODULE_12__.MatSidenavContent],
+  dependencies: [_angular_common__WEBPACK_IMPORTED_MODULE_6__.NgIf, _angular_router__WEBPACK_IMPORTED_MODULE_5__.RouterOutlet, _angular_router__WEBPACK_IMPORTED_MODULE_5__.RouterLink, _angular_material_tooltip__WEBPACK_IMPORTED_MODULE_7__.MatTooltip, _angular_forms__WEBPACK_IMPORTED_MODULE_4__["ɵNgNoValidate"], _angular_forms__WEBPACK_IMPORTED_MODULE_4__.DefaultValueAccessor, _angular_forms__WEBPACK_IMPORTED_MODULE_4__.NgControlStatus, _angular_forms__WEBPACK_IMPORTED_MODULE_4__.NgControlStatusGroup, _angular_forms__WEBPACK_IMPORTED_MODULE_4__.FormGroupDirective, _angular_forms__WEBPACK_IMPORTED_MODULE_4__.FormControlName, _angular_material_input__WEBPACK_IMPORTED_MODULE_8__.MatInput, _angular_material_form_field__WEBPACK_IMPORTED_MODULE_9__.MatFormField, _angular_material_form_field__WEBPACK_IMPORTED_MODULE_9__.MatLabel, _angular_material_form_field__WEBPACK_IMPORTED_MODULE_9__.MatSuffix, _angular_material_button__WEBPACK_IMPORTED_MODULE_10__.MatButton, _angular_material_button__WEBPACK_IMPORTED_MODULE_10__.MatIconButton, _angular_material_icon__WEBPACK_IMPORTED_MODULE_11__.MatIcon, _angular_material_datepicker__WEBPACK_IMPORTED_MODULE_12__.MatDatepickerToggle, _angular_material_datepicker__WEBPACK_IMPORTED_MODULE_12__.MatDateRangeInput, _angular_material_datepicker__WEBPACK_IMPORTED_MODULE_12__.MatStartDate, _angular_material_datepicker__WEBPACK_IMPORTED_MODULE_12__.MatEndDate, _angular_material_datepicker__WEBPACK_IMPORTED_MODULE_12__.MatDateRangePicker, _angular_material_datepicker__WEBPACK_IMPORTED_MODULE_12__.MatDatepickerActions, _angular_material_datepicker__WEBPACK_IMPORTED_MODULE_12__.MatDatepickerCancel, _angular_material_datepicker__WEBPACK_IMPORTED_MODULE_12__.MatDatepickerApply, _angular_material_sidenav__WEBPACK_IMPORTED_MODULE_13__.MatSidenav, _angular_material_sidenav__WEBPACK_IMPORTED_MODULE_13__.MatSidenavContainer, _angular_material_sidenav__WEBPACK_IMPORTED_MODULE_13__.MatSidenavContent],
   styles: ["/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiJhcHAuY29tcG9uZW50LmNzcyJ9 */\n/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8uL3NyYy9hcHAvYXBwLmNvbXBvbmVudC5jc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IjtBQUNBLDRKQUE0SiIsInNvdXJjZVJvb3QiOiIifQ== */", "[_nghost-%COMP%] {\n    font-family: -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto,\n      Helvetica, Arial, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\",\n      \"Segoe UI Symbol\";\n    font-size: 14px;\n    color: #333;\n    box-sizing: border-box;\n    -webkit-font-smoothing: antialiased;\n    -moz-osx-font-smoothing: grayscale;\n  }\n\n  h1[_ngcontent-%COMP%], h2[_ngcontent-%COMP%], h3[_ngcontent-%COMP%], h4[_ngcontent-%COMP%], h5[_ngcontent-%COMP%], h6[_ngcontent-%COMP%] {\n    margin: 8px 0;\n  }\n\n  p[_ngcontent-%COMP%] {\n    margin: 0;\n  }\n\n  .spacer[_ngcontent-%COMP%] {\n    flex: 1;\n  }\n\n  .toolbar[_ngcontent-%COMP%] {\n    position: absolute;\n    top: 0;\n    left: 0;\n    right: 0;\n    height: 60px;\n    display: flex;\n    align-items: center;\n    background-color: #1976d2;\n    color: white;\n    font-weight: 600;\n  }\n\n  .toolbar[_ngcontent-%COMP%]   img[_ngcontent-%COMP%] {\n    margin: 0 16px;\n  }\n\n  .content[_ngcontent-%COMP%] {\n    margin: 82px auto 32px;\n    padding: 0 32px;\n    max-width: auto;\n    \n\n  }\n  \n\n\n\n\n  svg.material-icons[_ngcontent-%COMP%] {\n    height: 24px;\n    width: auto;\n  }\n\n  svg.material-icons[_ngcontent-%COMP%]:not(:last-child) {\n    margin-right: 8px;\n  }\n\n  .card[_ngcontent-%COMP%]   svg.material-icons[_ngcontent-%COMP%]   path[_ngcontent-%COMP%] {\n    fill: #888;\n  }\n\n  .card-container[_ngcontent-%COMP%] {\n    display: flex;\n    flex-wrap: wrap;\n    justify-content: center;\n    margin-top: 16px;\n  }\n\n  .card[_ngcontent-%COMP%] {\n    all: unset;\n    border-radius: 4px;\n    border: 1px solid #eee;\n    background-color: #5f5e5e;\n    height: 40px;\n    width: 200px;\n    margin: 0 8px 16px;\n    padding: 16px;\n    display: flex;\n    flex-direction: row;\n    justify-content: center;\n    align-items: center;\n    transition: all 0.2s ease-in-out;\n    line-height: 24px;\n  }\n\n  .card-container[_ngcontent-%COMP%]   .card[_ngcontent-%COMP%]:not(:last-child) {\n    margin-right: 0;\n  }\n\n  .card.card-small[_ngcontent-%COMP%] {\n    height: 16px;\n    width: 168px;\n  }\n\n  .card-container[_ngcontent-%COMP%]   .card[_ngcontent-%COMP%]:not(.highlight-card) {\n    cursor: pointer;\n  }\n\n  .card-container[_ngcontent-%COMP%]   .card[_ngcontent-%COMP%]:not(.highlight-card):hover {\n    transform: translateY(-3px);\n    box-shadow: 0 4px 17px rgba(0, 0, 0, 0.35);\n  }\n\n  .card-container[_ngcontent-%COMP%]   .card[_ngcontent-%COMP%]:not(.highlight-card):hover   .material-icons[_ngcontent-%COMP%]   path[_ngcontent-%COMP%] {\n    fill: rgb(105, 103, 103);\n  }\n\n  .card.highlight-card[_ngcontent-%COMP%] {\n    background-color: #1976d2;\n    color: white;\n    font-weight: 600;\n    border: none;\n    width: auto;\n    min-width: 30%;\n    position: relative;\n  }\n\n  .card.card.highlight-card[_ngcontent-%COMP%]   span[_ngcontent-%COMP%] {\n    margin-left: 60px;\n  }\n\n  svg#rocket[_ngcontent-%COMP%] {\n    width: 80px;\n    position: absolute;\n    left: -10px;\n    top: -24px;\n  }\n\n  svg#rocket-smoke[_ngcontent-%COMP%] {\n    height: calc(100vh - 95px);\n    position: absolute;\n    top: 10px;\n    right: 180px;\n    z-index: -10;\n  }\n\n  a[_ngcontent-%COMP%], a[_ngcontent-%COMP%]:visited, a[_ngcontent-%COMP%]:hover {\n    text-decoration: none;\n    padding: 10px;\n  }\n\n  a[_ngcontent-%COMP%]:hover {\n    color: #050505;\n  }\n\n  footer[_ngcontent-%COMP%] {\n    margin-top: 8px;\n    display: flex;\n    align-items: center;\n    line-height: 20px;\n  }\n\n  footer[_ngcontent-%COMP%]   a[_ngcontent-%COMP%] {\n    display: flex;\n    align-items: center;\n  }\n\n  svg#clouds[_ngcontent-%COMP%] {\n    position: fixed;\n    bottom: -160px;\n    left: -230px;\n    z-index: -10;\n    width: 1920px;\n  }\n\n  \n\n  @media screen and (max-width: 767px) {\n    .card-container[_ngcontent-%COMP%]    > *[_ngcontent-%COMP%]:not(.circle-link), .terminal[_ngcontent-%COMP%] {\n      width: 100%;\n    }\n\n    .card[_ngcontent-%COMP%]:not(.highlight-card) {\n      height: 16px;\n      margin: 8px 0;\n    }\n\n    .card.highlight-card[_ngcontent-%COMP%]   span[_ngcontent-%COMP%] {\n      margin-left: 72px;\n    }\n\n    svg#rocket-smoke[_ngcontent-%COMP%] {\n      right: 120px;\n      transform: rotate(-5deg);\n    }\n  }\n\n  @media screen and (max-width: 575px) {\n    svg#rocket-smoke[_ngcontent-%COMP%] {\n      display: none;\n      visibility: hidden;\n    }\n  }"]
 });
 
@@ -370,14 +378,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   tokenGetter: () => (/* binding */ tokenGetter)
 /* harmony export */ });
 /* harmony import */ var _angular_platform_browser__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! @angular/platform-browser */ 6480);
-/* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! @angular/forms */ 8849);
+/* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! @angular/forms */ 8849);
 /* harmony import */ var _app_routing_module__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./app-routing.module */ 3966);
 /* harmony import */ var _app_component__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./app.component */ 6401);
 /* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! @angular/common/http */ 4860);
 /* harmony import */ var _components_listar_datos_listar_datos_component__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/listar-datos/listar-datos.component */ 3716);
-/* harmony import */ var _angular_platform_browser_animations__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! @angular/platform-browser/animations */ 4987);
+/* harmony import */ var _angular_platform_browser_animations__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(/*! @angular/platform-browser/animations */ 4987);
 /* harmony import */ var src_material_module__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! src/material.module */ 8761);
-/* harmony import */ var ngx_toastr__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(/*! ngx-toastr */ 7548);
+/* harmony import */ var ngx_toastr__WEBPACK_IMPORTED_MODULE_29__ = __webpack_require__(/*! ngx-toastr */ 7548);
 /* harmony import */ var _components_register_register_component__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./components/register/register.component */ 6560);
 /* harmony import */ var _components_login_login_component__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./components/login/login.component */ 6666);
 /* harmony import */ var _components_updatepopup_updatepopup_component__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./components/updatepopup/updatepopup.component */ 9996);
@@ -392,11 +400,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _forms_linea_produccion_form_linea_produccion_form_component__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./forms/linea-produccion-form/linea-produccion-form.component */ 8631);
 /* harmony import */ var _forms_proceso_form_proceso_form_component__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./forms/proceso-form/proceso-form.component */ 9343);
 /* harmony import */ var _forms_variable_form_variable_form_component__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./forms/variable-form/variable-form.component */ 9);
-/* harmony import */ var _auth0_angular_jwt__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! @auth0/angular-jwt */ 2401);
+/* harmony import */ var _auth0_angular_jwt__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! @auth0/angular-jwt */ 2401);
 /* harmony import */ var _forms_trigger_form_trigger_form_component__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./forms/trigger-form/trigger-form.component */ 8579);
 /* harmony import */ var _components_home5_home5_component__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ./components/home5/home5.component */ 919);
 /* harmony import */ var _components_tabla_tabla_component__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ./components/tabla/tabla.component */ 8505);
 /* harmony import */ var ngx_spinner__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! ngx-spinner */ 8375);
+/* harmony import */ var _angular_material_tooltip__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! @angular/material/tooltip */ 702);
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! @angular/core */ 1699);
 
 
@@ -404,6 +413,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 // Import FusionCharts library and chart modules
+
 
 
 
@@ -442,17 +452,17 @@ AppModule.ɵmod = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_21__["ɵɵ
   bootstrap: [_app_component__WEBPACK_IMPORTED_MODULE_1__.AppComponent]
 });
 AppModule.ɵinj = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_21__["ɵɵdefineInjector"]({
-  imports: [_angular_platform_browser__WEBPACK_IMPORTED_MODULE_22__.BrowserModule, _app_routing_module__WEBPACK_IMPORTED_MODULE_0__.AppRoutingModule, _angular_common_http__WEBPACK_IMPORTED_MODULE_23__.HttpClientModule, ngx_spinner__WEBPACK_IMPORTED_MODULE_24__.NgxSpinnerModule, _auth0_angular_jwt__WEBPACK_IMPORTED_MODULE_25__.JwtModule.forRoot({
+  imports: [_angular_platform_browser__WEBPACK_IMPORTED_MODULE_22__.BrowserModule, _app_routing_module__WEBPACK_IMPORTED_MODULE_0__.AppRoutingModule, _angular_common_http__WEBPACK_IMPORTED_MODULE_23__.HttpClientModule, ngx_spinner__WEBPACK_IMPORTED_MODULE_24__.NgxSpinnerModule, _angular_material_tooltip__WEBPACK_IMPORTED_MODULE_25__.MatTooltipModule, _auth0_angular_jwt__WEBPACK_IMPORTED_MODULE_26__.JwtModule.forRoot({
     config: {
       tokenGetter: tokenGetter,
       allowedDomains: ['localhost']
     }
-  }), _angular_forms__WEBPACK_IMPORTED_MODULE_26__.FormsModule, _angular_platform_browser_animations__WEBPACK_IMPORTED_MODULE_27__.BrowserAnimationsModule, _angular_forms__WEBPACK_IMPORTED_MODULE_26__.ReactiveFormsModule, src_material_module__WEBPACK_IMPORTED_MODULE_3__.MaterialModule, ngx_toastr__WEBPACK_IMPORTED_MODULE_28__.ToastrModule.forRoot()]
+  }), _angular_forms__WEBPACK_IMPORTED_MODULE_27__.FormsModule, _angular_platform_browser_animations__WEBPACK_IMPORTED_MODULE_28__.BrowserAnimationsModule, _angular_forms__WEBPACK_IMPORTED_MODULE_27__.ReactiveFormsModule, src_material_module__WEBPACK_IMPORTED_MODULE_3__.MaterialModule, ngx_toastr__WEBPACK_IMPORTED_MODULE_29__.ToastrModule.forRoot()]
 });
 (function () {
   (typeof ngJitMode === "undefined" || ngJitMode) && _angular_core__WEBPACK_IMPORTED_MODULE_21__["ɵɵsetNgModuleScope"](AppModule, {
     declarations: [_app_component__WEBPACK_IMPORTED_MODULE_1__.AppComponent, _components_listar_datos_listar_datos_component__WEBPACK_IMPORTED_MODULE_2__.ListarDatosComponent, _components_register_register_component__WEBPACK_IMPORTED_MODULE_4__.RegisterComponent, _components_login_login_component__WEBPACK_IMPORTED_MODULE_5__.LoginComponent, _components_updatepopup_updatepopup_component__WEBPACK_IMPORTED_MODULE_6__.UpdatepopupComponent, _components_userlisting_userlisting_component__WEBPACK_IMPORTED_MODULE_7__.UserlistingComponent, _forms_pais_form_pais_form_component__WEBPACK_IMPORTED_MODULE_8__.PaisFormComponent, _forms_provincia_form_provincia_form_component__WEBPACK_IMPORTED_MODULE_9__.ProvinciaFormComponent, _forms_localidad_form_localidad_form_component__WEBPACK_IMPORTED_MODULE_10__.LocalidadFormComponent, _forms_empresa_form_empresa_form_component__WEBPACK_IMPORTED_MODULE_11__.EmpresaFormComponent, _forms_empresa_planta_form_empresa_planta_form_component__WEBPACK_IMPORTED_MODULE_12__.EmpresaPlantaFormComponent, _forms_maquina_form_maquina_form_component__WEBPACK_IMPORTED_MODULE_13__.MaquinaFormComponent, _forms_tipo_maquina_form_tipo_maquina_form_component__WEBPACK_IMPORTED_MODULE_14__.TipoMaquinaFormComponent, _forms_linea_produccion_form_linea_produccion_form_component__WEBPACK_IMPORTED_MODULE_15__.LineaProduccionFormComponent, _forms_proceso_form_proceso_form_component__WEBPACK_IMPORTED_MODULE_16__.ProcesoFormComponent, _forms_variable_form_variable_form_component__WEBPACK_IMPORTED_MODULE_17__.VariableFormComponent, _forms_trigger_form_trigger_form_component__WEBPACK_IMPORTED_MODULE_18__.TriggerFormComponent, _components_home5_home5_component__WEBPACK_IMPORTED_MODULE_19__.Home5Component, _components_tabla_tabla_component__WEBPACK_IMPORTED_MODULE_20__.TablaComponent],
-    imports: [_angular_platform_browser__WEBPACK_IMPORTED_MODULE_22__.BrowserModule, _app_routing_module__WEBPACK_IMPORTED_MODULE_0__.AppRoutingModule, _angular_common_http__WEBPACK_IMPORTED_MODULE_23__.HttpClientModule, ngx_spinner__WEBPACK_IMPORTED_MODULE_24__.NgxSpinnerModule, _auth0_angular_jwt__WEBPACK_IMPORTED_MODULE_25__.JwtModule, _angular_forms__WEBPACK_IMPORTED_MODULE_26__.FormsModule, _angular_platform_browser_animations__WEBPACK_IMPORTED_MODULE_27__.BrowserAnimationsModule, _angular_forms__WEBPACK_IMPORTED_MODULE_26__.ReactiveFormsModule, src_material_module__WEBPACK_IMPORTED_MODULE_3__.MaterialModule, ngx_toastr__WEBPACK_IMPORTED_MODULE_28__.ToastrModule]
+    imports: [_angular_platform_browser__WEBPACK_IMPORTED_MODULE_22__.BrowserModule, _app_routing_module__WEBPACK_IMPORTED_MODULE_0__.AppRoutingModule, _angular_common_http__WEBPACK_IMPORTED_MODULE_23__.HttpClientModule, ngx_spinner__WEBPACK_IMPORTED_MODULE_24__.NgxSpinnerModule, _angular_material_tooltip__WEBPACK_IMPORTED_MODULE_25__.MatTooltipModule, _auth0_angular_jwt__WEBPACK_IMPORTED_MODULE_26__.JwtModule, _angular_forms__WEBPACK_IMPORTED_MODULE_27__.FormsModule, _angular_platform_browser_animations__WEBPACK_IMPORTED_MODULE_28__.BrowserAnimationsModule, _angular_forms__WEBPACK_IMPORTED_MODULE_27__.ReactiveFormsModule, src_material_module__WEBPACK_IMPORTED_MODULE_3__.MaterialModule, ngx_toastr__WEBPACK_IMPORTED_MODULE_29__.ToastrModule]
   });
 })();
 

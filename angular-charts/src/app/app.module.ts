@@ -29,6 +29,7 @@ import { TriggerFormComponent } from './forms/trigger-form/trigger-form.componen
 import { Home5Component } from './components/home5/home5.component';
 import { TablaComponent } from './components/tabla/tabla.component';
 import { NgxSpinnerModule } from 'ngx-spinner';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { InterceptorService } from './service/interceptor.service';
 
 export function tokenGetter() {
@@ -62,6 +63,7 @@ export function tokenGetter() {
     AppRoutingModule,
     HttpClientModule,
     NgxSpinnerModule,
+    MatTooltipModule,
     JwtModule.forRoot({
       config: {
         tokenGetter: tokenGetter,

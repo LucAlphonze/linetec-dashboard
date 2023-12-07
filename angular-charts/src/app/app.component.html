@@ -237,6 +237,11 @@ en el otro componente
           </mat-date-range-picker-actions>
         </mat-date-range-picker>
       </mat-form-field>
+      <mat-icon
+        matTooltip="Seleccionar 2 fechas para actualizar los contenidos del grafico y la tabla de alertas "
+      >
+        help
+      </mat-icon>
     </div>
 
     <div class="p-3">
@@ -249,6 +254,12 @@ en el otro componente
           <mat-label>Elegir valor limite </mat-label>
           <input matInput formControlName formControlName="threshold" />
         </mat-form-field>
+        <mat-icon
+          matTooltip="Luego de seleccionar las dos fechas estara disponible el boton para cambiar los limites de la tabla "
+        >
+          help
+        </mat-icon>
+
         <button
           class="m-3"
           [disabled]="!range.value.start && !range.value.end"
@@ -267,10 +278,6 @@ en el otro componente
       </button>
 
       <a routerLink="/">Graficos</a>
-      <!-- <a *ngIf="isAdminUser" routerLink="/home2">Pais form</a>
-    <a *ngIf="isAdminUser" routerLink="/home">Empresa form</a>
-    <a *ngIf="isAdminUser" routerLink="/home3">Linea form</a>
-    <a *ngIf="isAdminUser" routerLink="/home4">Variable form</a> -->
       <a *ngIf="isAdminUser" routerLink="/home5">Formularios</a>
       <a *ngIf="isAdminUser" routerLink="/user">Usuarios</a>
       <div class="spacer"></div>
