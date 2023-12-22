@@ -28,7 +28,7 @@ router.get(
   filtrarRegistrosGenerales
 );
 router.get(
-  "/filter/:idVariable/:startdate/:enddate/",
+  "/granularidad/:idVariable/:startdate/:enddate/:granularidad",
   filtrarRegistrosGenerales2
 );
 router.get("/:idVariable", obtenerRegistrosGeneral);

@@ -301,6 +301,8 @@ const filtrarRegistrosGenerales2 = async (req, res) => {
   var idVariable = req.params.idVariable;
   var sti = req.params.startdate;
   var stf = req.params.enddate;
+  var granularidad = req.params.granularidad;
+  const resultado = determinarGranularidad(granularidad);
   try {
     const registrosFiltrados = await RegistroGeneral.aggregate([
       {
@@ -320,7 +322,7 @@ const filtrarRegistrosGenerales2 = async (req, res) => {
         $group: {
           _id: {
             $dateToString: {
-              format: "%Y-%m-%d",
+              format: resultado,
               date: "$time_stamp",
             },
           },
@@ -416,6 +418,40 @@ function determinarOperacion(operacion) {
       break;
   }
   console.log("resultado: ", resultado, "operacion: ", operacion);
+}
+
+function determinarGranularidad(escalaTiempo) {
+  let resultado;
+  switch (escalaTiempo) {
+    case "month":
+      resultado = "%Y-%m";
+      if (resultado != "") {
+        return resultado;
+      }
+      break;
+
+    case "day":
+      resultado = "%Y-%m-%d";
+      if (resultado != "") {
+        return resultado;
+      }
+      break;
+
+    case "hour":
+      resultado = "%Y-%m-%dT%H:00";
+      if (resultado != "") {
+        return resultado;
+      }
+      break;
+
+    default:
+      resultado = "%Y-%m-%d";
+      if (resultado != "") {
+        return resultado;
+      }
+      break;
+  }
+  console.log("resultado: ", resultado);
 }
 
 function filterArray2(source, removals) {
