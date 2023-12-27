@@ -167,10 +167,6 @@ class AppComponent {
     this._httpService = _httpService;
     this.spinnerService = spinnerService;
     this.opened = false;
-    this.range = new _angular_forms__WEBPACK_IMPORTED_MODULE_4__.FormGroup({
-      start: new _angular_forms__WEBPACK_IMPORTED_MODULE_4__.FormControl(null),
-      end: new _angular_forms__WEBPACK_IMPORTED_MODULE_4__.FormControl(null)
-    });
     this.title = 'angular-charts';
     this.isMenuRequired = false;
     this.isAdminUser = false;
@@ -182,6 +178,11 @@ class AppComponent {
   ngOnInit() {
     this.valor = this.builder.group({
       threshold: new _angular_forms__WEBPACK_IMPORTED_MODULE_4__.FormControl(25)
+    });
+    this.range = this.builder.group({
+      start: new _angular_forms__WEBPACK_IMPORTED_MODULE_4__.FormControl(null),
+      end: new _angular_forms__WEBPACK_IMPORTED_MODULE_4__.FormControl(null),
+      granularidad: new _angular_forms__WEBPACK_IMPORTED_MODULE_4__.FormControl('day')
     });
     this.subscription = this._httpService.listaVariables.subscribe(message => this.listVariables = message);
     this.subscription2 = this._httpService.listaDatosInRange.subscribe(message => {
@@ -216,7 +217,7 @@ class AppComponent {
         this.spinnerService.detenerSpinner('grafico');
       }
     });
-    this._httpService.getValoresFiltrados2(this.listVariables[1]._id, inicio, final).subscribe(data => {
+    this._httpService.getValoresFiltrados2(this.listVariables[1]._id, inicio, final, this.range.value.granularidad).subscribe(data => {
       // console.log(data);
       this._httpService.stream_RegistroFiltrado2(data['datos']);
       if (data['datos'].length == 0) {
@@ -224,7 +225,7 @@ class AppComponent {
       }
     });
     this.getInRangeTabla();
-    this._httpService.getValoresFiltrados2(this.listVariables[4]._id, inicio, final).subscribe(data => {
+    this._httpService.getValoresFiltrados2(this.listVariables[4]._id, inicio, final, this.range.value.granularidad).subscribe(data => {
       console.log(data);
       this._httpService.stream_Datos3(data['datos']);
       if (data['datos'].length == 0) {
@@ -4884,9 +4885,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   HttpService: () => (/* binding */ HttpService)
 /* harmony export */ });
 /* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! rxjs */ 8071);
+/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! rxjs */ 2513);
 /* harmony import */ var src_environments_environment__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! src/environments/environment */ 553);
-/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/core */ 1699);
-/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/common/http */ 4860);
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/core */ 1699);
+/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @angular/common/http */ 4860);
 
 
 
@@ -4896,16 +4898,21 @@ class HttpService {
     this.http = http;
     this.registroGeneral = src_environments_environment__WEBPACK_IMPORTED_MODULE_0__.environment.API_URL_RGENERAL;
     this.variables = src_environments_environment__WEBPACK_IMPORTED_MODULE_0__.environment.API_URL_VARIABLES;
+    // chartUrl = environment.API_URL_CHARTS;
     this.listaVariablesSource = new rxjs__WEBPACK_IMPORTED_MODULE_1__.BehaviorSubject([]);
     this.listaRegistroFiltradoSource = new rxjs__WEBPACK_IMPORTED_MODULE_1__.BehaviorSubject([]);
     this.listaRegistroFiltrado2Source = new rxjs__WEBPACK_IMPORTED_MODULE_1__.BehaviorSubject([]);
     this.listaDatosSource3 = new rxjs__WEBPACK_IMPORTED_MODULE_1__.BehaviorSubject([]);
     this.listaDatosInRangeSource = new rxjs__WEBPACK_IMPORTED_MODULE_1__.BehaviorSubject([]);
+    this.listChartInfoSource = new rxjs__WEBPACK_IMPORTED_MODULE_2__.Subject();
+    this.listCharDatatInfoSource = new rxjs__WEBPACK_IMPORTED_MODULE_2__.Subject();
     this.listaVariables = this.listaVariablesSource.asObservable();
     this.listaRegistroFiltrado = this.listaRegistroFiltradoSource.asObservable();
     this.listaRegistroFiltrado2 = this.listaRegistroFiltrado2Source.asObservable();
     this.listaDatos3 = this.listaDatosSource3.asObservable();
     this.listaDatosInRange = this.listaDatosInRangeSource.asObservable();
+    this.listChartInfo = this.listChartInfoSource.asObservable();
+    this.listChartDataInfo = this.listCharDatatInfoSource.asObservable();
   }
   getValores(variable) {
     return this.http.get(this.registroGeneral + 'all/' + variable, {
@@ -4914,6 +4921,13 @@ class HttpService {
       }
     });
   }
+  // getCharts(): Observable<any> {
+  //   return this.http.get(this.chartUrl, {
+  //     headers: {
+  //       Authorization: 'Bearer ' + sessionStorage.getItem('token')?.toString(),
+  //     },
+  //   });
+  // }
   getValoresFiltrados(variable, inicio, fin, operacion) {
     return this.http.get(this.registroGeneral + `filter/${variable}/${inicio}/${fin}/${operacion}`, {
       headers: {
@@ -4921,8 +4935,8 @@ class HttpService {
       }
     });
   }
-  getValoresFiltrados2(variable, inicio, fin) {
-    return this.http.get(this.registroGeneral + `filter/${variable}/${inicio}/${fin}/`, {
+  getValoresFiltrados2(variable, inicio, fin, granularidad) {
+    return this.http.get(this.registroGeneral + `granularidad/${variable}/${inicio}/${fin}/${granularidad}`, {
       headers: {
         Authorization: 'Bearer ' + sessionStorage.getItem('token')?.toString()
       }
@@ -4959,11 +4973,17 @@ class HttpService {
   stream_DatosInRange(datoGeneral) {
     this.listaDatosInRangeSource.next(datoGeneral);
   }
+  stream_Chart_Info(chartInfo) {
+    this.listChartInfoSource.next(chartInfo);
+  }
+  stream_ChartData_Info(chartDataInfo) {
+    this.listCharDatatInfoSource.next(chartDataInfo);
+  }
 }
 HttpService.ɵfac = function HttpService_Factory(t) {
-  return new (t || HttpService)(_angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵinject"](_angular_common_http__WEBPACK_IMPORTED_MODULE_3__.HttpClient));
+  return new (t || HttpService)(_angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵinject"](_angular_common_http__WEBPACK_IMPORTED_MODULE_4__.HttpClient));
 };
-HttpService.ɵprov = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵdefineInjectable"]({
+HttpService.ɵprov = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵdefineInjectable"]({
   token: HttpService,
   factory: HttpService.ɵfac,
   providedIn: 'root'

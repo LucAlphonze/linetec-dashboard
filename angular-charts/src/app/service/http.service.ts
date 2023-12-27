@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, catchError } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, catchError } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { RegistroFiltrado, Variable } from '../models/datos.model';
 
@@ -10,6 +10,7 @@ import { RegistroFiltrado, Variable } from '../models/datos.model';
 export class HttpService {
   registroGeneral = environment.API_URL_RGENERAL;
   variables = environment.API_URL_VARIABLES;
+  // chartUrl = environment.API_URL_CHARTS;
   private listaVariablesSource = new BehaviorSubject(<Variable[]>[]);
   private listaRegistroFiltradoSource = new BehaviorSubject(
     <RegistroFiltrado[]>[]
@@ -17,11 +18,15 @@ export class HttpService {
   private listaRegistroFiltrado2Source = new BehaviorSubject(<[]>[]);
   private listaDatosSource3 = new BehaviorSubject(<[]>[]);
   private listaDatosInRangeSource = new BehaviorSubject(<[]>[]);
+  private listChartInfoSource = new Subject();
+  private listCharDatatInfoSource = new Subject();
   listaVariables = this.listaVariablesSource.asObservable();
   listaRegistroFiltrado = this.listaRegistroFiltradoSource.asObservable();
   listaRegistroFiltrado2 = this.listaRegistroFiltrado2Source.asObservable();
   listaDatos3 = this.listaDatosSource3.asObservable();
   listaDatosInRange = this.listaDatosInRangeSource.asObservable();
+  listChartInfo = this.listChartInfoSource.asObservable();
+  listChartDataInfo = this.listCharDatatInfoSource.asObservable();
 
   constructor(private http: HttpClient) {}
 
@@ -32,6 +37,13 @@ export class HttpService {
       },
     });
   }
+  // getCharts(): Observable<any> {
+  //   return this.http.get(this.chartUrl, {
+  //     headers: {
+  //       Authorization: 'Bearer ' + sessionStorage.getItem('token')?.toString(),
+  //     },
+  //   });
+  // }
   getValoresFiltrados(
     variable: String,
     inicio: String,
@@ -51,10 +63,12 @@ export class HttpService {
   getValoresFiltrados2(
     variable: String,
     inicio: String,
-    fin: String
+    fin: String,
+    granularidad: string
   ): Observable<any> {
     return this.http.get(
-      this.registroGeneral + `filter/${variable}/${inicio}/${fin}/`,
+      this.registroGeneral +
+        `granularidad/${variable}/${inicio}/${fin}/${granularidad}`,
       {
         headers: {
           Authorization:
@@ -101,5 +115,11 @@ export class HttpService {
   }
   stream_DatosInRange(datoGeneral: any) {
     this.listaDatosInRangeSource.next(datoGeneral);
+  }
+  stream_Chart_Info(chartInfo: any) {
+    this.listChartInfoSource.next(chartInfo);
+  }
+  stream_ChartData_Info(chartDataInfo: any) {
+    this.listCharDatatInfoSource.next(chartDataInfo);
   }
 }

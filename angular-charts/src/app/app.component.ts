@@ -15,10 +15,7 @@ import { SpinnerService } from './service/spinner.service';
 export class AppComponent implements DoCheck, OnInit {
   opened: boolean = false;
 
-  range = new FormGroup({
-    start: new FormControl<Date | null>(null),
-    end: new FormControl<Date | null>(null),
-  });
+  range!: FormGroup;
 
   valor!: FormGroup;
   title = 'angular-charts';
@@ -43,7 +40,11 @@ export class AppComponent implements DoCheck, OnInit {
     this.valor = this.builder.group({
       threshold: new FormControl<number>(25),
     });
-
+    this.range = this.builder.group({
+      start: new FormControl<Date | null>(null),
+      end: new FormControl<Date | null>(null),
+      granularidad: new FormControl<string>('day'),
+    });
     this.subscription = this._httpService.listaVariables.subscribe(
       (message) => (this.listVariables = message)
     );
@@ -88,7 +89,12 @@ export class AppComponent implements DoCheck, OnInit {
         }
       });
     this._httpService
-      .getValoresFiltrados2(this.listVariables[1]._id, inicio, final)
+      .getValoresFiltrados2(
+        this.listVariables[1]._id,
+        inicio,
+        final,
+        this.range.value.granularidad
+      )
       .subscribe((data) => {
         // console.log(data);
         this._httpService.stream_RegistroFiltrado2(data['datos']);
@@ -98,7 +104,12 @@ export class AppComponent implements DoCheck, OnInit {
       });
     this.getInRangeTabla();
     this._httpService
-      .getValoresFiltrados2(this.listVariables[4]._id, inicio, final)
+      .getValoresFiltrados2(
+        this.listVariables[4]._id,
+        inicio,
+        final,
+        this.range.value.granularidad
+      )
       .subscribe((data) => {
         console.log(data);
         this._httpService.stream_Datos3(data['datos']);
