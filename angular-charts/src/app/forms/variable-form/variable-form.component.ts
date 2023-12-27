@@ -86,6 +86,7 @@ export class VariableFormComponent implements OnInit {
         id_trigger: this.id_trigger,
         nombre: this.variableForm.value.nombre,
         trigger_valor: this.variableForm.value.trigger_valor,
+        time_stamp: new Date(),
       };
       this.service.postForm(this.apiVariables, body).subscribe({
         next: (res: any) => {

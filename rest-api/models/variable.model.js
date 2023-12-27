@@ -26,6 +26,9 @@ const VariableSchema = Schema({
   trigger_valor: {
     type: String,
   },
+  time_stamp: {
+    type: Date,
+  },
 });
 
 module.exports = model("Variable", VariableSchema);

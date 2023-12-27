@@ -8,7 +8,8 @@ const obtenerVariables = async (req, res) => {
     const variables = await Variable.find()
       .populate("id_maquina", "nombre modelo")
       .populate("id_proceso", "descripcion")
-      .populate("id_trigger", "nombre descripcion");
+      .populate("id_trigger", "nombre descripcion")
+      .sort({ time_stamp: 1 });
     res.send(variables);
   } catch (error) {
     res.status(500).json({
