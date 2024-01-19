@@ -14,6 +14,7 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogOverviewExampleDialog } from '../dialog.component';
+import { LoginModalComponent } from '../login-modal/login-modal.component';
 import { ToastrService } from 'ngx-toastr';
 
 @Injectable({
@@ -83,6 +84,18 @@ export class AuthService {
       enterAnimationDuration: '500ms',
       exitAnimationDuration: '500ms',
       width: '50%',
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      console.log('The dialog was closed');
+    });
+  }
+  openDialog2(): void {
+    const dialogRef = this.dialog.open(LoginModalComponent, {
+      enterAnimationDuration: '500ms',
+      exitAnimationDuration: '500ms',
+      width: '571px',
+      height: '292px',
     });
 
     dialogRef.afterClosed().subscribe((result) => {

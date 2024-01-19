@@ -31,6 +31,7 @@ import { TablaComponent } from './components/tabla/tabla.component';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { InterceptorService } from './service/interceptor.service';
+import { LoginModalComponent } from './login-modal/login-modal.component';
 
 export function tokenGetter() {
   return localStorage.getItem('token');
@@ -57,6 +58,7 @@ export function tokenGetter() {
     TriggerFormComponent,
     Home5Component,
     TablaComponent,
+    LoginModalComponent,
   ],
   imports: [
     BrowserModule,

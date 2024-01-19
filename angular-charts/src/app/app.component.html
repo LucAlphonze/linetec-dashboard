@@ -23,9 +23,9 @@
     margin: 0;
   }
 
-  .spacer {
+  /* .spacer {
     flex: 1;
-  }
+  } */
 
   .toolbar {
     position: absolute;
@@ -43,15 +43,12 @@
   .toolbar img {
     margin: 0 16px;
   }
-
+  /*
   .content {
     margin: 82px auto 32px;
     padding: 0 32px;
     max-width: auto;
-    /* background-color: rgb(223, 215, 215); */
-  }
-  /* .fondo {
-    background-color: rgb(223, 215, 215);
+   background-color: rgb(223, 215, 215);
   } */
 
   svg.material-icons {
@@ -120,7 +117,6 @@
     border: none;
     width: auto;
     min-width: 30%;
-    position: relative;
   }
 
   .card.card.highlight-card span {
@@ -206,7 +202,7 @@
 vamos a hacer un cambio grande del programa para poder mandar los datos y que funcionen bien 
 en el otro componente
 -->
-<mat-sidenav-container class="example-container">
+<mat-sidenav-container>
   <mat-sidenav #sidenav mode="side" [(opened)]="opened">
     <div class="p-3">
       <mat-form-field>

@@ -2,6 +2,22 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@font-face {
+  font-family: "DIN";
+  src: url(assets/fonts/otf/D-DIN-PRO-400-Regular.otf) format("truetype");
+}
+@font-face {
+  font-family: "DIN Alternate Bold";
+  font-style: normal;
+  font-weight: normal;
+  src: url(assets/fonts/din-alternate-cufonfonts/DINAlternate-Bold.ttf)
+    format("truetype");
+}
+
+@font-face {
+  font-family: "D-DIN-PRO";
+  src: url(assets/fonts/otf/D-DIN-PRO-500-Medium.otf) format("truetype");
+}
 
 html,
 body {
@@ -15,8 +31,6 @@ body {
   max-width: 600px;
   margin: auto;
   width: 100%;
-  /* border: 3px; */
-  /* border-style: solid;
-  border-color: #673ab7; */
+
   padding: 10px;
 }

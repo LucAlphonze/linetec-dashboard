@@ -1,29 +1,223 @@
-<mat-card class="carta">
-  <mat-card-header>
-    <h2>Login</h2>
-  </mat-card-header>
-  <mat-card-content>
-    <form
-      class="example-form"
-      [formGroup]="loginForm"
-      (ngSubmit)="proceedLogin()"
-    >
-      <div class="flex flex-col p-5">
-        <mat-form-field class="">
-          <mat-label>Nombre de usuario</mat-label>
-          <input matInput formControlName="username" />
-        </mat-form-field>
-        <mat-form-field class="">
-          <mat-label>Contraseña</mat-label>
-          <input type="password" matInput formControlName="password" />
-        </mat-form-field>
+<div class="grid grid-flow-row-dense grid-cols-1 sm:grid-cols-2">
+  <div *ngIf="!mobile" class="row-span-1 col-span-1">
+    <img src="assets/g850.png" alt="" class="login" />
+  </div>
+
+  <div class="row-span-1 col-span-1">
+    <div class="carta flex flex-col col-span-1" *ngIf="showDiv.Login">
+      <div class="logo">
+        <img
+          src="assets/3- ISOTIPO LINETEC (T con fondo) PNG.png"
+          alt=""
+          class="lintec_logo m-5"
+        />
+        <h2 class="titulo">Iniciar sesión</h2>
       </div>
-      <div class="m-1">
-        <button class="m-3" mat-raised-button color="primary">Ingresar</button>
-        <a routerLink="/register" mat-raised-button color="accent"
-          >Nuevo usuario</a
-        >
+      <form
+        class="example-form"
+        [formGroup]="loginForm"
+        (ngSubmit)="proceedLogin()"
+      >
+        <div class="flex flex-col">
+          <mat-form-field class="m-input">
+            <input matInput placeholder="Usuario" formControlName="username" />
+          </mat-form-field>
+
+          <mat-form-field class="m-input">
+            <input
+              [type]="pass"
+              matInput
+              placeholder="Contraseña"
+              formControlName="password"
+            />
+            <a
+              matSuffix
+              style="cursor: pointer"
+              (click)="showPass()"
+              class="p-2"
+            >
+              <mat-icon *ngIf="!show">visibility</mat-icon>
+              <mat-icon *ngIf="show">visibility_off</mat-icon>
+            </a>
+          </mat-form-field>
+          <div class="space-y-[10vh] 2xl:space-y-[40vh]">
+            <button
+              mat-raised-button
+              [disabled]="
+                !loginForm.value.username || !loginForm.value.password
+              "
+              class="boton2"
+            >
+              Ingresar
+            </button>
+            <a mat-raised-button (click)="mostrarRegistro()" class="boton">
+              Registrar Usuario
+            </a>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div class="carta col-span-1" *ngIf="showDiv.Register">
+      <div class="logo">
+        <img
+          src="assets/3- ISOTIPO LINETEC (T con fondo) PNG.png"
+          alt=""
+          class="lintec_logo m-5 p-3"
+        />
+        <h2 class="titulo">Registro de usuario</h2>
       </div>
-    </form>
-  </mat-card-content>
-</mat-card>
+      <form
+        class="example-form"
+        [formGroup]="registerForm"
+        (ngSubmit)="[proceedRegistration(), registerForm.reset()]"
+      >
+        <div class="flex flex-col p-5">
+          <mat-form-field class="m-input">
+            <input
+              matInput
+              placeholder="Nombre de usuario"
+              formControlName="username"
+            />
+          </mat-form-field>
+
+          <mat-form-field class="m-input">
+            <input
+              matInput
+              placeholder="Nombre y apellido"
+              formControlName="name"
+            />
+          </mat-form-field>
+
+          <mat-form-field class="m-input">
+            <input matInput placeholder="Email" formControlName="email" />
+          </mat-form-field>
+
+          <mat-form-field class="m-input">
+            <input
+              [type]="pass"
+              matInput
+              placeholder="Contraseña"
+              formControlName="password"
+            />
+            <a
+              matSuffix
+              style="cursor: pointer"
+              (click)="showPass()"
+              class="p-2"
+            >
+              <mat-icon *ngIf="!show">visibility</mat-icon>
+              <mat-icon *ngIf="show">visibility_off</mat-icon>
+            </a>
+          </mat-form-field>
+          <div class="m-input">
+            <h2>REQUISITOS</h2>
+            <div class="flex justify-start">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 16 16"
+                fill="none"
+                class="svg"
+              >
+                <path
+                  [ngClass]="!password.value || password.errors?.['pattern'] ?  '' : 'iconFill'"
+                  d="M10.8653 5.52533L11.8013 6.47533L7.93933 10.28C7.68133 10.538 7.342 10.6667 7.00133 10.6667C6.66067 10.6667 6.318 10.5367 6.05733 10.2767L4.20267 8.47933L5.13133 7.52133L6.99333 9.326L10.8653 5.52533ZM16 8C16 12.4113 12.4113 16 8 16C3.58867 16 0 12.4113 0 8C0 3.58867 3.58867 0 8 0C12.4113 0 16 3.58867 16 8ZM14.6667 8C14.6667 4.324 11.676 1.33333 8 1.33333C4.324 1.33333 1.33333 4.324 1.33333 8C1.33333 11.676 4.324 14.6667 8 14.6667C11.676 14.6667 14.6667 11.676 14.6667 8Z"
+                  fill="#B1B2B4"
+                />
+              </svg>
+
+              <p
+                [ngClass]="!password.value || password.errors?.['pattern'] ?  '' : 'requisitos'"
+              >
+                Al menos una mayúscula
+              </p>
+            </div>
+            <div class="flex justify-start">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 16 16"
+                fill="none"
+                class="svg"
+              >
+                <path
+                  [ngClass]="!password.value || password.errors?.['minlength'] ?  '' : 'iconFill'"
+                  d="M10.8653 5.52533L11.8013 6.47533L7.93933 10.28C7.68133 10.538 7.342 10.6667 7.00133 10.6667C6.66067 10.6667 6.318 10.5367 6.05733 10.2767L4.20267 8.47933L5.13133 7.52133L6.99333 9.326L10.8653 5.52533ZM16 8C16 12.4113 12.4113 16 8 16C3.58867 16 0 12.4113 0 8C0 3.58867 3.58867 0 8 0C12.4113 0 16 3.58867 16 8ZM14.6667 8C14.6667 4.324 11.676 1.33333 8 1.33333C4.324 1.33333 1.33333 4.324 1.33333 8C1.33333 11.676 4.324 14.6667 8 14.6667C11.676 14.6667 14.6667 11.676 14.6667 8Z"
+                  fill="#B1B2B4"
+                />
+              </svg>
+
+              <p
+                [ngClass]="!password.value || password.errors?.['minlength'] ?  '' : 'requisitos'"
+              >
+                8 caracteres mínimo
+              </p>
+            </div>
+            <div class="flex justify-start">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 16 16"
+                fill="none"
+                class="svg"
+              >
+                <path
+                  [ngClass]="!password.value || password.errors?.['pattern'] ?  '' : 'iconFill'"
+                  d="M10.8653 5.52533L11.8013 6.47533L7.93933 10.28C7.68133 10.538 7.342 10.6667 7.00133 10.6667C6.66067 10.6667 6.318 10.5367 6.05733 10.2767L4.20267 8.47933L5.13133 7.52133L6.99333 9.326L10.8653 5.52533ZM16 8C16 12.4113 12.4113 16 8 16C3.58867 16 0 12.4113 0 8C0 3.58867 3.58867 0 8 0C12.4113 0 16 3.58867 16 8ZM14.6667 8C14.6667 4.324 11.676 1.33333 8 1.33333C4.324 1.33333 1.33333 4.324 1.33333 8C1.33333 11.676 4.324 14.6667 8 14.6667C11.676 14.6667 14.6667 11.676 14.6667 8Z"
+                  fill="#B1B2B4"
+                />
+              </svg>
+              <p
+                [ngClass]="!password.value || password.errors?.['pattern'] ?  '' : 'requisitos'"
+              >
+                Al menos un caracter especial
+              </p>
+            </div>
+            <div class="flex justify-start">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 16 16"
+                fill="none"
+                class="svg"
+              >
+                <path
+                  [ngClass]="!password.value || password.errors?.['pattern'] ?  '' : 'iconFill'"
+                  d="M10.8653 5.52533L11.8013 6.47533L7.93933 10.28C7.68133 10.538 7.342 10.6667 7.00133 10.6667C6.66067 10.6667 6.318 10.5367 6.05733 10.2767L4.20267 8.47933L5.13133 7.52133L6.99333 9.326L10.8653 5.52533ZM16 8C16 12.4113 12.4113 16 8 16C3.58867 16 0 12.4113 0 8C0 3.58867 3.58867 0 8 0C12.4113 0 16 3.58867 16 8ZM14.6667 8C14.6667 4.324 11.676 1.33333 8 1.33333C4.324 1.33333 1.33333 4.324 1.33333 8C1.33333 11.676 4.324 14.6667 8 14.6667C11.676 14.6667 14.6667 11.676 14.6667 8Z"
+                  fill="#B1B2B4"
+                />
+              </svg>
+              <p
+                [ngClass]="!password.value || password.errors?.['pattern'] ?  '' : 'requisitos'"
+              >
+                Al menos 1 número
+              </p>
+            </div>
+          </div>
+
+          <div class="flex flex-col justify-between space-y-6">
+            <button
+              mat-raised-button
+              [disabled]="
+                !registerForm.value.username ||
+                !registerForm.value.password ||
+                !registerForm.value.name ||
+                !registerForm.value.email
+              "
+              class="boton2"
+            >
+              Enviar
+            </button>
+
+            <a (click)="mostrarLogin()" id="volver"> Volver </a>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
