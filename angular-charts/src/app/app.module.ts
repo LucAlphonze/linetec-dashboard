@@ -3,7 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 
 // Import FusionCharts library and chart modules
 import { ListarDatosComponent } from './components/listar-datos/listar-datos.component';
@@ -30,7 +30,6 @@ import { Home5Component } from './components/home5/home5.component';
 import { TablaComponent } from './components/tabla/tabla.component';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { InterceptorService } from './service/interceptor.service';
 import { LoginModalComponent } from './login-modal/login-modal.component';
 
 export function tokenGetter() {

@@ -1,20 +1,13 @@
-import {
-  AfterViewInit,
-  Component,
-  DoCheck,
-  ElementRef,
-  OnInit,
-  ViewChild,
-} from '@angular/core';
-import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  Validators,
-} from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from 'src/app/service/auth.service';
+import {
+  checkNumber,
+  checkSpecial,
+  checkUpperCase,
+} from 'src/app/service/validator';
 
 @Component({
   selector: 'app-login',
@@ -47,16 +40,16 @@ export class LoginComponent implements OnInit {
         Validators.minLength(5),
       ]),
       name: new FormControl('', [Validators.required, Validators.minLength(5)]),
-      password: new FormControl(
+      password: [
         '',
-        Validators.compose([
+        [
           Validators.required,
           Validators.minLength(8),
-          Validators.pattern(
-            `^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[$@$!%*?&])(?!.*?[=?<>()'"\/\&]).{8,20}$`
-          ),
-        ])
-      ),
+          checkUpperCase(),
+          checkNumber(),
+          checkSpecial(),
+        ],
+      ],
       email: new FormControl('', [Validators.required, Validators.email]),
       role: this.builder.control('64f1f60e918724a5f931d909'),
       isActive: this.builder.control(false),
