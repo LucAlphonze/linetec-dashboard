@@ -7,6 +7,9 @@ import colorLib from '@kurkle/color';
 export class UtilsService {
   constructor() {}
   private CHART_COLORS = {
+    strong_blue: '#062984',
+    medium_blue: '#1758FF',
+    light_blue: '#6F97FF',
     red: 'rgb(255, 99, 132)',
     orange: 'rgb(255, 159, 64)',
     yellow: 'rgb(255, 205, 86)',
@@ -17,6 +20,9 @@ export class UtilsService {
   };
 
   NAMED_COLORS = [
+    this.CHART_COLORS.strong_blue,
+    this.CHART_COLORS.medium_blue,
+    this.CHART_COLORS.light_blue,
     this.CHART_COLORS.red,
     this.CHART_COLORS.orange,
     this.CHART_COLORS.yellow,

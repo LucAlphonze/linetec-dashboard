@@ -44,6 +44,7 @@ export class AuthService {
   private plantasSource = new BehaviorSubject('');
   private lineaSource = new BehaviorSubject('');
   private maquinaSource = new BehaviorSubject('');
+  private fullnameSource = new BehaviorSubject('');
 
   //observables que recogen la opcion seleccionada
   paisSelectedSource = new BehaviorSubject('');
@@ -78,6 +79,7 @@ export class AuthService {
   maquinaSelected = this.maquinaSelectedSource.asObservable();
   procesoSelected = this.procesoSelectedSource.asObservable();
   triggerSelected = this.triggerSelectedSource.asObservable();
+  fullname = this.fullnameSource.asObservable();
 
   openDialog(): void {
     const dialogRef = this.dialog.open(DialogOverviewExampleDialog, {
@@ -134,7 +136,8 @@ export class AuthService {
       new Date().valueOf();
     sessionStorage.setItem('token', token);
     sessionStorage.setItem('rtoken', rtoken);
-    sessionStorage.setItem('username', user.name);
+    sessionStorage.setItem('username', user.username);
+    sessionStorage.setItem('fullname', user.name);
     sessionStorage.setItem('userrole', user.role.name);
     this.authToken = token;
     this.user = user;
@@ -189,6 +192,16 @@ export class AuthService {
       ? sessionStorage.getItem('userrole')?.toString()
       : '';
   }
+
+  getUser() {
+    try {
+      var fullname = sessionStorage.getItem('fullname')!.toString();
+      this.fullnameSource.next(fullname);
+    } catch (error) {
+      console.log('getUser error: ', error);
+    }
+  }
+
   // post
   Proceedregister(inputdata: any) {
     return this.http

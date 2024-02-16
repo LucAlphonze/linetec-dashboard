@@ -31,10 +31,28 @@ import { TablaComponent } from './components/tabla/tabla.component';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { LoginModalComponent } from './login-modal/login-modal.component';
+import {
+  DateAdapter,
+  MatNativeDateModule,
+  MAT_DATE_FORMATS,
+  MAT_DATE_LOCALE,
+} from '@angular/material/core';
+import { MomentDateAdapter } from '@angular/material-moment-adapter';
 
 export function tokenGetter() {
   return localStorage.getItem('token');
 }
+const MY_DATE_FORMAT = {
+  parse: {
+    dateInput: 'yyyy-MM-dd', // this is how your date will be parsed from Input
+  },
+  display: {
+    dateInput: 'yyyy-MM-DD', // this is how your date will get displayed on the Input
+    monthYearLabel: 'MMMM YYYY',
+    dateA11yLabel: 'LL',
+    monthYearA11yLabel: 'MMMM YYYY',
+  },
+};
 
 @NgModule({
   declarations: [
@@ -65,6 +83,7 @@ export function tokenGetter() {
     HttpClientModule,
     NgxSpinnerModule,
     MatTooltipModule,
+    MatNativeDateModule,
     JwtModule.forRoot({
       config: {
         tokenGetter: tokenGetter,
@@ -76,6 +95,14 @@ export function tokenGetter() {
     ReactiveFormsModule,
     MaterialModule,
     ToastrModule.forRoot(),
+  ],
+  providers: [
+    {
+      provide: DateAdapter,
+      useClass: MomentDateAdapter,
+      deps: [MAT_DATE_LOCALE],
+    },
+    { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMAT },
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   bootstrap: [AppComponent],

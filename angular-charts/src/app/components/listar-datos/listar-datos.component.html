@@ -1,8 +1,77 @@
 <div class="grid grid-flow-row grid-cols-1 sm:grid-cols-1 p-3 fondo">
   <div class="p-3">
+    <a
+      mat-raised-button
+      class="flex justify-start filtrar mb-5"
+      [matMenuTriggerFor]="menu"
+    >
+      <mat-icon svgIcon="ajustes-deslizadores" id="ajustes_icon"></mat-icon>
+      <p class="boton_texto">Filtrar</p>
+      <mat-icon iconPositionEnd id="expand_icon">expand_more</mat-icon>
+    </a>
+    <mat-menu [hasBackdrop]="true" #menu="matMenu" class="menu">
+      <div
+        class="grid grid-cols-2 grid-flow-row sm:grid-cols-2 grid-row-2 gap-4 m-3"
+        [formGroup]="range"
+        (click)="$event.stopPropagation()"
+      >
+        <div>
+          <h2 class="subtitulo">Desde</h2>
+          <div class="d-input">
+            <mat-datepicker-toggle [for]="startpicker">
+              <mat-icon
+                svgIcon="calendario"
+                class="calendario"
+                matDatepickerToggleIcon
+              ></mat-icon>
+            </mat-datepicker-toggle>
+            <input
+              placeholder="xx/xx/xxxx"
+              [matDatepicker]="startpicker"
+              formControlName="start"
+              class="input-field"
+              type="date"
+            />
+          </div>
+          <mat-datepicker #startpicker></mat-datepicker>
+        </div>
+        <div>
+          <h2 class="subtitulo">Hasta</h2>
+          <div class="d-input">
+            <mat-datepicker-toggle [for]="endpicker">
+              <mat-icon
+                svgIcon="calendario"
+                class="calendario"
+                matDatepickerToggleIcon
+              ></mat-icon>
+            </mat-datepicker-toggle>
+            <input
+              formControlName="end"
+              [matDatepicker]="endpicker"
+              class="input-field"
+              type="date"
+              (dateChange)="setInicio_final()"
+            />
+          </div>
+          <mat-datepicker #endpicker></mat-datepicker>
+        </div>
+        <div class="col-span-2 row-start-2">
+          <!-- <button mat-button (click)="range.reset()">Reset</button> -->
+          <button
+            mat-raised-button
+            (click)="getFiltrados()"
+            class="boton_wide"
+            [disabled]="!range.value.start || !range.value.end"
+          >
+            Aplicar
+          </button>
+        </div>
+      </div>
+    </mat-menu>
+
     <mat-card>
       <mat-card-header>
-        <h2>Estrusione</h2>
+        <h2 class="titulo">Estrusione</h2>
       </mat-card-header>
       <mat-card-content>
         <canvas id="myChart"></canvas>
@@ -21,13 +90,13 @@
 </div>
 
 <div class="grid grid-flow-row grid-cols-1 sm:grid-cols-2 p-3 fondo">
-  <div class="p-3">
+  <div class="p-3" *ngFor="let chart of chartList">
     <mat-card>
       <mat-card-header>
-        <h2>Presión promedio por mes</h2>
+        <h2 class="titulo">{{ chart.titulo }}</h2>
       </mat-card-header>
       <mat-card-content>
-        <canvas id="myChart3"></canvas>
+        <canvas id="{{ chart.titulo }}"></canvas>
       </mat-card-content>
     </mat-card>
   </div>

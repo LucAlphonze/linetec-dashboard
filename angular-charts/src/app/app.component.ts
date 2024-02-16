@@ -6,6 +6,8 @@ import { HttpService } from './service/http.service';
 import { Subscription, catchError } from 'rxjs';
 import { RegistroFiltrado, Variable } from './models/datos.model';
 import { SpinnerService } from './service/spinner.service';
+import { MatIconRegistry } from '@angular/material/icon';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-root',
@@ -24,18 +26,37 @@ export class AppComponent implements DoCheck, OnInit {
   listVariables: Variable[] = [];
   subscription!: Subscription;
   subscription2!: Subscription;
+  subscription3!: Subscription;
   listDatos: RegistroFiltrado[] = [];
   exceedList: any = [];
 
   notExceedList2: any = [];
+  fullName!: string;
+  iniciales!: string;
+  mobile = false;
 
   constructor(
     private builder: FormBuilder,
     private router: Router,
     private service: AuthService,
     private _httpService: HttpService,
-    private spinnerService: SpinnerService
-  ) {}
+    private spinnerService: SpinnerService,
+    private matIconRegistry: MatIconRegistry,
+    private domSanitizer: DomSanitizer
+  ) {
+    this.matIconRegistry.addSvgIcon(
+      'ajustes-deslizadores',
+      this.domSanitizer.bypassSecurityTrustResourceUrl(
+        '../assets/ajustes-deslizadores.svg'
+      )
+    );
+    this.matIconRegistry.addSvgIcon(
+      'calendario',
+      this.domSanitizer.bypassSecurityTrustResourceUrl(
+        '../assets/calendario 2.svg'
+      )
+    );
+  }
   ngOnInit(): void {
     this.valor = this.builder.group({
       threshold: new FormControl<number>(25),
@@ -44,6 +65,11 @@ export class AppComponent implements DoCheck, OnInit {
       start: new FormControl<Date | null>(null),
       end: new FormControl<Date | null>(null),
       granularidad: new FormControl<string>('day'),
+    });
+    this.subscription3 = this.service.fullname.subscribe((message) => {
+      console.log('fullname: ', message);
+      this.fullName = message;
+      this.splitFullName();
     });
     this.subscription = this._httpService.listaVariables.subscribe(
       (message) => (this.listVariables = message)
@@ -54,6 +80,10 @@ export class AppComponent implements DoCheck, OnInit {
         // console.log('app component datos in range: ', message);
       }
     );
+
+    if (window.screen.width < 500) {
+      this.mobile = true;
+    }
   }
 
   ngDoCheck(): void {
@@ -89,12 +119,7 @@ export class AppComponent implements DoCheck, OnInit {
         }
       });
     this._httpService
-      .getValoresFiltrados2(
-        this.listVariables[1]._id,
-        inicio,
-        final,
-        this.range.value.granularidad
-      )
+      .getValoresFiltrados2(inicio, final, this.range.value.granularidad)
       .subscribe((data) => {
         // console.log(data);
         this._httpService.stream_RegistroFiltrado2(data['datos']);
@@ -103,20 +128,19 @@ export class AppComponent implements DoCheck, OnInit {
         }
       });
     this.getInRangeTabla();
-    this._httpService
-      .getValoresFiltrados2(
-        this.listVariables[4]._id,
-        inicio,
-        final,
-        this.range.value.granularidad
-      )
-      .subscribe((data) => {
-        console.log(data);
-        this._httpService.stream_Datos3(data['datos']);
-        if (data['datos'].length == 0) {
-          this.spinnerService.detenerSpinner('grafico');
-        }
-      });
+    // this._httpService
+    //   .getValoresFiltrados2(
+    //     inicio,
+    //     final,
+    //     this.range.value.granularidad
+    //   )
+    //   .subscribe((data) => {
+    //     console.log(data);
+    //     this._httpService.stream_Datos3(data['datos']);
+    //     if (data['datos'].length == 0) {
+    //       this.spinnerService.detenerSpinner('grafico');
+    //     }
+    //   });
 
     this.opened = false;
   }
@@ -218,5 +242,16 @@ export class AppComponent implements DoCheck, OnInit {
         this.padTo2Digits(date.getSeconds()),
       ].join(':')
     );
+  }
+
+  splitFullName() {
+    var output = this.fullName.split(' ');
+
+    if (output.length > 1) {
+      this.iniciales = output[0].charAt(0) + output[1].charAt(0);
+    } else {
+      this.iniciales = output[0].charAt(0) + output[0].charAt(1);
+    }
+    console.log('iniciales: ', this.iniciales);
   }
 }

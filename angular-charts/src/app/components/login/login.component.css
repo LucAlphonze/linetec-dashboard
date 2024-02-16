@@ -23,7 +23,7 @@
   line-height: normal;
 }
 
-.boton {
+#boton {
   width: 100%;
   height: 50px;
   border-radius: 8px;
@@ -38,22 +38,8 @@
   margin-left: auto;
   margin-right: auto;
 }
-.boton2 {
-  width: 100%;
-  height: 50px;
-  border-radius: 8px;
-  text-align: center;
-  font-family: "D-DIN-PRO";
-  font-size: 18px;
-  font-style: normal;
-  font-weight: 500;
-  line-height: normal;
-  color: white;
-  background-color: #52b48f;
-  margin-left: auto;
-  margin-right: auto;
-}
-.boton2:disabled {
+
+#boton2:disabled {
   background-color: #b1b2b4;
 }
 .m-input {
@@ -72,7 +58,7 @@
   line-height: normal;
 }
 
-.lintec_logo {
+.linetec_logo {
   max-height: 100vh;
   max-width: 100%;
   flex-shrink: 0;
@@ -117,6 +103,22 @@
   font-weight: 500;
   line-height: normal;
   color: #c82d3b;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#boton2 {
+  width: 100%;
+  height: 50px;
+  border-radius: 8px;
+  text-align: center;
+  font-family: "D-DIN-PRO";
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  color: white;
+  background-color: #52b48f;
   margin-left: auto;
   margin-right: auto;
 }

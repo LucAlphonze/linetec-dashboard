@@ -18,6 +18,10 @@
   font-family: "D-DIN-PRO";
   src: url(assets/fonts/otf/D-DIN-PRO-500-Medium.otf) format("truetype");
 }
+@font-face {
+  font-family: "DIN-PRO";
+  src: url(assets/fonts/FontsFree-Net-DINPro-1.ttf) format("truetype");
+}
 
 html,
 body {
@@ -33,4 +37,13 @@ body {
   width: 100%;
 
   padding: 10px;
+}
+.titulo {
+  color: var(--Azul, #231e46);
+  text-align: center;
+  font-family: "DIN Alternate Bold";
+  font-size: 26px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
 }

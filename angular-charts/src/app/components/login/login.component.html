@@ -9,7 +9,7 @@
         <img
           src="assets/3- ISOTIPO LINETEC (T con fondo) PNG.png"
           alt=""
-          class="lintec_logo m-5"
+          class="linetec_logo m-5"
         />
         <h2 class="titulo">Iniciar sesión</h2>
       </div>
@@ -36,8 +36,7 @@
               (click)="showPass()"
               class="p-2"
             >
-              <mat-icon *ngIf="!show">visibility</mat-icon>
-              <mat-icon *ngIf="show">visibility_off</mat-icon>
+              <mat-icon>{{ show ? "visibility" : "visibility_off" }}</mat-icon>
             </a>
           </mat-form-field>
           <div class="space-y-[10vh] 2xl:space-y-[40vh]">
@@ -46,11 +45,11 @@
               [disabled]="
                 !loginForm.value.username || !loginForm.value.password
               "
-              class="boton2"
+              id="boton2"
             >
               Ingresar
             </button>
-            <a mat-raised-button (click)="mostrarRegistro()" class="boton">
+            <a mat-raised-button (click)="mostrarRegistro()" id="boton">
               Registrar Usuario
             </a>
           </div>
@@ -63,7 +62,7 @@
         <img
           src="assets/3- ISOTIPO LINETEC (T con fondo) PNG.png"
           alt=""
-          class="lintec_logo m-5 p-3"
+          class="linetec_logo m-5 p-3"
         />
         <h2 class="titulo">Registro de usuario</h2>
       </div>
@@ -106,8 +105,7 @@
               (click)="showPass()"
               class="p-2"
             >
-              <mat-icon *ngIf="!show">visibility</mat-icon>
-              <mat-icon *ngIf="show">visibility_off</mat-icon>
+              <mat-icon>{{ show ? "visibility" : "visibility_off" }}</mat-icon>
             </a>
           </mat-form-field>
           <div class="m-input">
@@ -230,7 +228,7 @@
                 !registerForm.value.name ||
                 !registerForm.value.email
               "
-              class="boton2"
+              id="boton2"
             >
               Enviar
             </button>

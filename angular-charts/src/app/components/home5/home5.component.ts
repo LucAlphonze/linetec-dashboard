@@ -58,6 +58,7 @@ export class Home5Component implements OnInit {
 
   ngOnInit() {
     this.expirationCheck();
+    this.service.getUser();
     this.subscription = this.service.paisSelected.subscribe((message) => {
       if (message != '') {
         this.isPaisCompleted = true;
