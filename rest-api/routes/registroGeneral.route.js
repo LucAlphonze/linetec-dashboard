@@ -21,14 +21,16 @@ const { verifyToken } = require("../controllers/auth.controller");
 
 const router = Router();
 router.get("/all/:variable", obtenerTodos);
-router.get("/all/:idVariable/:startdate/:enddate/", getAllInRange);
+router.get("/all/:idVariable/:startdate/:enddate/", verifyToken, getAllInRange);
 router.get("/", verifyToken, getTodos);
 router.get(
   "/filter/:idVariable/:startdate/:enddate/:operacion",
+  verifyToken,
   filtrarRegistrosGenerales
 );
 router.get(
   "/granularidad/:startdate/:enddate/:granularidad",
+  verifyToken,
   filtrarRegistrosGenerales2
 );
 router.get("/:idVariable", obtenerRegistrosGeneral);
