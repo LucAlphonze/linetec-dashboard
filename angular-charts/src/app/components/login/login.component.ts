@@ -142,6 +142,7 @@ export class LoginComponent implements OnInit {
   get password() {
     return this.registerForm.get('password')!;
   }
+
   showPass() {
     if (this.pass === 'password') {
       this.pass = 'text';

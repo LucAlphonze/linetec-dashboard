@@ -1,48 +1,16 @@
-<mat-card class="carta">
-  <mat-card-header>
-    <h2>Formulario de Localidad</h2>
-  </mat-card-header>
-  <mat-card-content>
-    <div class="flex flex-col p-3">
-      <mat-accordion>
-        <mat-expansion-panel>
-          <mat-expansion-panel-header>
-            <mat-panel-title>Formulario de Localidades</mat-panel-title>
-          </mat-expansion-panel-header>
-          <form
-            class="example-form"
-            [formGroup]="localidadForm"
-            (ngSubmit)="createLocalidad()"
-          >
-            <mat-form-field class="">
-              <mat-label>Nombre de Localidad</mat-label>
-              <input matInput formControlName="nombre" />
-            </mat-form-field>
-
-            <div class="m-1">
-              <button class="m-3" mat-raised-button color="primary">
-                Enviar
-              </button>
-            </div>
-          </form>
-        </mat-expansion-panel>
-      </mat-accordion>
-    </div>
-
-    <div class="flex flex-col p-3">
-      <mat-form-field>
-        <mat-label> Elegir una Localidad </mat-label>
-        <mat-select>
-          <mat-option
-            *ngFor="let localidad of listLocalidades"
-            [value]="localidad._id"
-            (click)="[setLocalidad(localidad._id, localidad.nombre)]"
-          >
-            <p>{{ localidad.nombre }}</p>
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-    </div>
-    <button mat-button matStepperNext type="button">Siguiente</button>
-  </mat-card-content>
-</mat-card>
+<div class="carta flex flex-col p-3">
+  <mat-form-field appearance="outline">
+    <mat-label>Localidad </mat-label>
+    <mat-select [disabled]="!id_provincia">
+      <mat-option
+        *ngFor="let localidad of listLocalidades"
+        [value]="localidad.nombre ? localidad.nombre : localidad"
+        (click)="
+          [setLocalidad(localidad.nombre ? localidad.nombre : localidad)]
+        "
+      >
+        <p>{{ localidad.nombre ? localidad.nombre : localidad }}</p>
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>

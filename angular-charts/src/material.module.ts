@@ -20,6 +20,8 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatTabsModule } from '@angular/material/tabs';
 
 @NgModule({
   exports: [
@@ -44,6 +46,8 @@ import { MatMenuModule } from '@angular/material/menu';
     MatFormFieldModule,
     MatProgressSpinnerModule,
     MatMenuModule,
+    MatProgressBarModule,
+    MatTabsModule,
   ],
 })
 export class MaterialModule {}

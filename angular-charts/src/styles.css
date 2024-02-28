@@ -1,7 +1,8 @@
 /* You can add global styles to this file, and also import other style files */
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
 @font-face {
   font-family: "DIN";
   src: url(assets/fonts/otf/D-DIN-PRO-400-Regular.otf) format("truetype");
@@ -37,6 +38,9 @@ body {
   width: 100%;
 
   padding: 10px;
+}
+mat-form-field {
+  width: 100%;
 }
 .titulo {
   color: var(--Azul, #231e46);

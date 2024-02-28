@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
 import { AuthService } from 'src/app/service/auth.service';
+import { HttpService } from 'src/app/service/http.service';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -14,7 +15,8 @@ export class ProvinciaFormComponent {
   constructor(
     private builder: FormBuilder,
     private toastr: ToastrService,
-    private service: AuthService
+    private service: AuthService,
+    private _httpservice: HttpService
   ) {}
   listPaises: any;
   listProvincias: any;
@@ -22,20 +24,20 @@ export class ProvinciaFormComponent {
   apiPaises = environment.API_URL_PAISES;
   apiProvincia = environment.API_URL_PROVINCIAS;
   apiLocalidad = environment.API_URL_LOCALIDADES;
+  apiArgentinaMunicipios = environment.API_URL_ARGENTINA_MUNICIPIOS;
   isOptional = true;
   provinciaForm!: FormGroup;
-  id_pais!: string;
+  nombre_pais!: string;
   id_provincia!: string;
   subscription!: Subscription;
   subscription2!: Subscription;
 
   ngOnInit(): void {
-    this.GetAllPaises();
     this.provinciaForm = this.builder.group({
       nombre: this.builder.control('', Validators.required),
     });
     this.subscription = this.service.paisSelected.subscribe(
-      (message) => (this.id_pais = message)
+      (message) => (this.nombre_pais = message)
     );
     this.subscription = this.service.provinciaSelected.subscribe(
       (message) => (this.id_provincia = message)
@@ -46,90 +48,37 @@ export class ProvinciaFormComponent {
     );
   }
 
-  GetAllPaises() {
-    this.service.getForm(this.apiPaises).subscribe((res: any) => {
-      console.log(res);
-      this.listPaises = res['datos'];
-    });
-  }
-  // no esta en uso
-  GetAllProvincias() {
-    this.service.getForm(this.apiProvincia).subscribe({
-      next: (res: any) => {
-        console.log(res);
-        this.listProvincias = res['datos'];
-      },
-      error: (error: any) => {
-        this.toastr.error(error);
-        console.log(error);
-      },
-    });
-  }
-
-  createProvincia() {
-    if (this.provinciaForm.valid) {
-      console.log(this.provinciaForm.value);
-      let body = {
-        nombre: this.provinciaForm.value.nombre,
-        id_pais: this.id_pais,
-      };
-      this.service.postForm(this.apiProvincia, body).subscribe({
-        next: (res: any) => {
-          console.log('respuesta: ', res);
-          if (res.status == 200) {
-            this.toastr.success('provincia registrada correctamente');
-            this.service
-              .getForm(this.apiProvincia + this.id_pais)
-              .subscribe((res: any) => {
-                this.listProvinciasPais = res;
-              });
-          } else if (res.status == 403) {
-            this.toastr.warning('acceso denegado, token expirado');
-          } else {
-            this.toastr.warning(res.error.error);
-          }
-        },
-        error: (error: any) => {
-          this.toastr.error(error);
-          console.log(error);
-        },
-      });
-    } else {
-      this.toastr.warning('Por favor entre datos validos');
-    }
-  }
-  borrarProvincia(id: string) {
-    console.log(this.apiProvincia + id);
-    this.service.deleteForm(this.apiProvincia, id).subscribe({
-      next: (res: any) => {
-        console.log('respuesta: ', res);
-        if (res.status == 500) {
-          this.toastr.warning(res.error.error);
-        } else {
-          this.toastr.success('Provincia borrada correctamente');
-          this.GetAllProvincias();
-        }
-      },
-      error: (error: any) => {
-        this.toastr.error(error);
-        console.log(error);
-      },
-    });
-  }
-  setProvincia(id: any, nombre: any) {
-    console.log('set provincia', id, 'nombre', nombre);
-    this.service.changeMessage(id);
-    this.service.provinciaSelectedSource.next(id);
+  setProvincia(nombre: any) {
+    console.log('set provincia nombre', nombre);
+    this.service.changeMessage(nombre);
+    this.service.provinciaSelectedSource.next(nombre);
     this.GetLocalidadesByProvincia();
   }
 
   GetLocalidadesByProvincia() {
-    this.service
-      .getForm(this.apiLocalidad + this.id_provincia)
-      .subscribe((res: any) => {
-        console.log('provincia form get localidades', res);
+    if (this.nombre_pais == 'Argentina') {
+      this._httpservice
+        .httpGet(
+          this.apiArgentinaMunicipios +
+            this.id_provincia +
+            '&orden=nombre&max=2100'
+        )
+        .subscribe((res: any) => {
+          console.log('pais form get municipios', res.municipios);
+          this.service.streamLocalides_ProvinciaSelected(res.municipios);
+        });
+    } else {
+      let body = {
+        country: this.nombre_pais,
+        state: this.id_provincia,
+      };
+      this._httpservice
+        .httpPost(this.apiLocalidad, body)
+        .subscribe((res: any) => {
+          console.log('provincia form get localidades', res.body.data);
 
-        this.service.streamLocalides_ProvinciaSelected(res);
-      });
+          this.service.streamLocalides_ProvinciaSelected(res.body.data);
+        });
+    }
   }
 }

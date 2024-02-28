@@ -31,7 +31,6 @@ export class EmpresaPlantaFormComponent implements OnInit {
   subscription!: Subscription;
 
   ngOnInit(): void {
-    this.GetAllLocalidades();
     this.GetAllEmpresas();
     this.plantaForm = this.builder.group({
       nombre: this.builder.control('', Validators.required),
@@ -47,13 +46,6 @@ export class EmpresaPlantaFormComponent implements OnInit {
     this.subscription = this.service.localidadSelected.subscribe(
       (message) => (this.id_localidad = message)
     );
-  }
-
-  GetAllLocalidades() {
-    this.service.getForm(this.apiLocalidad).subscribe((res: any) => {
-      console.log(res);
-      this.listLocalidades = res['datos'];
-    });
   }
 
   GetAllEmpresas() {

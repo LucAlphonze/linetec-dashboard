@@ -183,7 +183,7 @@ export class TablaComponent implements OnInit {
       this.service.stream_Variables(data);
       this.listVariables = data;
       console.log(this.listVariables);
-      this.id_variable = this.listVariables[1]._id;
+      this.id_variable = this.listVariables[0]._id;
     });
   }
   variableSelected(value: Event) {

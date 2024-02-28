@@ -28,15 +28,14 @@ export class EmpresaFormComponent implements OnInit {
   subscription!: Subscription;
 
   ngOnInit(): void {
-    this.GetAllLocalidades();
     this.empresaForm = this.builder.group({
       razon_social: this.builder.control('', Validators.required),
       nombre_fantasia: this.builder.control('', Validators.required),
       calle: this.builder.control('', Validators.required),
       altura: this.builder.control('', Validators.required),
-      piso: this.builder.control('', Validators.required),
-      deptartamento: this.builder.control('', Validators.required),
       rubro: this.builder.control('', Validators.required),
+      piso: this.builder.control(''),
+      deptartamento: this.builder.control(''),
     });
     this.subscription = this.service.localidadSelected.subscribe(
       (message) => (this.id_localidad = message)
@@ -46,12 +45,6 @@ export class EmpresaFormComponent implements OnInit {
     );
   }
 
-  GetAllLocalidades() {
-    this.service.getForm(this.apiLocalidad).subscribe((res: any) => {
-      console.log(res);
-      this.listLocalidades = res['datos'];
-    });
-  }
   GetAllEmpresas() {
     this.service.getForm(this.apiEmpresas).subscribe((res: any) => {
       console.log(res);
@@ -114,8 +107,8 @@ export class EmpresaFormComponent implements OnInit {
       },
     });
   }
-  setEmpresa(id: any, nombre: any) {
-    console.log('set empresa', id, 'nombre', nombre);
+  setEmpresa(id: any) {
+    console.log('set empresa', id);
     this.id_empresa = id;
     this.service.changeMessage(id);
     this.service.empresaSelectedSource.next(id);

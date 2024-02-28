@@ -102,6 +102,24 @@ export class HttpService {
       },
     });
   }
+  httpGet(url: string) {
+    return this.http.get(url);
+  }
+  httpPost(url: string, body: any) {
+    return this.http
+      .post(url, body, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        observe: 'response',
+      })
+      .pipe(
+        catchError(async (error) => {
+          console.log(error.message);
+          return error;
+        })
+      );
+  }
   stream_Variables(variables: Variable[]) {
     console.log('stream variables: ', variables);
     this.listaVariablesSource.next(variables);

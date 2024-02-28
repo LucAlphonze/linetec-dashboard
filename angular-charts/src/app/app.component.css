@@ -4,7 +4,6 @@
   font-size: 24px;
   font-style: normal;
   font-weight: 500;
-  line-height: normal;
 }
 
 [data-letters]:before {
@@ -33,9 +32,8 @@
   display: flex;
 }
 .lintec_logo {
-  width: 59px;
-  height: 59px;
-  flex-shrink: 0;
+  width: 56px;
+  height: 56px;
 }
 
 .spacer {

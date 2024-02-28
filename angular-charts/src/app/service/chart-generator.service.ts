@@ -26,6 +26,7 @@ export class ChartGeneratorService {
                 data: [],
                 borderColor: '#062984',
                 backgroundColor: 'rgba(6, 41, 132, 0.35)',
+                label: idList[i].titulo,
               },
             ],
           },

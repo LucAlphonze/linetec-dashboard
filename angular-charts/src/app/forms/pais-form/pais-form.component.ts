@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
 import { AuthService } from 'src/app/service/auth.service';
+import { HttpService } from 'src/app/service/http.service';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -14,14 +15,16 @@ export class PaisFormComponent implements OnInit {
   constructor(
     private _formBuilder: FormBuilder,
     private toastr: ToastrService,
-    private service: AuthService
+    private service: AuthService,
+    private _httpservice: HttpService
   ) {}
   listPaises: any;
   apiPaises = environment.API_URL_PAISES;
+  apiArgentinaPronvincias = environment.API_URL_ARGENTINA_PROVINCIAS;
   apiProvincia = environment.API_URL_PROVINCIAS;
   isOptional = true;
   paisForm!: FormGroup;
-  id_pais!: string;
+  nombre_pais!: string;
   message2!: any;
   subscription!: Subscription;
   subscription2!: Subscription;
@@ -33,73 +36,43 @@ export class PaisFormComponent implements OnInit {
       nombre: this._formBuilder.control('', Validators.required),
     });
     this.subscription = this.service.paisSelected.subscribe(
-      (message) => (this.id_pais = message)
+      (message) => (this.nombre_pais = message)
     );
   }
-  urlPaises = environment.API_URL_PAISES;
 
   GetAllPaises() {
-    this.service.getForm(this.apiPaises).subscribe((res: any) => {
-      console.log(res);
-      this.listPaises = res['datos'];
+    this._httpservice.httpGet(this.apiPaises).subscribe((res: any) => {
+      console.log('lista paises', res);
+      this.listPaises = res['data'];
+      this.setPais(this.listPaises[7].country);
     });
   }
-  createPais() {
-    if (this.paisForm.valid) {
-      console.log(this.paisForm.value);
-      this.service.postForm(this.urlPaises, this.paisForm.value).subscribe({
-        next: (res: any) => {
-          console.log('respuesta: ', res);
-          if (res.status == 500) {
-            this.toastr.warning(res.error.error);
-          } else {
-            this.toastr.success('Pais registrado correctamente');
-            this.GetAllPaises();
-          }
-        },
-        error: (error: any) => {
-          this.toastr.error(error);
-          console.log(error);
-        },
-      });
-    } else {
-      this.toastr.warning('Por favor entre datos validos');
-    }
-  }
-  borrarPais(id: string) {
-    console.log(this.urlPaises + id);
-    this.service.deleteForm(this.urlPaises, id).subscribe({
-      next: (res: any) => {
-        console.log('respuesta: ', res);
-        if (res.status == 500) {
-          this.toastr.warning(res.error.error);
-        } else {
-          this.toastr.success('Pais borrado correctamente');
-          this.GetAllPaises();
-        }
-      },
-      error: (error: any) => {
-        this.toastr.error(error);
-        console.log(error);
-      },
-    });
-  }
-
-  setPais(id: any, nombre: any) {
-    console.log('set pais', id, 'nombre', nombre);
+  setPais(id: any) {
+    console.log('set pais', id);
     this.service.changeMessage(id);
     this.service.paisSelectedSource.next(id);
     this.GetProvinciasByPais();
   }
 
   GetProvinciasByPais() {
-    console.log('pais nombre', this.id_pais);
-
-    this.service
-      .getForm(this.apiProvincia + this.id_pais)
-      .subscribe((res: any) => {
-        console.log('pais form get provincias', res);
-        this.service.streamProvincias_PaisSelected(res);
-      });
+    console.log('pais nombre', this.nombre_pais);
+    if (this.nombre_pais == 'Argentina') {
+      this._httpservice
+        .httpGet(this.apiArgentinaPronvincias)
+        .subscribe((res: any) => {
+          console.log('pais form get provincias', res.provincias);
+          this.service.streamProvincias_PaisSelected(res.provincias);
+        });
+    } else {
+      let body = {
+        country: this.nombre_pais,
+      };
+      this._httpservice
+        .httpPost(this.apiProvincia, body)
+        .subscribe((res: any) => {
+          console.log('pais form get provincias', res.body.data.states);
+          this.service.streamProvincias_PaisSelected(res.body.data.states);
+        });
+    }
   }
 }

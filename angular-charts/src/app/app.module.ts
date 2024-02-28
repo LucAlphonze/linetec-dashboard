@@ -31,6 +31,7 @@ import { TablaComponent } from './components/tabla/tabla.component';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { LoginModalComponent } from './login-modal/login-modal.component';
+
 import {
   DateAdapter,
   MatNativeDateModule,
@@ -84,6 +85,7 @@ const MY_DATE_FORMAT = {
     NgxSpinnerModule,
     MatTooltipModule,
     MatNativeDateModule,
+
     JwtModule.forRoot({
       config: {
         tokenGetter: tokenGetter,
