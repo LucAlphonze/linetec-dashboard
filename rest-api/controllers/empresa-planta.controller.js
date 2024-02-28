@@ -41,13 +41,10 @@ const plantaPorEmpresa = async (req, res) => {
 
 const crearEmpresaPlanta = async (req, res) => {
   try {
-    const existeLocalidad = await Localidad.findOne({
-      _id: req.body.id_localidad,
-    });
     const existeEmpresa = await Empresa.findOne({
       _id: req.body.id_empresa,
     });
-    if (existeLocalidad && existeEmpresa) {
+    if (existeEmpresa) {
       const existePlanta = await EmpresaPlanta.findOne({
         nombre: { $regex: new RegExp(req.body.nombre, "i") },
         id_localidad: req.body.id_localidad,

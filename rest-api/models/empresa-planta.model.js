@@ -19,8 +19,7 @@ const EmpresaPlantaSchema = Schema({
     required: false,
   },
   id_localidad: {
-    type: Schema.Types.ObjectId,
-    ref: "Localidad",
+    type: String,
     required: true,
   },
 });
