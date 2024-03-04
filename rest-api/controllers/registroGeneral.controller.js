@@ -46,6 +46,7 @@ const obtenerTodos = async (req, res) => {
     });
   }
 };
+
 const getTodos = async (req, res) => {
   try {
     const registrosGenerales = await RegistroGeneral.find({})
@@ -352,11 +353,6 @@ const filtrarRegistrosGenerales2 = async (req, res) => {
               },
             },
           },
-        },
-      },
-      {
-        $sort: {
-          _id: 1,
         },
       },
     ]);
