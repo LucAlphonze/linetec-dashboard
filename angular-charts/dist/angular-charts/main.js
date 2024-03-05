@@ -966,32 +966,31 @@ class ListarDatosComponent {
         this.spinnerService.detenerSpinner('grafico');
       }
       var sortedList = this.listVariables;
-      var j = 0;
+      sortedList = sortedList.map(item => {
+        const item2 = this.listDatos.find(i2 => i2._id === item._id);
+        return item2 ? {
+          ...item,
+          ...item2
+        } : item;
+      });
+      console.log('sortedList: ', sortedList);
       for (let i = 0; i < this.listVariables.length; i++) {
-        if (this.listVariables[i]._id == this.listDatos[j]?._id) {
-          sortedList[i] = this.listDatos[j];
-          this.chart.data.datasets[i].data = sortedList[i]?.info.sort((objA, objB) => Number(new Date(objA.date)) - Number(new Date(objB.date))).map(x => this.dato = {
-            y: parseFloat(x.max.valor_lectura.toFixed(2)),
-            x: new Date(x.max.time_stamp).getTime()
-          });
-          console.log(this.chart.data.datasets[i].data);
-          j++;
-        }
+        this.chart.data.datasets[i].data = sortedList[i]?.info.sort((objA, objB) => Number(new Date(objA.date)) - Number(new Date(objB.date))).map(x => this.dato = {
+          y: parseFloat(x.max.valor_lectura.toFixed(2)),
+          x: new Date(x.max.time_stamp).getTime()
+        });
+        this.chart.update();
         if (i == this.listVariables.length - 1) {
+          this.spinnerService.detenerSpinner('grafico');
           this.chart.update();
         }
       }
-      // hay que modificar esto para cuando tengamos que elegir variables manualmente, guardar las variables en la tabla de charts funcionaba bien, hay que probar eso de vuelta. la query cambio y ahora todo viene del mismo lugar
-      var j2 = 0;
       for (let i = 0; i < this.chartList.length; i++) {
-        if (this.chartList[i].id == this.listDatos[j2]?._id) {
-          this.chartList2[i].chart.data.datasets[0].data = this.listDatos[j2]?.info.sort((objA, objB) => Number(new Date(objA.date)) - Number(new Date(objB.date))).map(x => this.dato = {
-            y: parseFloat(x.max.valor_lectura.toFixed(2)),
-            x: new Date(x.max.time_stamp).getTime()
-          });
-          j2++;
-          this.chartList2[i].chart.update();
-        }
+        this.chartList2[i].chart.data.datasets[0].data = sortedList[i]?.info.sort((objA, objB) => Number(new Date(objA.date)) - Number(new Date(objB.date))).map(x => this.dato = {
+          y: parseFloat(x.min.valor_lectura.toFixed(2)),
+          x: new Date(x.min.time_stamp).getTime()
+        });
+        this.chartList2[i].chart.update();
       }
     });
   }
@@ -1003,31 +1002,47 @@ class ListarDatosComponent {
   getRegistros() {
     var inicio = new Date('2023-05-01').getTime().toString();
     var final = new Date('2023-12-31').getTime().toString();
+    var sortedList = this.listVariables;
     this.spinnerService.llamarSpinner('grafico');
     this._httpService.getValoresFiltrados2(inicio, final, this.range.value.granularidad).subscribe(data => {
-      if (data['datos'].length == 0) {
-        this.spinnerService.detenerSpinner('grafico');
-      }
       this.listDatos = data['datos'];
-      var j = 0;
-      var sortedList = this.listVariables;
-      for (let i = 0; i < this.listVariables.length; i++) {
-        console.log('listVariables :', this.listVariables[i]._id, 'listDatos : ', this.listDatos[j]._id);
-        console.log('sorted list: ', sortedList);
-        if (this.listVariables[i]._id == this.listDatos[j]?._id) {
-          sortedList[i] = this.listDatos[j];
-          this.chart.data.datasets[i].data = sortedList[i]?.info.sort((objA, objB) => Number(new Date(objA.date)) - Number(new Date(objB.date))).map(x => this.dato = {
-            y: parseFloat(x.max.valor_lectura.toFixed(2)),
-            x: new Date(x.max.time_stamp).getTime()
-          });
-          console.log('datos: ', this.chart.data.datasets[i].data);
-          j++;
-          this.chart.update();
+      sortedList = sortedList.map(item => {
+        const item2 = this.listDatos.find(i2 => i2._id === item._id);
+        return item2 ? {
+          ...item,
+          ...item2
+        } : item;
+      });
+      if (this.chart.data.datasets.length < this.listVariables.length) {
+        for (let j = 0; j < sortedList.length; j++) {
+          const dsColor = this.utils.namedColor(this.chart.data.datasets.length);
+          const dataSet = {
+            data: [],
+            label: sortedList[j].nombre,
+            borderColor: dsColor,
+            backgroundColor: this.utils.transparentize(dsColor, 0.5)
+          };
+          this.chart.data.datasets.push(dataSet);
         }
-        if (i == this.listVariables.length - 1 || !sortedList[i].info) {
+      }
+      console.log('sortedList: ', sortedList);
+      for (let i = 0; i < this.listVariables.length; i++) {
+        this.chart.data.datasets[i].data = sortedList[i]?.info.sort((objA, objB) => Number(new Date(objA.date)) - Number(new Date(objB.date))).map(x => this.dato = {
+          y: parseFloat(x.max.valor_lectura.toFixed(2)),
+          x: new Date(x.max.time_stamp).getTime()
+        });
+        this.chart.update();
+        if (i == this.listVariables.length - 1) {
           this.spinnerService.detenerSpinner('grafico');
           this.chart.update();
         }
+      }
+      for (let i = 0; i < this.chartList.length; i++) {
+        this.chartList2[i].chart.data.datasets[0].data = sortedList[i]?.info.sort((objA, objB) => Number(new Date(objA.date)) - Number(new Date(objB.date))).map(x => this.dato = {
+          y: parseFloat(x.min.valor_lectura.toFixed(2)),
+          x: new Date(x.min.time_stamp).getTime()
+        });
+        this.chartList2[i].chart.update();
       }
     });
   }
@@ -1049,16 +1064,6 @@ class ListarDatosComponent {
         this.chartService.generate(this.chartList, this.decimation);
         this.chartList2 = this.chartService.getCharts();
       }, 500);
-      for (let i = 0; i < data.length; i++) {
-        const dsColor = this.utils.namedColor(this.chart.data.datasets.length);
-        const dataSet = {
-          data: [],
-          label: data[i].nombre,
-          borderColor: dsColor,
-          backgroundColor: this.utils.transparentize(dsColor, 0.5)
-        };
-        this.chart.data.datasets.push(dataSet);
-      }
     });
   }
   getFiltrados() {
@@ -1817,6 +1822,7 @@ class TablaComponent {
     });
     this.subscription = this.service.listaDatosInRange.subscribe(message => {
       this.exceedList = message;
+      console.log('lista excedida stream', this.exceedList);
       // console.log('prueba filter: ', this.removeDuplicates(this.exceedList));
       this.dataSource = new _angular_material_table__WEBPACK_IMPORTED_MODULE_4__.MatTableDataSource(this.exceedList);
       if (this.exceedList.length != 0) {
@@ -1826,6 +1832,7 @@ class TablaComponent {
       this.dataSource.sort = this.sort;
     });
     this.subscription = this.service.rangeInfo.subscribe(message => {
+      console.log('inicio', message[0], 'final', message[1]);
       this.range = message;
     });
   }
@@ -1840,7 +1847,7 @@ class TablaComponent {
   }
   downloadCSV() {
     let csvList;
-    csvList = this.removeDuplicates(this.exceedList).map(e => ({
+    csvList = this.exceedList.map(e => ({
       valor_lectura: e.valor_lectura,
       tiempo_inicio: e.time_stamp,
       tiempo_fin: e.cTime_stamp,
@@ -1866,7 +1873,6 @@ class TablaComponent {
       }
       keysCounter = 0;
     }
-    console.log('csv: ', this.csv);
     let link = document.createElement('a');
     link.id = 'download-csv';
     link.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(this.csv));
@@ -5434,8 +5440,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   HttpService: () => (/* binding */ HttpService)
 /* harmony export */ });
 /* harmony import */ var C_Users_ftolosa_Downloads_LNT_ID_CF_angular_charts_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 1670);
-/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! rxjs */ 8071);
-/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! rxjs */ 2513);
+/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! rxjs */ 2513);
+/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! rxjs */ 8071);
 /* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! rxjs */ 2389);
 /* harmony import */ var src_environments_environment__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! src/environments/environment */ 553);
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @angular/core */ 1699);
@@ -5451,14 +5457,14 @@ class HttpService {
     this.registroGeneral = src_environments_environment__WEBPACK_IMPORTED_MODULE_1__.environment.API_URL_RGENERAL;
     this.variables = src_environments_environment__WEBPACK_IMPORTED_MODULE_1__.environment.API_URL_VARIABLES;
     // chartUrl = environment.API_URL_CHARTS;
-    this.listaVariablesSource = new rxjs__WEBPACK_IMPORTED_MODULE_2__.BehaviorSubject([]);
-    this.listaRegistroFiltradoSource = new rxjs__WEBPACK_IMPORTED_MODULE_2__.BehaviorSubject([]);
-    this.listaRegistroFiltrado2Source = new rxjs__WEBPACK_IMPORTED_MODULE_3__.Subject();
-    this.listaDatosSource3 = new rxjs__WEBPACK_IMPORTED_MODULE_2__.BehaviorSubject([]);
-    this.listaDatosInRangeSource = new rxjs__WEBPACK_IMPORTED_MODULE_2__.BehaviorSubject([]);
-    this.listChartInfoSource = new rxjs__WEBPACK_IMPORTED_MODULE_3__.Subject();
-    this.listCharDatatInfoSource = new rxjs__WEBPACK_IMPORTED_MODULE_3__.Subject();
-    this.rangeSource = new rxjs__WEBPACK_IMPORTED_MODULE_3__.Subject();
+    this.listaVariablesSource = new rxjs__WEBPACK_IMPORTED_MODULE_2__.Subject();
+    this.listaRegistroFiltradoSource = new rxjs__WEBPACK_IMPORTED_MODULE_3__.BehaviorSubject([]);
+    this.listaRegistroFiltrado2Source = new rxjs__WEBPACK_IMPORTED_MODULE_2__.Subject();
+    this.listaDatosSource3 = new rxjs__WEBPACK_IMPORTED_MODULE_3__.BehaviorSubject([]);
+    this.listaDatosInRangeSource = new rxjs__WEBPACK_IMPORTED_MODULE_3__.BehaviorSubject([]);
+    this.listChartInfoSource = new rxjs__WEBPACK_IMPORTED_MODULE_2__.Subject();
+    this.listCharDatatInfoSource = new rxjs__WEBPACK_IMPORTED_MODULE_2__.Subject();
+    this.rangeSource = new rxjs__WEBPACK_IMPORTED_MODULE_2__.Subject();
     this.listaVariables = this.listaVariablesSource.asObservable();
     this.listaRegistroFiltrado = this.listaRegistroFiltradoSource.asObservable();
     this.listaRegistroFiltrado2 = this.listaRegistroFiltrado2Source.asObservable();
@@ -5532,7 +5538,6 @@ class HttpService {
     }()));
   }
   stream_Variables(variables) {
-    console.log('stream variables: ', variables);
     this.listaVariablesSource.next(variables);
   }
   stream_RegistroFiltrado(datos) {

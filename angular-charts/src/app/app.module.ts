@@ -39,6 +39,7 @@ import {
   MAT_DATE_LOCALE,
 } from '@angular/material/core';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
+import { DepartamentosComponent } from './forms/departamentos/departamentos.component';
 
 export function tokenGetter() {
   return localStorage.getItem('token');
@@ -77,6 +78,7 @@ const MY_DATE_FORMAT = {
     Home5Component,
     TablaComponent,
     LoginModalComponent,
+    DepartamentosComponent,
   ],
   imports: [
     BrowserModule,

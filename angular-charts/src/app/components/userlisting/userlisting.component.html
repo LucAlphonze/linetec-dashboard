@@ -1,59 +1,76 @@
-<div class="mat-elevation-z8 carta">
-  <table mat-table matSort [dataSource]="dataSource">
-    <!-- Position Column -->
-    <ng-container matColumnDef="username">
-      <th mat-header-cell mat-sort-header *matHeaderCellDef>User name</th>
-      <td mat-cell *matCellDef="let element">{{ element.username }}</td>
-    </ng-container>
+<mat-card class="fondo">
+  <mat-card-header><h2 class="titulo">Listado de usuarios</h2></mat-card-header>
 
-    <!-- Name Column -->
-    <ng-container matColumnDef="name">
-      <th mat-header-cell mat-sort-header *matHeaderCellDef>Name</th>
-      <td mat-cell *matCellDef="let element">{{ element.name }}</td>
-    </ng-container>
+  <mat-card-content>
+    <div class="card">
+      <mat-table matSort [dataSource]="dataSource">
+        <!-- Name Column -->
+        <ng-container matColumnDef="name">
+          <mat-header-cell mat-sort-header *matHeaderCellDef
+            >Nombre</mat-header-cell
+          >
+          <mat-cell *matCellDef="let element">{{ element.name }}</mat-cell>
+        </ng-container>
 
-    <!-- Weight Column -->
-    <ng-container matColumnDef="email">
-      <th mat-header-cell mat-sort-header *matHeaderCellDef>email</th>
-      <td mat-cell *matCellDef="let element">{{ element.email }}</td>
-    </ng-container>
+        <!-- username Column -->
+        <ng-container matColumnDef="username">
+          <mat-header-cell mat-sort-header *matHeaderCellDef
+            >Nombre de usuario</mat-header-cell
+          >
+          <mat-cell *matCellDef="let element">{{ element.username }}</mat-cell>
+        </ng-container>
 
-    <ng-container matColumnDef="role">
-      <th mat-header-cell mat-sort-header *matHeaderCellDef>Role</th>
-      <td mat-cell *matCellDef="let element">
-        {{ element.role.name === "" ? "Unassigned" : element.role.name }}
-      </td>
-    </ng-container>
+        <!-- email Column -->
+        <ng-container matColumnDef="email">
+          <mat-header-cell mat-sort-header *matHeaderCellDef
+            >Email</mat-header-cell
+          >
+          <mat-cell *matCellDef="let element">{{ element.email }}</mat-cell>
+        </ng-container>
 
-    <!-- Symbol Column -->
-    <ng-container matColumnDef="status">
-      <th mat-header-cell mat-sort-header *matHeaderCellDef>Status</th>
-      <td mat-cell *matCellDef="let element">
-        {{ element.isActive ? "Active" : "Inactive" }}
-      </td>
-    </ng-container>
+        <!-- role Column -->
+        <ng-container matColumnDef="role">
+          <mat-header-cell mat-sort-header *matHeaderCellDef
+            >Rol</mat-header-cell
+          >
+          <mat-cell *matCellDef="let element">
+            {{ element.role.name === "" ? "Unassigned" : element.role.name }}
+          </mat-cell>
+        </ng-container>
 
-    <ng-container matColumnDef="action">
-      <th mat-header-cell *matHeaderCellDef>Action</th>
-      <td mat-cell *matCellDef="let element">
-        <a
-          (click)="UpdateUser(element.username)"
-          class="m-3"
-          mat-raised-button
-          color="primary"
-          >Update</a
-        >
-      </td>
-    </ng-container>
+        <!-- Status Column -->
+        <ng-container matColumnDef="status">
+          <mat-header-cell mat-sort-header *matHeaderCellDef
+            >Estado</mat-header-cell
+          >
+          <mat-cell *matCellDef="let element">
+            {{ element.isActive ? "Active" : "Inactive" }}
+          </mat-cell>
+        </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-  </table>
+        <ng-container matColumnDef="action">
+          <mat-header-cell *matHeaderCellDef>Action</mat-header-cell>
+          <mat-cell *matCellDef="let element">
+            <a
+              (click)="UpdateUser(element.username)"
+              class="m-3"
+              mat-raised-button
+              color="primary"
+              >Update</a
+            >
+          </mat-cell>
+        </ng-container>
 
-  <mat-paginator
-    [pageSizeOptions]="[5, 10, 20]"
-    showFirstLastButtons
-    aria-label="Select page of periodic elements"
-  >
-  </mat-paginator>
-</div>
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+      </mat-table>
+
+      <mat-paginator
+        [pageSizeOptions]="[5, 10, 20]"
+        showFirstLastButtons
+        aria-label="Select page of periodic elements"
+      >
+      </mat-paginator>
+    </div>
+  </mat-card-content>
+</mat-card>

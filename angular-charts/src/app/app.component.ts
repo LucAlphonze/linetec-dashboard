@@ -23,7 +23,7 @@ export class AppComponent implements DoCheck, OnInit {
   title = 'angular-charts';
   isMenuRequired = false;
   isAdminUser = false;
-  listVariables: Variable[] = [];
+  listVariables: any = [];
   subscription!: Subscription;
   subscription2!: Subscription;
   subscription3!: Subscription;
@@ -72,7 +72,7 @@ export class AppComponent implements DoCheck, OnInit {
       this.splitFullName();
     });
     this.subscription = this._httpService.listaVariables.subscribe(
-      (message) => (this.listVariables = message)
+      (message: any) => (this.listVariables = message)
     );
 
     this.subscription2 = this._httpService.listaDatosInRange.subscribe(

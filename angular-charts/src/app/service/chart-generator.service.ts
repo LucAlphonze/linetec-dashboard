@@ -13,7 +13,7 @@ export class ChartGeneratorService {
   chartList: any = [];
   constructor() {}
 
-  generate(idList: any[], decimation: any, canvasBackgroundColor: any) {
+  generate(idList: any[], decimation: any, canvasBackgroundColor?: any) {
     this.chartList = [];
     for (let i = 0; i < idList.length; i++) {
       var generatedChart = {
@@ -26,7 +26,7 @@ export class ChartGeneratorService {
                 data: [],
                 borderColor: '#062984',
                 backgroundColor: 'rgba(6, 41, 132, 0.35)',
-                label: idList[i].titulo,
+                label: idList[i].titulo + ' minimo',
               },
             ],
           },
@@ -64,10 +64,10 @@ export class ChartGeneratorService {
               },
             },
           },
-          plugins: [canvasBackgroundColor],
+          plugins: [],
         }),
         titulo: idList[i].titulo,
-        id: i,
+        id: idList[i].id,
       };
       this.chartList.push(generatedChart);
     }

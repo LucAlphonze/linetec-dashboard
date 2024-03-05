@@ -26,6 +26,8 @@ export const environment = {
   API_URL_RTOKEN: 'http:///automatismopalmar.ddns.net:3001/api/refresh',
   API_URL_ARGENTINA_PROVINCIAS:
     'https://apis.datos.gob.ar/georef/api/provincias?orden=nombre&campos=basico&max=30',
-  API_URL_ARGENTINA_MUNICIPIOS:
-    'https://apis.datos.gob.ar/georef/api/municipios?provincia=',
+  API_URL_ARGENTINA_DEPARTAMENTOS:
+    'https://apis.datos.gob.ar/georef/api/departamentos?provincia=',
+  API_URL_ARGENTINA_LOCALIDADES:
+    'https://apis.datos.gob.ar/georef/api/localidades?provincia=',
 };

@@ -24,7 +24,7 @@ export class ProvinciaFormComponent {
   apiPaises = environment.API_URL_PAISES;
   apiProvincia = environment.API_URL_PROVINCIAS;
   apiLocalidad = environment.API_URL_LOCALIDADES;
-  apiArgentinaMunicipios = environment.API_URL_ARGENTINA_MUNICIPIOS;
+  apiArgentinaDepartamentos = environment.API_URL_ARGENTINA_DEPARTAMENTOS;
   isOptional = true;
   provinciaForm!: FormGroup;
   nombre_pais!: string;
@@ -52,20 +52,21 @@ export class ProvinciaFormComponent {
     console.log('set provincia nombre', nombre);
     this.service.changeMessage(nombre);
     this.service.provinciaSelectedSource.next(nombre);
-    this.GetLocalidadesByProvincia();
+    this.GetDepartamentosByProvincia();
   }
 
-  GetLocalidadesByProvincia() {
+  GetDepartamentosByProvincia() {
     if (this.nombre_pais == 'Argentina') {
       this._httpservice
         .httpGet(
-          this.apiArgentinaMunicipios +
+          this.apiArgentinaDepartamentos +
             this.id_provincia +
-            '&orden=nombre&max=2100'
+            '&orden=nombre&max=2100&exacto=true'
         )
         .subscribe((res: any) => {
-          console.log('pais form get municipios', res.municipios);
-          this.service.streamLocalides_ProvinciaSelected(res.municipios);
+          console.log('pais form get departamentos', res.departamentos);
+
+          this.service.streamDepartamentos_ProvinciaSelected(res.departamentos);
         });
     } else {
       let body = {
@@ -77,7 +78,7 @@ export class ProvinciaFormComponent {
         .subscribe((res: any) => {
           console.log('provincia form get localidades', res.body.data);
 
-          this.service.streamLocalides_ProvinciaSelected(res.body.data);
+          this.service.streamDepartamentos_ProvinciaSelected(res.body.data);
         });
     }
   }

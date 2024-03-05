@@ -39,6 +39,7 @@ export class AuthService {
   private messageSource = new BehaviorSubject('default message');
   //observables que recogen la respuesta de la llamada a la api
   private provinciasSource = new BehaviorSubject('');
+  private departamentosSource = new BehaviorSubject('');
   private localidadesSource = new BehaviorSubject('');
   private empresasSource = new BehaviorSubject('');
   private plantasSource = new BehaviorSubject('');
@@ -49,6 +50,7 @@ export class AuthService {
   //observables que recogen la opcion seleccionada
   paisSelectedSource = new BehaviorSubject('');
   provinciaSelectedSource = new BehaviorSubject('');
+  departamentoSelectedSource = new BehaviorSubject('');
   localidadSelectedSource = new BehaviorSubject('');
   empresaSelectedSource = new BehaviorSubject('');
   plantaSelectedSource = new BehaviorSubject('');
@@ -62,6 +64,7 @@ export class AuthService {
 
   // guardamos la respuesta en listas que son accesibles desde los componentes
   listProvincias = this.provinciasSource.asObservable();
+  listDepartamentos = this.departamentosSource.asObservable();
   listLocalidades = this.localidadesSource.asObservable();
   listEmpresas = this.empresasSource.asObservable();
   listPlantas = this.plantasSource.asObservable();
@@ -71,6 +74,7 @@ export class AuthService {
   // guardamos la opcion seleccionada para que sea accesible a los componentes
   paisSelected = this.paisSelectedSource.asObservable();
   provinciaSelected = this.provinciaSelectedSource.asObservable();
+  departamentoSelected = this.departamentoSelectedSource.asObservable();
   localidadSelected = this.localidadSelectedSource.asObservable();
   empresaSelected = this.empresaSelectedSource.asObservable();
   plantaSelected = this.plantaSelectedSource.asObservable();
@@ -285,7 +289,11 @@ export class AuthService {
     this.provinciasSource.next(provincias);
   }
 
-  streamLocalides_ProvinciaSelected(localidades: string) {
+  streamDepartamentos_ProvinciaSelected(departamentos: string) {
+    console.log('change message: ', departamentos);
+    this.departamentosSource.next(departamentos);
+  }
+  streamLocalidades_DepartamentoSelected(localidades: string) {
     console.log('change message: ', localidades);
     this.localidadesSource.next(localidades);
   }

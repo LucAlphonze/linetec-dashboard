@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, Subject, catchError } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { RegistroFiltrado, Variable } from '../models/datos.model';
+import { RegistroFiltrado } from '../models/datos.model';
 
 @Injectable({
   providedIn: 'root',
@@ -11,11 +11,11 @@ export class HttpService {
   registroGeneral = environment.API_URL_RGENERAL;
   variables = environment.API_URL_VARIABLES;
   // chartUrl = environment.API_URL_CHARTS;
-  private listaVariablesSource = new BehaviorSubject(<Variable[]>[]);
+  private listaVariablesSource = new Subject();
   private listaRegistroFiltradoSource = new BehaviorSubject(
     <RegistroFiltrado[]>[]
   );
-  private listaRegistroFiltrado2Source = new BehaviorSubject(<[]>[]);
+  private listaRegistroFiltrado2Source = new Subject();
   private listaDatosSource3 = new BehaviorSubject(<[]>[]);
   private listaDatosInRangeSource = new BehaviorSubject(<[]>[]);
   private listChartInfoSource = new Subject();
@@ -120,8 +120,7 @@ export class HttpService {
         })
       );
   }
-  stream_Variables(variables: Variable[]) {
-    console.log('stream variables: ', variables);
+  stream_Variables(variables: any) {
     this.listaVariablesSource.next(variables);
   }
   stream_RegistroFiltrado(datos: RegistroFiltrado[]) {

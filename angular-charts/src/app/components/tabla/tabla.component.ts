@@ -38,7 +38,7 @@ export class TablaComponent implements OnInit {
 
     this.subscription = this.service.listaDatosInRange.subscribe((message) => {
       this.exceedList = message;
-
+      console.log('lista excedida stream', this.exceedList);
       // console.log('prueba filter: ', this.removeDuplicates(this.exceedList));
       this.dataSource = new MatTableDataSource(this.exceedList);
       if (this.exceedList.length != 0) {
@@ -47,7 +47,8 @@ export class TablaComponent implements OnInit {
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
     });
-    this.subscription = this.service.rangeInfo.subscribe((message) => {
+    this.subscription = this.service.rangeInfo.subscribe((message: any) => {
+      console.log('inicio', message[0], 'final', message[1]);
       this.range = message;
     });
   }
@@ -65,7 +66,7 @@ export class TablaComponent implements OnInit {
   }
   downloadCSV() {
     let csvList: CSVDato[];
-    csvList = this.removeDuplicates(this.exceedList).map((e: any) => ({
+    csvList = this.exceedList.map((e: any) => ({
       valor_lectura: e.valor_lectura,
       tiempo_inicio: e.time_stamp,
       tiempo_fin: e.cTime_stamp,
@@ -95,7 +96,6 @@ export class TablaComponent implements OnInit {
 
       keysCounter = 0;
     }
-    console.log('csv: ', this.csv);
     let link = document.createElement('a');
     link.id = 'download-csv';
     link.setAttribute(
@@ -180,9 +180,7 @@ export class TablaComponent implements OnInit {
   }
   getVariables() {
     this.service.getVariables().subscribe((data) => {
-      this.service.stream_Variables(data);
       this.listVariables = data;
-      console.log(this.listVariables);
       this.id_variable = this.listVariables[0]._id;
     });
   }

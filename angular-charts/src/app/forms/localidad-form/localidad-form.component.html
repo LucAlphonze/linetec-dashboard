@@ -1,7 +1,7 @@
 <div class="carta flex flex-col p-3">
   <mat-form-field appearance="outline">
     <mat-label>Localidad </mat-label>
-    <mat-select [disabled]="!id_provincia">
+    <mat-select [disabled]="!id_departamento">
       <mat-option
         *ngFor="let localidad of listLocalidades"
         [value]="localidad.nombre ? localidad.nombre : localidad"

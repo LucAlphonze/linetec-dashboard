@@ -1,5 +1,27 @@
-.carta {
-  max-width: 700px;
+.fondo {
   margin: auto;
+  width: 90%;
+  background-color: #fafafa;
+  margin: 20vh auto 10px;
+  display: flex;
+  justify-content: center;
+  padding: 10px 3rem 10px 3rem;
+}
+
+table {
   width: 100%;
+}
+
+.titulo {
+  color: var(--Azul, #231e46);
+  text-align: center;
+  font-family: "DIN Alternate Bold";
+  font-size: 26px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+}
+
+.card {
+  overflow-x: auto;
 }

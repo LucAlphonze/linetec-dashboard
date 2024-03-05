@@ -24,6 +24,7 @@ export class LocalidadFormComponent implements OnInit {
   isOptional = true;
   id_provincia!: string;
   id_localidad!: string;
+  id_departamento!: string;
   localidadForm!: FormGroup;
   subscription!: Subscription;
   subscription2!: Subscription;
@@ -37,6 +38,9 @@ export class LocalidadFormComponent implements OnInit {
     );
     this.subscription = this.service.provinciaSelected.subscribe(
       (message) => (this.id_provincia = message)
+    );
+    this.subscription = this.service.departamentoSelected.subscribe(
+      (message) => (this.id_departamento = message)
     );
     this.subscription2 = this.service.listLocalidades.subscribe(
       (message) => (this.listLocalidades = message)
