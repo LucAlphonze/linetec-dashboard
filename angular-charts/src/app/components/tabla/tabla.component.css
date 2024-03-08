@@ -30,16 +30,15 @@ label {
   display: block;
 }
 
-.boton {
+.mat-mdc-raised-button:not(:disabled).boton {
   width: 85px;
   height: 40px;
   flex-shrink: 0;
   border-radius: 8px;
-}
-.mat-mdc-raised-button:not(:disabled) {
   background-color: #c82d3b;
   color: #fff;
 }
+
 .subtitulo {
   width: 96px;
   height: 12.8px;

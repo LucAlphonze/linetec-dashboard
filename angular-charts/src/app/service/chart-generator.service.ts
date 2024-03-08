@@ -64,7 +64,7 @@ export class ChartGeneratorService {
               },
             },
           },
-          plugins: [],
+          plugins: [canvasBackgroundColor],
         }),
         titulo: idList[i].titulo,
         id: idList[i].id,

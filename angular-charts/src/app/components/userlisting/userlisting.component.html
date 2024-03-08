@@ -1,9 +1,22 @@
 <mat-card class="fondo">
-  <mat-card-header><h2 class="titulo">Listado de usuarios</h2></mat-card-header>
+  <mat-card-header class="">
+    <div class="grid grid-cols-2 header">
+      <h2 class="titulo justify-self-start">Listado de usuarios</h2>
+
+      <a
+        (click)="editableToggle()"
+        mat-raised-button
+        class="boton justify-self-end"
+      >
+        <mat-icon id="icon"> edit_note </mat-icon>
+        {{ editable ? "Cancelar" : "Editar Listado" }}
+      </a>
+    </div>
+  </mat-card-header>
 
   <mat-card-content>
     <div class="card">
-      <mat-table matSort [dataSource]="dataSource">
+      <mat-table matSort [dataSource]="dataSource" class="mb-3">
         <!-- Name Column -->
         <ng-container matColumnDef="name">
           <mat-header-cell mat-sort-header *matHeaderCellDef
@@ -28,43 +41,64 @@
           <mat-cell *matCellDef="let element">{{ element.email }}</mat-cell>
         </ng-container>
 
-        <!-- role Column -->
-        <ng-container matColumnDef="role">
-          <mat-header-cell mat-sort-header *matHeaderCellDef
-            >Rol</mat-header-cell
-          >
-          <mat-cell *matCellDef="let element">
-            {{ element.role.name === "" ? "Unassigned" : element.role.name }}
-          </mat-cell>
-        </ng-container>
-
         <!-- Status Column -->
         <ng-container matColumnDef="status">
           <mat-header-cell mat-sort-header *matHeaderCellDef
             >Estado</mat-header-cell
           >
           <mat-cell *matCellDef="let element">
-            {{ element.isActive ? "Active" : "Inactive" }}
+            <mat-select
+              [ngClass]="editable ? '' : 'select'"
+              [style]="
+                element.isActive === 'active'
+                  ? 'color:#52b48f'
+                  : 'color: #c82d3b'
+              "
+              [disabled]="!editable"
+              [(value)]="element.isActive"
+            >
+              <mat-option style="color: #c82d3b" value="inactive"
+                >Inactivo</mat-option
+              >
+              <mat-option style="color: #52b48f" value="active"
+                >Activo</mat-option
+              >
+            </mat-select>
           </mat-cell>
         </ng-container>
 
-        <ng-container matColumnDef="action">
-          <mat-header-cell *matHeaderCellDef>Action</mat-header-cell>
+        <!-- role Column -->
+        <ng-container matColumnDef="role">
+          <mat-header-cell mat-sort-header *matHeaderCellDef
+            >Rol</mat-header-cell
+          >
           <mat-cell *matCellDef="let element">
-            <a
-              (click)="UpdateUser(element.username)"
-              class="m-3"
-              mat-raised-button
-              color="primary"
-              >Update</a
+            <mat-select
+              [ngClass]="editable ? '' : 'select'"
+              [disabled]="!editable"
+              [(value)]="element.role._id"
             >
+              <mat-option value="64f1f60e918724a5f931d909">
+                Usuario
+              </mat-option>
+              <mat-option value="64d3cdd575d7a2df083079bd">
+                Administrador
+              </mat-option>
+            </mat-select>
           </mat-cell>
         </ng-container>
 
         <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
         <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
       </mat-table>
-
+      <div class="grid grid-cols-1">
+        <a
+          (click)="guardarCambios(dataSource._data._value)"
+          class="boton justify-self-end"
+          mat-raised-button
+          >Guardar Cambios</a
+        >
+      </div>
       <mat-paginator
         [pageSizeOptions]="[5, 10, 20]"
         showFirstLastButtons

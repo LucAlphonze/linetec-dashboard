@@ -41,7 +41,14 @@ export class TipoMaquinaFormComponent {
             if (res.status == 500) {
               this.toastr.warning(res.error.error);
             } else {
-              this.toastr.success('Tipo de maquina registrada correctamente');
+              this.toastr.success(
+                'Tipo de maquina registrada correctamente',
+                '',
+                {
+                  toastClass: 'yourclass ngx-toastr',
+                  positionClass: 'toast-bottom-center',
+                }
+              );
               this.GetAllTiposMaquina();
             }
           },

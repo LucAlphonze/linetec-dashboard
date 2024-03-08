@@ -76,7 +76,10 @@ export class LoginComponent implements OnInit {
       switch (this.userData.status) {
         case 200:
           if (this.userData['datos'].isActive) {
-            this.toastr.success('acceso concedido');
+            this.toastr.success('acceso concedido', '', {
+              toastClass: 'yourclass ngx-toastr',
+              positionClass: 'toast-bottom-center',
+            });
             this.service.storeUserData(
               this.userData.token,
               this.userData['datos'],

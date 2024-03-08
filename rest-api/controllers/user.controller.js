@@ -29,27 +29,40 @@ const obtenerUserByUserName = async (req, res) => {
 };
 
 const crearUser = async (req, res) => {
-  const user = new User(req.body);
-
   try {
+    const existeUser = await User.findOne({
+      username: { $regex: new RegExp(req.body.username, "i") },
+    });
+
+    if (existeUser) {
+      return res.status(500).json({
+        ok: false,
+        status: 500,
+        error: "El nombre de usuario ingresado ya está registrado",
+      });
+    }
+
+    const user = new User(req.body);
+
     await user.save();
 
     res.json({
       ok: true,
       datos: user,
     });
-  } catch (error) {
+  } catch (err) {
     res.status(500).json({
       ok: false,
-      error,
+      error: err,
     });
   }
 };
+
 const updateUser = async (req, res) => {
-  var filter = { username: req.params.username };
+  var username = { username: req.params.username };
 
   try {
-    const user = await User.findOneAndUpdate(filter, req.body, {
+    const user = await User.findOneAndUpdate(username, req.body, {
       new: true,
     });
 

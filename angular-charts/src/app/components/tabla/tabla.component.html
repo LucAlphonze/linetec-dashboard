@@ -15,83 +15,83 @@
 
   <mat-card-content>
     <div
-      class="grid grid-cols-2 grid-flow-row sm:grid-cols-2 grid-row-2 gap-4 m-3"
+      class="grid grid-cols-2 grid-flow-row sm:grid-cols-2 grid-row-2"
+      [formGroup]="valor"
     >
-      <div class="flex flex-row mb-5" [formGroup]="valor">
-        <div class="flex flex-col">
-          <label for="valor_limite" class="subtitulo">Valor límite</label>
-          <input
-            id="valor_limite"
-            class="d-input mr-2"
-            formControlName="threshold"
-          />
-        </div>
-        <div class="flex flex-col">
-          <label for="selec_variable" class="subtitulo">Elegir variable</label>
-          <select
-            class="select d-input mr-2"
-            id="select_variable"
-            (change)="variableSelected($event)"
-          >
-            <option
-              *ngFor="let variable of listVariables"
-              value="{{ variable._id }}"
-            >
-              {{ variable.nombre }}
-            </option>
-          </select>
-        </div>
-
-        <button
-          class="boton mt-4"
-          mat-raised-button
-          (click)="getInRangeTabla(id_variable)"
-          [disabled]="!range[0] || !range[1]"
-        >
-          Aplicar
-        </button>
+      <div class="">
+        <label for="valor_limite" class="subtitulo">Valor límite</label>
+        <input
+          id="valor_limite"
+          class="d-input mr-2"
+          formControlName="threshold"
+        />
       </div>
+      <div class="">
+        <label for="selec_variable" class="subtitulo">Elegir variable</label>
+        <select
+          class="select d-input mr-2"
+          id="select_variable"
+          (change)="variableSelected($event)"
+        >
+          <option
+            *ngFor="let variable of listVariables"
+            value="{{ variable._id }}"
+          >
+            {{ variable.nombre }}
+          </option>
+        </select>
+      </div>
+      <button
+        class="boton mt-4"
+        mat-raised-button
+        (click)="getInRangeTabla(id_variable)"
+        [disabled]="!range[0] || !range[1]"
+      >
+        Aplicar
+      </button>
     </div>
 
-    <table mat-table matSort [dataSource]="dataSource">
+    <mat-table matSort [dataSource]="dataSource">
       <!-- Position Column -->
       <ng-container matColumnDef="exceed_value">
-        <th mat-header-cell mat-sort-header *matHeaderCellDef>
+        <mat-header-cell mat-sort-header *matHeaderCellDef>
           Valor Excedido
-        </th>
-        <td mat-cell *matCellDef="let element">
+        </mat-header-cell>
+        <mat-cell *matCellDef="let element">
           {{ element.valor_lectura.toFixed(2) }}
-        </td>
+        </mat-cell>
       </ng-container>
 
       <!-- Name Column -->
       <ng-container matColumnDef="tiempo_inicio">
-        <th mat-header-cell mat-sort-header *matHeaderCellDef>
+        <mat-header-cell mat-sort-header *matHeaderCellDef>
           Tiempo de inicio
-        </th>
-        <td mat-cell *matCellDef="let element">
+        </mat-header-cell>
+        <mat-cell *matCellDef="let element">
           {{ element.time_stamp }}
-        </td>
+        </mat-cell>
       </ng-container>
       <!-- Name Column -->
       <ng-container matColumnDef="tiempo_fin">
-        <th mat-header-cell mat-sort-header *matHeaderCellDef>Tiempo de fin</th>
-        <td mat-cell *matCellDef="let element">
+        <mat-header-cell mat-sort-header *matHeaderCellDef
+          >Tiempo de fin</mat-header-cell
+        >
+        <mat-cell *matCellDef="let element">
           {{ element.cTime_stamp }}
-        </td>
+        </mat-cell>
       </ng-container>
 
       <!-- Name Column -->
       <ng-container matColumnDef="diferencia">
-        <th mat-header-cell mat-sort-header *matHeaderCellDef>
+        <mat-header-cell mat-sort-header *matHeaderCellDef>
           Diferencia en tiempo
-        </th>
-        <td mat-cell *matCellDef="let element">{{ element.time }}</td>
+        </mat-header-cell>
+        <mat-cell *matCellDef="let element">{{ element.time }}</mat-cell>
       </ng-container>
 
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-    </table>
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+    </mat-table>
     <mat-paginator
       [pageSizeOptions]="[5, 10, 20]"
       showFirstLastButtons

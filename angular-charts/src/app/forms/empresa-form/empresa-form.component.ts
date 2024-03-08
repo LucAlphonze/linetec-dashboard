@@ -71,7 +71,10 @@ export class EmpresaFormComponent implements OnInit {
           if (res.status == 500) {
             this.toastr.warning(res.error.error);
           } else {
-            this.toastr.success('Empresa registrada corectamente');
+            this.toastr.success('Empresa registrada corectamente', '', {
+              toastClass: 'yourclass ngx-toastr',
+              positionClass: 'toast-bottom-center',
+            });
             this.service
               .getForm(this.apiEmpresas + 'localidad/' + this.id_localidad)
               .subscribe((res: any) => {

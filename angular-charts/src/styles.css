@@ -50,3 +50,10 @@ mat-form-field {
   font-weight: 700;
   line-height: normal;
 }
+.yourclass.toast-success {
+  background-color: rgba(82, 180, 143, 0.4);
+  border: 2px solid #52b48f;
+  font-family: "D-DIN-PRO" !important;
+  color: black !important;
+  background-image: url(assets/Vector.png);
+}

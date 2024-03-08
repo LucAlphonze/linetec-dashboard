@@ -102,7 +102,10 @@ export class VariableFormComponent implements OnInit {
           if (res.status == 500) {
             this.toastr.warning(res.error.error);
           } else {
-            this.toastr.success('Variable registrada correctamente');
+            this.toastr.success('Variable registrada correctamente', '', {
+              toastClass: 'yourclass ngx-toastr',
+              positionClass: 'toast-bottom-center',
+            });
             this.GetAllVariables();
           }
         },

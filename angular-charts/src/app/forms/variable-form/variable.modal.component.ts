@@ -48,7 +48,10 @@ export class VariableModalComponent {
         if (res.status == 500) {
           this.toastr.warning(res.error.error);
         } else {
-          this.toastr.success('Variable borrada correctamente');
+          this.toastr.success('Variable borrada correctamente', '', {
+            toastClass: 'yourclass ngx-toastr',
+            positionClass: 'toast-bottom-center',
+          });
           this.GetAllVariables();
         }
         this.dialogRef.close();

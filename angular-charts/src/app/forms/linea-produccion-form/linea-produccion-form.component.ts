@@ -71,7 +71,14 @@ export class LineaProduccionFormComponent implements OnInit {
           if (res.status == 500) {
             this.toastr.warning(res.error.error);
           } else {
-            this.toastr.success('Linea de produccion registrada corectamente');
+            this.toastr.success(
+              'Linea de produccion registrada corectamente',
+              '',
+              {
+                toastClass: 'yourclass ngx-toastr',
+                positionClass: 'toast-bottom-center',
+              }
+            );
             this.service
               .getForm(this.apiLinea + this.id_empresa_planta)
               .subscribe((res: any) => {

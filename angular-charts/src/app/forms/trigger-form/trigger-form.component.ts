@@ -45,7 +45,10 @@ export class TriggerFormComponent implements OnInit {
           if (res.status == 500) {
             this.toastr.warning(res.error.error);
           } else {
-            this.toastr.success('Trigger registrado correctamente');
+            this.toastr.success('Trigger registrado correctamente', '', {
+              toastClass: 'yourclass ngx-toastr',
+              positionClass: 'toast-bottom-center',
+            });
             this.GetAllTriggers();
           }
         },

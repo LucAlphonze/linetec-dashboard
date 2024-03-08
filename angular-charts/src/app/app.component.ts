@@ -67,9 +67,11 @@ export class AppComponent implements DoCheck, OnInit {
       granularidad: new FormControl<string>('day'),
     });
     this.subscription3 = this.service.fullname.subscribe((message) => {
-      console.log('fullname: ', message);
-      this.fullName = message;
-      this.splitFullName();
+      setTimeout(() => {
+        console.log('fullname: ', message);
+        this.fullName = message;
+        this.iniciales = this.splitFullName();
+      }, 0);
     });
     this.subscription = this._httpService.listaVariables.subscribe(
       (message: any) => (this.listVariables = message)
@@ -246,12 +248,13 @@ export class AppComponent implements DoCheck, OnInit {
 
   splitFullName() {
     var output = this.fullName.split(' ');
-
+    var iniciales = '';
     if (output.length > 1) {
-      this.iniciales = output[0].charAt(0) + output[1].charAt(0);
+      iniciales = output[0].charAt(0) + output[1].charAt(0);
     } else {
-      this.iniciales = output[0].charAt(0) + output[0].charAt(1);
+      iniciales = output[0].charAt(0) + output[0].charAt(1);
     }
-    console.log('iniciales: ', this.iniciales);
+    console.log('iniciales: ', iniciales);
+    return iniciales.toUpperCase();
   }
 }

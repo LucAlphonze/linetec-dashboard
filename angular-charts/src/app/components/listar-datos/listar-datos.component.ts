@@ -48,45 +48,35 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
   chartList: any = [];
   chartList2: any = [];
 
-  // canvasBackgroundColor = {
-  //   id: 'canvasBackgroundColor',
-  //   beforeDatasetsDraw(chart: any, args: any, pluginOptions: any) {
-  //     const {
-  //       ctx,
-  //       chartArea: { top, bottom, left, right, width, height },
-  //       scales: { x, y },
-  //     } = chart;
+  canvasBackgroundColor = {
+    id: 'canvasBackgroundColor',
+    beforeDatasetsDraw(chart: any, args: any, pluginOptions: any) {
+      const {
+        ctx,
+        chartArea: { top, bottom, left, right, width, height },
+        scales: { x, y },
+      } = chart;
 
-  //     function bgColors(
-  //       bracketLow: number,
-  //       bracketHigh: number,
-  //       color: string
-  //     ) {
-  //       ctx.fillStyle = color;
-  //       ctx.fillRect(
-  //         left,
-  //         y.getPixelForValue(bracketHigh),
-  //         width,
-  //         y.getPixelForValue(bracketLow) - y.getPixelForValue(bracketHigh)
-  //       );
-  //     }
-  //     bgColors(
-  //       parseInt(y._labelItems[6].label),
-  //       parseInt(y._labelItems[y._labelItems.length - 1].label),
-  //       'rgba(23, 88, 255, 0.30)'
-  //     );
-  //     bgColors(
-  //       parseInt(y._labelItems[5].label),
-  //       parseInt(y._labelItems[6].label),
-  //       'rgba(6, 41, 132, 0.35)'
-  //     );
-  //     bgColors(
-  //       parseInt(y._labelItems[0].label),
-  //       y._labelItems[5].label,
-  //       'rgba(111, 151, 255, 0.30)'
-  //     );
-  //   },
-  // };
+      function bgColors(
+        bracketLow: number,
+        bracketHigh: number,
+        color: string
+      ) {
+        ctx.fillStyle = color;
+        ctx.fillRect(
+          left,
+          y.getPixelForValue(bracketHigh),
+          width,
+          y.getPixelForValue(bracketLow) - y.getPixelForValue(bracketHigh)
+        );
+      }
+      bgColors(
+        0,
+        parseInt(y._labelItems[y._labelItems.length - 1].label),
+        'rgba(111, 151, 255, 0.30)'
+      );
+    },
+  };
   decimation: any = {
     id: 'decimation',
     enabled: true,
@@ -154,7 +144,7 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
           },
         },
       },
-      plugins: [], //canvasBackgroundColor,
+      plugins: [this.canvasBackgroundColor], //canvasBackgroundColor,
     });
 
     this.subscription = this._httpService.listaVariables.subscribe(
@@ -315,7 +305,11 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
         },
       ];
       setTimeout(() => {
-        this.chartService.generate(this.chartList, this.decimation);
+        this.chartService.generate(
+          this.chartList,
+          this.decimation,
+          this.canvasBackgroundColor
+        );
         this.chartList2 = this.chartService.getCharts();
       }, 500);
     });
