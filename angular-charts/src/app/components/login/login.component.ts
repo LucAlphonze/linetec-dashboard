@@ -52,7 +52,7 @@ export class LoginComponent implements OnInit {
       ],
       email: new FormControl('', [Validators.required, Validators.email]),
       role: this.builder.control('64f1f60e918724a5f931d909'),
-      isActive: this.builder.control(false),
+      isActive: this.builder.control('inactive'),
     });
   }
 
@@ -75,7 +75,7 @@ export class LoginComponent implements OnInit {
       console.log(this.userData);
       switch (this.userData.status) {
         case 200:
-          if (this.userData['datos'].isActive) {
+          if (this.userData['datos'].isActive === 'active') {
             this.toastr.success('acceso concedido', '', {
               toastClass: 'yourclass ngx-toastr',
               positionClass: 'toast-bottom-center',

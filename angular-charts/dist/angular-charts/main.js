@@ -1421,7 +1421,7 @@ class LoginComponent {
       password: ['', [_angular_forms__WEBPACK_IMPORTED_MODULE_3__.Validators.required, _angular_forms__WEBPACK_IMPORTED_MODULE_3__.Validators.minLength(8), (0,src_app_service_validator__WEBPACK_IMPORTED_MODULE_0__.checkUpperCase)(), (0,src_app_service_validator__WEBPACK_IMPORTED_MODULE_0__.checkNumber)(), (0,src_app_service_validator__WEBPACK_IMPORTED_MODULE_0__.checkSpecial)()]],
       email: new _angular_forms__WEBPACK_IMPORTED_MODULE_3__.FormControl('', [_angular_forms__WEBPACK_IMPORTED_MODULE_3__.Validators.required, _angular_forms__WEBPACK_IMPORTED_MODULE_3__.Validators.email]),
       role: this.builder.control('64f1f60e918724a5f931d909'),
-      isActive: this.builder.control(false)
+      isActive: this.builder.control('inactive')
     });
   }
   proceedLogin() {
@@ -1431,7 +1431,7 @@ class LoginComponent {
       console.log(this.userData);
       switch (this.userData.status) {
         case 200:
-          if (this.userData['datos'].isActive) {
+          if (this.userData['datos'].isActive === 'active') {
             this.toastr.success('acceso concedido', '', {
               toastClass: 'yourclass ngx-toastr',
               positionClass: 'toast-bottom-center'
