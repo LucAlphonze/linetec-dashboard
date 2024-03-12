@@ -82,7 +82,7 @@ servClient.on("message", function (topic, message) {
               time_stamp: ts,
               fecha_lectura: new Date(),
             };
-            if (timeNow.getTime() > decoded.exp - 120000) {
+            if (timeNow.getTime() > decoded.exp * 1000 - 12000) {
               console.log("refrescando el token...");
               await axios
                 .post("http://rest-api:3001/api/refresh", { token: rtoken })
@@ -199,12 +199,12 @@ servClient.on("message", function (topic, message) {
                 }
               }
             });
-          return error;
+          return console.log(error);
         }
-        return error;
+        return console.log(error);
       } else if (error.request) {
         console.log("Error request: ", error.request);
-        return error;
+        return console.log(error);
       } else {
         console.log("else error: ", error.message);
         return "error del servidor";
