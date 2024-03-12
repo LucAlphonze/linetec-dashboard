@@ -1,86 +1,95 @@
-<mat-card class="carta">
-  <mat-card-header>
-    <h2>Formulario de Empresa</h2>
-  </mat-card-header>
+<mat-card>
+  <mat-card-header><h2 class="titulo">Elegir una empresa</h2> </mat-card-header>
   <mat-card-content>
-    <div class="flex flex-col">
-      <mat-accordion>
-        <mat-expansion-panel hideToggle>
-          <mat-expansion-panel-header>
-            <mat-panel-title> Lista de Empresas </mat-panel-title>
-          </mat-expansion-panel-header>
-          <form
-            class="example-form"
-            [formGroup]="empresaForm"
-            (ngSubmit)="createEmpresa()"
-            (submit)="empresaForm.reset()"
-          >
-            <mat-form-field class="">
-              <mat-label>Razon Social</mat-label>
-              <input matInput formControlName="razon_social" />
-            </mat-form-field>
-            <mat-form-field class="">
-              <mat-label>Nombre Fantasia</mat-label>
-              <input matInput formControlName="nombre_fantasia" />
-            </mat-form-field>
-            <mat-form-field class="">
-              <mat-label>Calle</mat-label>
-              <input matInput formControlName="calle" />
-            </mat-form-field>
-            <mat-form-field class="">
-              <mat-label>Altura</mat-label>
-              <input matInput formControlName="altura" />
-            </mat-form-field>
-            <mat-form-field class="">
-              <mat-label>Piso</mat-label>
-              <input matInput formControlName="piso" />
-            </mat-form-field>
-            <mat-form-field class="">
-              <mat-label>Deptartamento</mat-label>
-              <input matInput formControlName="deptartamento" />
-            </mat-form-field>
-            <mat-form-field class="">
-              <mat-label>Rubro</mat-label>
-              <input matInput formControlName="rubro" />
-            </mat-form-field>
+    <div>
+      <mat-form-field appearance="outline">
+        <mat-label>Lista De Empresas</mat-label>
 
-            <div class="m-1">
-              <button class="m-3" mat-raised-button color="primary">
-                Enviar
-              </button>
-            </div>
-          </form>
-        </mat-expansion-panel>
-      </mat-accordion>
-    </div>
-    <div class="flex flex-col p-3">
-      <mat-form-field>
-        <mat-label>Elegir una Empresa </mat-label>
         <mat-select>
           <mat-option
             *ngFor="let empresa of listEmpresas"
             [value]="empresa._id"
-            (click)="[setEmpresa(empresa._id, empresa.razon_social)]"
+            (click)="[setEmpresa(empresa._id)]"
           >
-            <p>{{ empresa.razon_social }}</p>
+            <p>{{ empresa.nombre_fantasia }}</p>
           </mat-option>
         </mat-select>
       </mat-form-field>
     </div>
-    <button mat-button matStepperNext type="button">Siguiente</button>
   </mat-card-content>
 </mat-card>
 
-<!-- <mat-list role="list" *ngFor="let empresa of listEmpresas">
-              <mat-list-item role="listitem">
-                {{ empresa.nombre_fantasia }}
-                <a
-                  (click)="borrarEmpresa(empresa._id)"
-                  class="m-3"
-                  mat-raised-button
-                  color="warn"
-                >
-                  eliminar
-                </a>
-              </mat-list-item>
-            </mat-list> -->
+<mat-card>
+  <mat-card-header>
+    <h2 class="titulo">Ingresar nueva empresa</h2>
+  </mat-card-header>
+  <mat-card-content>
+    <div>
+      <form
+        [formGroup]="empresaForm"
+        (ngSubmit)="createEmpresa()"
+        (submit)="empresaForm.reset()"
+      >
+        <div class="grid grid-cols-3 grid-rows-6 gap-4">
+          <div class="col-span-3">
+            <mat-form-field class="">
+              <mat-label>Razon Social</mat-label>
+              <input class="d-input" matInput formControlName="razon_social" />
+            </mat-form-field>
+          </div>
+          <div class="col-span-3 row-start-2">
+            <mat-form-field class="">
+              <mat-label>Nombre Fantasia</mat-label>
+              <input matInput formControlName="nombre_fantasia" />
+            </mat-form-field>
+          </div>
+          <div class="col-span-3 row-start-3">
+            <mat-form-field class="">
+              <mat-label>Calle</mat-label>
+              <input matInput formControlName="calle" />
+            </mat-form-field>
+          </div>
+          <div class="row-start-4">
+            <mat-form-field>
+              <mat-label>Altura</mat-label>
+              <input matInput formControlName="altura" />
+            </mat-form-field>
+          </div>
+          <div class="row-start-4">
+            <mat-form-field>
+              <mat-label>Piso</mat-label>
+              <input matInput formControlName="piso" />
+            </mat-form-field>
+          </div>
+          <div class="row-start-4">
+            <mat-form-field>
+              <mat-label>Deptartamento</mat-label>
+              <input matInput formControlName="deptartamento" />
+            </mat-form-field>
+          </div>
+          <div class="col-span-3">
+            <mat-form-field class="">
+              <mat-label>Rubro</mat-label>
+              <input matInput formControlName="rubro" />
+            </mat-form-field>
+          </div>
+          <div class="col-span-3 justify-self-end">
+            <button
+              class="boton"
+              mat-raised-button
+              [disabled]="
+                !empresaForm.value.razon_social ||
+                !empresaForm.value.nombre_fantasia ||
+                !empresaForm.value.calle ||
+                !empresaForm.value.altura ||
+                !empresaForm.value.rubro
+              "
+            >
+              Registrar
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </mat-card-content>
+</mat-card>

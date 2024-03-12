@@ -1,0 +1,9 @@
+<mat-dialog-content>
+  <p>¿Estás seguro que querés borrar esta variable?</p>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">No</button>
+  <button mat-button (click)="borrarVariable(data)" cdkFocusInitial>
+    Confirmar
+  </button>
+</mat-dialog-actions>

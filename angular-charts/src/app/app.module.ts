@@ -3,7 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 
 // Import FusionCharts library and chart modules
 import { ListarDatosComponent } from './components/listar-datos/listar-datos.component';
@@ -30,11 +30,31 @@ import { Home5Component } from './components/home5/home5.component';
 import { TablaComponent } from './components/tabla/tabla.component';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { InterceptorService } from './service/interceptor.service';
+import { LoginModalComponent } from './login-modal/login-modal.component';
+
+import {
+  DateAdapter,
+  MatNativeDateModule,
+  MAT_DATE_FORMATS,
+  MAT_DATE_LOCALE,
+} from '@angular/material/core';
+import { MomentDateAdapter } from '@angular/material-moment-adapter';
+import { DepartamentosComponent } from './forms/departamentos/departamentos.component';
 
 export function tokenGetter() {
   return localStorage.getItem('token');
 }
+const MY_DATE_FORMAT = {
+  parse: {
+    dateInput: 'yyyy-MM-dd', // this is how your date will be parsed from Input
+  },
+  display: {
+    dateInput: 'yyyy-MM-DD', // this is how your date will get displayed on the Input
+    monthYearLabel: 'MMMM YYYY',
+    dateA11yLabel: 'LL',
+    monthYearA11yLabel: 'MMMM YYYY',
+  },
+};
 
 @NgModule({
   declarations: [
@@ -57,6 +77,8 @@ export function tokenGetter() {
     TriggerFormComponent,
     Home5Component,
     TablaComponent,
+    LoginModalComponent,
+    DepartamentosComponent,
   ],
   imports: [
     BrowserModule,
@@ -64,6 +86,8 @@ export function tokenGetter() {
     HttpClientModule,
     NgxSpinnerModule,
     MatTooltipModule,
+    MatNativeDateModule,
+
     JwtModule.forRoot({
       config: {
         tokenGetter: tokenGetter,
@@ -75,6 +99,14 @@ export function tokenGetter() {
     ReactiveFormsModule,
     MaterialModule,
     ToastrModule.forRoot(),
+  ],
+  providers: [
+    {
+      provide: DateAdapter,
+      useClass: MomentDateAdapter,
+      deps: [MAT_DATE_LOCALE],
+    },
+    { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMAT },
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   bootstrap: [AppComponent],

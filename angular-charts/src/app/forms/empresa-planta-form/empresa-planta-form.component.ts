@@ -31,7 +31,6 @@ export class EmpresaPlantaFormComponent implements OnInit {
   subscription!: Subscription;
 
   ngOnInit(): void {
-    this.GetAllLocalidades();
     this.GetAllEmpresas();
     this.plantaForm = this.builder.group({
       nombre: this.builder.control('', Validators.required),
@@ -47,13 +46,6 @@ export class EmpresaPlantaFormComponent implements OnInit {
     this.subscription = this.service.localidadSelected.subscribe(
       (message) => (this.id_localidad = message)
     );
-  }
-
-  GetAllLocalidades() {
-    this.service.getForm(this.apiLocalidad).subscribe((res: any) => {
-      console.log(res);
-      this.listLocalidades = res['datos'];
-    });
   }
 
   GetAllEmpresas() {
@@ -85,7 +77,10 @@ export class EmpresaPlantaFormComponent implements OnInit {
           if (res.status == 500) {
             this.toastr.warning(res.error.error.message);
           } else {
-            this.toastr.success('Planta registrada corectamente');
+            this.toastr.success('Planta registrada corectamente', '', {
+              toastClass: 'yourclass ngx-toastr',
+              positionClass: 'toast-bottom-center',
+            });
             this.service
               .getForm(this.apiPlanta + this.id_empresa)
               .subscribe((res: any) => {

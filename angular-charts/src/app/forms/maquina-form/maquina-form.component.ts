@@ -90,7 +90,10 @@ export class MaquinaFormComponent implements OnInit {
           if (res.status == 500) {
             this.toastr.warning(res.error.error);
           } else {
-            this.toastr.success('Maquina registrada corectamente');
+            this.toastr.success('Maquina registrada corectamente', '', {
+              toastClass: 'yourclass ngx-toastr',
+              positionClass: 'toast-bottom-center',
+            });
             this.service
               .getForm(this.apiMaquina + this.id_linea_produccion)
               .subscribe((res: any) => {

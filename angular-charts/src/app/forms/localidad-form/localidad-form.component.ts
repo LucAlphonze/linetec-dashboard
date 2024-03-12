@@ -24,12 +24,12 @@ export class LocalidadFormComponent implements OnInit {
   isOptional = true;
   id_provincia!: string;
   id_localidad!: string;
+  id_departamento!: string;
   localidadForm!: FormGroup;
   subscription!: Subscription;
   subscription2!: Subscription;
 
   ngOnInit(): void {
-    this.GetAllProvincias();
     this.localidadForm = this.builder.group({
       nombre: this.builder.control('', Validators.required),
     });
@@ -39,16 +39,12 @@ export class LocalidadFormComponent implements OnInit {
     this.subscription = this.service.provinciaSelected.subscribe(
       (message) => (this.id_provincia = message)
     );
+    this.subscription = this.service.departamentoSelected.subscribe(
+      (message) => (this.id_departamento = message)
+    );
     this.subscription2 = this.service.listLocalidades.subscribe(
       (message) => (this.listLocalidades = message)
     );
-  }
-
-  GetAllProvincias() {
-    this.service.getForm(this.apiProvincias).subscribe((res: any) => {
-      console.log(res);
-      this.listProvincias = res['datos'];
-    });
   }
   //no esta en uso
   GetAllLocalidades() {
@@ -107,8 +103,8 @@ export class LocalidadFormComponent implements OnInit {
     });
   }
 
-  setLocalidad(id: any, nombre: any) {
-    console.log('set localidad', id, 'nombre', nombre);
+  setLocalidad(id: any) {
+    console.log('set localidad', id);
     this.service.changeMessage(id);
     this.service.localidadSelectedSource.next(id);
 

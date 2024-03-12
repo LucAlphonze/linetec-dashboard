@@ -1,97 +1,76 @@
-<mat-stepper
-  [orientation]="(stepperOrientation | async)!"
-  [linear]="isLinear"
-  #stepper
->
-  <mat-step [stepControl]="paisForm">
-    <ng-template matStepLabel>
-      <div class="text-center">
-        <mat-icon>queue_play_next</mat-icon><br /><span>País</span>
+<div class="p-3 fondo">
+  <mat-card>
+    <mat-card-header>
+      <div class="grid grid-cols-6 grid-rows-2 gap-1 m-6">
+        <div class="col-span-5">
+          <mat-progress-bar
+            mode="determinate"
+            [value]="(selected.value ? selected.value : 0) * 12.5"
+          ></mat-progress-bar>
+        </div>
+        <div class="col-start-6 justify-self-end">
+          <p>{{ selected.value ? selected.value + 1 : 1 }} / 9</p>
+        </div>
+        <div class="row-start-2">
+          <h2>{{ tituloTabs[selected.value || 0] }}</h2>
+        </div>
       </div>
-    </ng-template>
-    <app-pais-form></app-pais-form>
-  </mat-step>
-  <mat-step [stepControl]="provinciaForm" *ngIf="isPaisCompleted">
-    <ng-template matStepLabel>
-      <div class="text-center">
-        <mat-icon>queue_play_next</mat-icon><br /><span>Provincia</span>
-      </div>
-    </ng-template>
-    <app-provincia-form></app-provincia-form>
-  </mat-step>
-  <mat-step [stepControl]="localidadForm" *ngIf="isProvinciaCompleted">
-    <ng-template matStepLabel>
-      <div class="text-center">
-        <mat-icon>queue_play_next</mat-icon><br /><span>Localidad</span>
-      </div>
-    </ng-template>
-    <app-localidad-form></app-localidad-form>
-  </mat-step>
-  <mat-step [stepControl]="empresaForm" *ngIf="isLocalidadCompleted">
-    <ng-template matStepLabel>
-      <div class="text-center">
-        <mat-icon>queue_play_next</mat-icon><br /><span>Empresa</span>
-      </div>
-    </ng-template>
-    <app-empresa-form></app-empresa-form>
-  </mat-step>
-  <mat-step [stepControl]="plantaForm" *ngIf="isEmpresaCompleted">
-    <ng-template matStepLabel>
-      <div class="text-center">
-        <mat-icon>queue_play_next</mat-icon><br /><span>Planta</span>
-      </div>
-    </ng-template>
-    <app-empresa-planta-form></app-empresa-planta-form>
-  </mat-step>
+    </mat-card-header>
 
-  <mat-step [stepControl]="lineaProduccionForm" *ngIf="isPlantaCompleted">
-    <ng-template matStepLabel>
-      <div class="text-center">
-        <mat-icon>queue_play_next</mat-icon><br /><span
-          >Linea de produccion
-        </span>
+    <mat-card-content>
+      <mat-tab-group
+        class="invisible-tabs"
+        [selectedIndex]="selected.value"
+        (selectedIndexChange)="selected.setValue($event)"
+      >
+        <mat-tab>
+          <app-pais-form></app-pais-form>
+          <app-provincia-form></app-provincia-form>
+          <app-departamentos></app-departamentos>
+          <app-localidad-form></app-localidad-form>
+        </mat-tab>
+        <mat-tab>
+          <app-empresa-form></app-empresa-form>
+        </mat-tab>
+        <mat-tab>
+          <app-empresa-planta-form></app-empresa-planta-form>
+        </mat-tab>
+        <mat-tab>
+          <app-linea-produccion-form></app-linea-produccion-form>
+        </mat-tab>
+        <mat-tab>
+          <app-tipo-maquina-form></app-tipo-maquina-form>
+        </mat-tab>
+        <mat-tab>
+          <app-maquina-form></app-maquina-form>
+        </mat-tab>
+        <mat-tab>
+          <app-proceso-form></app-proceso-form>
+        </mat-tab>
+        <mat-tab>
+          <app-trigger-form></app-trigger-form>
+        </mat-tab>
+        <mat-tab><app-variable-form></app-variable-form></mat-tab>
+      </mat-tab-group>
+
+      <div class="flex justify-between">
+        <button
+          class="boton"
+          mat-raised-button
+          [disabled]="!selected.value"
+          (click)="backButton()"
+        >
+          Atrás
+        </button>
+        <button
+          class="boton"
+          mat-raised-button
+          [disabled]="!completed || selected.value == 8"
+          (click)="nextButton()"
+        >
+          siguiente
+        </button>
       </div>
-    </ng-template>
-    <app-linea-produccion-form></app-linea-produccion-form>
-  </mat-step>
-  <mat-step [stepControl]="tipoMaquinaForm" *ngIf="isLineaProduccionCompleted">
-    <ng-template matStepLabel>
-      <div class="text-center">
-        <mat-icon>queue_play_next</mat-icon><br /><span>Tipo de maquina </span>
-      </div>
-    </ng-template>
-    <app-tipo-maquina-form></app-tipo-maquina-form>
-  </mat-step>
-  <mat-step [stepControl]="maquinaForm" *ngIf="isTipoMaquinaCompleted">
-    <ng-template matStepLabel>
-      <div class="text-center">
-        <mat-icon>queue_play_next</mat-icon><br /><span>Maquina</span>
-      </div>
-    </ng-template>
-    <app-maquina-form></app-maquina-form>
-  </mat-step>
-  <mat-step [stepControl]="maquinaForm" *ngIf="isMaquinaCompleted">
-    <ng-template matStepLabel>
-      <div class="text-center">
-        <mat-icon>queue_play_next</mat-icon><br /><span>Proceso</span>
-      </div>
-    </ng-template>
-    <app-proceso-form></app-proceso-form>
-  </mat-step>
-  <mat-step [stepControl]="maquinaForm" *ngIf="isProcesoCompleted">
-    <ng-template matStepLabel>
-      <div class="text-center">
-        <mat-icon>queue_play_next</mat-icon><br /><span>Trigger</span>
-      </div>
-    </ng-template>
-    <app-trigger-form></app-trigger-form>
-  </mat-step>
-  <mat-step [stepControl]="maquinaForm" *ngIf="isTriggerCompleted">
-    <ng-template matStepLabel>
-      <div class="text-center">
-        <mat-icon>queue_play_next</mat-icon><br /><span>Variable</span>
-      </div>
-    </ng-template>
-    <app-variable-form></app-variable-form>
-  </mat-step>
-</mat-stepper>
+    </mat-card-content>
+  </mat-card>
+</div>

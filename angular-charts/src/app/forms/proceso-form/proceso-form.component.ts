@@ -44,7 +44,10 @@ export class ProcesoFormComponent implements OnInit {
           if (res.status == 500) {
             this.toastr.warning(res.error.error);
           } else {
-            this.toastr.success('proceso registrado correctamente');
+            this.toastr.success('proceso registrado correctamente', '', {
+              toastClass: 'yourclass ngx-toastr',
+              positionClass: 'toast-bottom-center',
+            });
             this.GetAllProcesos();
           }
         },

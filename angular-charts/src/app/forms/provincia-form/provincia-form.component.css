@@ -1,0 +1,32 @@
+::ng-deep
+  .mdc-text-field--outlined.mdc-text-field:not(.mdc-text-field--disabled)
+  .mdc-notched-outline__notch {
+  border-right: none;
+  border-color: black;
+}
+::ng-deep
+  .mdc-text-field--outlined.mdc-text-field:not(.mdc-text-field--disabled)
+  .mdc-notched-outline__leading,
+::ng-deep
+  .mdc-text-field--outlined.mdc-text-field:not(.mdc-text-field--disabled)
+  .mdc-notched-outline__trailing {
+  border-color: black;
+}
+
+::ng-depp
+  .mdc-text-field--outlined:not(
+    .mdc-text-field--disabled
+  ).mdc-text-field--focused
+  .mdc-notched-outline__leading
+  ::ng-depp
+  .mdc-text-field--outlined:not(
+    .mdc-text-field--disabled
+  ).mdc-text-field--focused
+  .mdc-notched-outline__notch
+  ::ng-depp
+  .mdc-text-field--outlined:not(
+    .mdc-text-field--disabled
+  ).mdc-text-field--focused
+  .mdc-notched-outline__trailing {
+  border-color: black;
+}

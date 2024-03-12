@@ -1,6 +1,51 @@
-.carta {
-  max-width: 700px;
+.fondo {
   margin: auto;
+  width: 90%;
+  background-color: #fafafa;
+  margin: 20vh auto 10px;
+  display: flex;
+  justify-content: center;
+  padding: 10px 3rem 10px 3rem;
+}
+
+table {
   width: 100%;
+}
+.mat-cell {
+  color: white;
+}
+.titulo {
+  color: var(--Azul, #231e46);
+  font-family: "DIN Alternate Bold";
+  font-size: 26px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+}
+
+.card {
   overflow-x: auto;
+}
+
+.header {
+  width: 100%;
+}
+#icon {
+  width: 25px;
+  font-size: 26px;
+  height: 22px;
+  flex-shrink: 0;
+}
+.mat-mdc-raised-button:not(:disabled).boton {
+  height: 44px;
+  flex-shrink: 0;
+  border-radius: 8px;
+  background-color: #c82d3b;
+  color: #fff;
+  margin-bottom: 1rem;
+  font-family: "DIN-PRO";
+  font-weight: 600;
+}
+.select ::ng-deep .mat-mdc-select-arrow {
+  display: none;
 }

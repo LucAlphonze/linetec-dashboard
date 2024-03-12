@@ -14,6 +14,7 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogOverviewExampleDialog } from '../dialog.component';
+import { LoginModalComponent } from '../login-modal/login-modal.component';
 import { ToastrService } from 'ngx-toastr';
 
 @Injectable({
@@ -38,15 +39,18 @@ export class AuthService {
   private messageSource = new BehaviorSubject('default message');
   //observables que recogen la respuesta de la llamada a la api
   private provinciasSource = new BehaviorSubject('');
+  private departamentosSource = new BehaviorSubject('');
   private localidadesSource = new BehaviorSubject('');
   private empresasSource = new BehaviorSubject('');
   private plantasSource = new BehaviorSubject('');
   private lineaSource = new BehaviorSubject('');
   private maquinaSource = new BehaviorSubject('');
+  private fullnameSource = new BehaviorSubject('');
 
   //observables que recogen la opcion seleccionada
   paisSelectedSource = new BehaviorSubject('');
   provinciaSelectedSource = new BehaviorSubject('');
+  departamentoSelectedSource = new BehaviorSubject('');
   localidadSelectedSource = new BehaviorSubject('');
   empresaSelectedSource = new BehaviorSubject('');
   plantaSelectedSource = new BehaviorSubject('');
@@ -60,6 +64,7 @@ export class AuthService {
 
   // guardamos la respuesta en listas que son accesibles desde los componentes
   listProvincias = this.provinciasSource.asObservable();
+  listDepartamentos = this.departamentosSource.asObservable();
   listLocalidades = this.localidadesSource.asObservable();
   listEmpresas = this.empresasSource.asObservable();
   listPlantas = this.plantasSource.asObservable();
@@ -69,6 +74,7 @@ export class AuthService {
   // guardamos la opcion seleccionada para que sea accesible a los componentes
   paisSelected = this.paisSelectedSource.asObservable();
   provinciaSelected = this.provinciaSelectedSource.asObservable();
+  departamentoSelected = this.departamentoSelectedSource.asObservable();
   localidadSelected = this.localidadSelectedSource.asObservable();
   empresaSelected = this.empresaSelectedSource.asObservable();
   plantaSelected = this.plantaSelectedSource.asObservable();
@@ -77,12 +83,25 @@ export class AuthService {
   maquinaSelected = this.maquinaSelectedSource.asObservable();
   procesoSelected = this.procesoSelectedSource.asObservable();
   triggerSelected = this.triggerSelectedSource.asObservable();
+  fullname = this.fullnameSource.asObservable();
 
   openDialog(): void {
     const dialogRef = this.dialog.open(DialogOverviewExampleDialog, {
       enterAnimationDuration: '500ms',
       exitAnimationDuration: '500ms',
       width: '50%',
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      console.log('The dialog was closed');
+    });
+  }
+  openDialog2(): void {
+    const dialogRef = this.dialog.open(LoginModalComponent, {
+      enterAnimationDuration: '500ms',
+      exitAnimationDuration: '500ms',
+      width: '571px',
+      height: '292px',
     });
 
     dialogRef.afterClosed().subscribe((result) => {
@@ -121,7 +140,8 @@ export class AuthService {
       new Date().valueOf();
     sessionStorage.setItem('token', token);
     sessionStorage.setItem('rtoken', rtoken);
-    sessionStorage.setItem('username', user.name);
+    sessionStorage.setItem('username', user.username);
+    sessionStorage.setItem('fullname', user.name);
     sessionStorage.setItem('userrole', user.role.name);
     this.authToken = token;
     this.user = user;
@@ -176,6 +196,16 @@ export class AuthService {
       ? sessionStorage.getItem('userrole')?.toString()
       : '';
   }
+
+  getUser() {
+    try {
+      var fullname = sessionStorage.getItem('fullname')!.toString();
+      this.fullnameSource.next(fullname);
+    } catch (error) {
+      console.log('getUser error: ', error);
+    }
+  }
+
   // post
   Proceedregister(inputdata: any) {
     return this.http
@@ -259,7 +289,11 @@ export class AuthService {
     this.provinciasSource.next(provincias);
   }
 
-  streamLocalides_ProvinciaSelected(localidades: string) {
+  streamDepartamentos_ProvinciaSelected(departamentos: string) {
+    console.log('change message: ', departamentos);
+    this.departamentosSource.next(departamentos);
+  }
+  streamLocalidades_DepartamentoSelected(localidades: string) {
     console.log('change message: ', localidades);
     this.localidadesSource.next(localidades);
   }

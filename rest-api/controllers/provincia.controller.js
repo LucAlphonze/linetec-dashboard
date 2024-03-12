@@ -20,8 +20,8 @@ const obtenerProvincias = async (req, res) => {
 
 const provinciasPorPais = async (req, res) => {
   try {
-    var medidas = req.params.idPais;
-    const ppp = await Provincia.find({ id_pais: medidas }).populate(
+    var pais = req.params.idPais;
+    const ppp = await Provincia.find({ id_pais: pais }).populate(
       "id_pais",
       "nombre"
     );

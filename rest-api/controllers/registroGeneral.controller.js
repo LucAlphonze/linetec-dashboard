@@ -46,6 +46,7 @@ const obtenerTodos = async (req, res) => {
     });
   }
 };
+
 const getTodos = async (req, res) => {
   try {
     const registrosGenerales = await RegistroGeneral.find({})
@@ -298,18 +299,13 @@ const filtrarRegistrosGenerales = async (req, res) => {
 };
 
 const filtrarRegistrosGenerales2 = async (req, res) => {
-  var idVariable = req.params.idVariable;
+  // var idVariable = req.params.idVariable;
   var sti = req.params.startdate;
   var stf = req.params.enddate;
   var granularidad = req.params.granularidad;
   const resultado = determinarGranularidad(granularidad);
   try {
     const registrosFiltrados = await RegistroGeneral.aggregate([
-      {
-        $match: {
-          id_variable: new mongoose.Types.ObjectId(idVariable),
-        },
-      },
       {
         $match: {
           time_stamp: {
@@ -321,20 +317,42 @@ const filtrarRegistrosGenerales2 = async (req, res) => {
       {
         $group: {
           _id: {
-            $dateToString: {
-              format: resultado,
-              date: "$time_stamp",
+            id_variable: "$id_variable",
+            date: {
+              $dateToString: {
+                date: "$time_stamp",
+                format: "%Y-%m-%d",
+              },
             },
           },
-          max: { $max: "$valor_lectura" },
-          min: { $min: "$valor_lectura" },
-          avg: { $avg: "$valor_lectura" },
-          sum: { $sum: "$valor_lectura" },
+          datos: {
+            $push: {
+              valor_lectura: "$valor_lectura",
+              time_stamp: "$time_stamp",
+            },
+          },
         },
       },
       {
-        $sort: {
-          _id: 1,
+        $group: {
+          _id: "$_id.id_variable",
+          info: {
+            $push: {
+              date: "$_id.date",
+              max: {
+                $max: "$datos",
+              },
+              min: {
+                $min: "$datos",
+              },
+              avg: {
+                $avg: "$datos.valor_lectura",
+              },
+              sum: {
+                $sum: "$datos.valor_lectura",
+              },
+            },
+          },
         },
       },
     ]);
