@@ -58,70 +58,39 @@ servClient.on("message", function (topic, message) {
           mas viejo que el nuevo valor que acaba de llegar (compara el timestamp nuevo con 
           el timestamp en la db + x_tiempo)
             */
-      for (let i = 0; i < messageJSON.length; i++) {
-        for (let j = 0; j < listVariables.length; j++) {
-          if (messageJSON[i].n != listVariables[j].nombre) {
-            console.log(
-              messageJSON[i].n,
-              "mensaje posisicion: ",
-              i,
-              listVariables[j].nombre,
-              "list variable posicion: ",
-              j
-            );
-          } else if (messageJSON[i].n == listVariables[j].nombre) {
-            var ts = "";
-            let timeNow = new Date();
-            if (messageJSON[i].ts) {
-              ts = dateSlicer(messageJSON[i]?.ts);
-            }
-            var pruebaJson = {
-              id_variable: listVariables[j]?._id,
-              valor_lectura: messageJSON[i].v,
-              modo: messageJSON[i]?.m,
-              time_stamp: ts,
-              fecha_lectura: new Date(),
-            };
-            if (timeNow.getTime() > decoded.exp * 1000 - 12000) {
-              console.log("refrescando el token...");
-              await axios
-                .post("http://rest-api:3001/api/refresh", { token: rtoken })
-                .then((response) => {
-                  token = response.data.accessToken;
-                  rtoken = response.data.refreshToken;
-                  decoded = parseJwt(token);
+      const variableMap = listVariables.reduce((map, { nombre, _id }) => {
+        let variable = map.get(nombre) || [];
+        variable.push(_id);
+        return map.set(nombre, variable);
+      }, new Map());
 
-                  console.log(
-                    "token refrescado exitosamente: ",
-                    token,
-                    "refresh token: ",
-                    rtoken
-                  );
-                });
-            }
-            await axios
-              .post(`http://rest-api:3001/api/registro-general`, pruebaJson, {
-                headers: {
-                  Authorization: `Bearer ${token}`,
-                  "content-type": "application/json",
-                },
-              })
-              .then((res) => {
-                console.log(`statusCode: ${res.status}`);
-                console.log(res.data);
-              })
-              .catch((error) => {
-                /*
-                hay que revisar esta parte y ver que pasa cuando mandamos un mensaje y justo el token se expira
-                actualmente el token tiene 10m de duracion
-                  */
-                console.log("error post: ", error.response.data);
-              });
-          }
-          if (j == listVariables.length) {
-            j = 0;
-          }
-        }
+      const array = messageJSON.map(({ n, v, ts }) => ({
+        valor_lectura: v,
+        id_variable: variableMap.get(n) || "",
+        fecha_lectura: new Date(),
+        time_stamp: dateSlicer(ts),
+      }));
+
+      for (let index = 0; index < array.length; index++) {
+        console.log("despues del map: ", array[index]);
+        await axios
+          .post(`http://rest-api:3001/api/registro-general`, array[index], {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "content-type": "application/json",
+            },
+          })
+          .then((res) => {
+            console.log(`statusCode: ${res.status}`);
+            console.log(res.data);
+          })
+          .catch((error) => {
+            /*
+              hay que revisar esta parte y ver que pasa cuando mandamos un mensaje y justo el token se expira
+              actualmente el token tiene 10m de duracion
+                */
+            return console.log("error post: ", error.response.data);
+          });
       }
     })
     .catch(async (error) => {
@@ -143,62 +112,40 @@ servClient.on("message", function (topic, message) {
                 rtoken
               );
             });
-          await axios
-            .get("http://rest-api:3001/api/variables", {
-              headers: { Authorization: `Bearer ${token}` },
-            })
-            .then(async (response) => {
-              console.log(response.status);
-              var listVariables = response.data;
-              var messageJSON = JSON.parse(message.toString());
-              for (let i = 0; i < messageJSON.length; i++) {
-                for (let j = 0; j < listVariables.length; j++) {
-                  if (messageJSON[i].n != listVariables[j].nombre) {
-                    console.log(
-                      messageJSON[i].n,
-                      "mensaje posisicion: ",
-                      i,
-                      listVariables[j].nombre,
-                      "list variable posicion: ",
-                      j
-                    );
-                  } else if (messageJSON[i].n == listVariables[j].nombre) {
-                    var ts = "";
-                    if (messageJSON[i].ts) {
-                      ts = dateSlicer(messageJSON[i]?.ts);
-                    }
-                    var pruebaJson = {
-                      id_variable: listVariables[j]?._id,
-                      valor_lectura: messageJSON[i].v,
-                      modo: messageJSON[i]?.m,
-                      time_stamp: ts,
-                      fecha_lectura: new Date(),
-                    };
-                    await axios
-                      .post(
-                        `http://rest-api:3001/api/registro-general`,
-                        pruebaJson,
-                        {
-                          headers: {
-                            Authorization: `Bearer ${token}`,
-                            "content-type": "application/json",
-                          },
-                        }
-                      )
-                      .then((res) => {
-                        console.log(`statusCode: ${res.status}`);
-                        console.log(res.data);
-                      })
-                      .catch((error) => {
-                        console.log("error post: ", error.response.data);
-                      });
-                  }
-                  if (j == listVariables.length) {
-                    j = 0;
-                  }
-                }
-              }
-            });
+          const variableMap = listVariables.reduce((map, { nombre, _id }) => {
+            let variable = map.get(nombre) || [];
+            variable.push(_id);
+            return map.set(nombre, variable);
+          }, new Map());
+
+          const array = messageJSON.map(({ n, v, ts }) => ({
+            valor_lectura: v,
+            id_variable: variableMap.get(n) || "",
+            fecha_lectura: new Date(),
+            time_stamp: dateSlicer(ts),
+          }));
+
+          for (let index = 0; index < array.length; index++) {
+            console.log("despues del map: ", array[index]);
+            await axios
+              .post(`http://rest-api:3001/api/registro-general`, array[index], {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                  "content-type": "application/json",
+                },
+              })
+              .then((res) => {
+                console.log(`statusCode: ${res.status}`);
+                console.log(res.data);
+              })
+              .catch((error) => {
+                /*
+                    hay que revisar esta parte y ver que pasa cuando mandamos un mensaje y justo el token se expira
+                    actualmente el token tiene 10m de duracion
+                      */
+                return console.log("error post: ", error.response.data);
+              });
+          }
           return console.log(error);
         }
         return console.log(error);
@@ -206,8 +153,8 @@ servClient.on("message", function (topic, message) {
         console.log("Error request: ", error.request);
         return console.log(error);
       } else {
-        console.log("else error: ", error.message);
-        return "error del servidor";
+        console.log("else error: ", error);
+        return console.log("error del servidor: ", error);
       }
     });
 

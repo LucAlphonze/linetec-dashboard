@@ -93,50 +93,54 @@ const crearRegistroGeneral = async (req, res) => {
   try {
     const variable = await Variable.findOne({
       _id: id_variable,
-    })
-      .populate("id_maquina", "nombre modelo")
-      .populate("id_proceso", "descripcion")
-      .populate("id_trigger", "nombre descripcion");
-
-    const ultimoRegistro = await RegistroGeneral.findOne({
-      id_variable: id_variable,
-    }).sort({ fecha_lectura: -1 });
-    console.log(
-      "ultimo registro : ",
-      ultimoRegistro,
-      "variable: ",
-      variable,
-      "registro nuevo: ",
-      registroGeneral
-    );
-    const existeTimestamp = await RegistroGeneral.find({
-      time_stamp: time_stamp,
-      id_variable: id_variable,
-    });
-
-    if (existeTimestamp.length > 0) {
+    }).populate("id_trigger", "nombre descripcion");
+    if (variable) {
+      const ultimoRegistro = await RegistroGeneral.findOne({
+        id_variable: id_variable,
+      }).sort({ fecha_lectura: -1 });
       console.log(
-        "registro general post error, ya existe un documento con este timestamp: ",
-        existeTimestamp
+        "ultimo registro : ",
+        ultimoRegistro,
+        "variable: ",
+        variable,
+        "registro nuevo: ",
+        registroGeneral
       );
+      const existeTimestamp = await RegistroGeneral.find({
+        time_stamp: time_stamp,
+        id_variable: id_variable,
+      });
+
+      if (existeTimestamp.length > 0) {
+        console.log(
+          "registro general post error, ya existe un documento con este timestamp: ",
+          existeTimestamp
+        );
+        res.status(500).json({
+          ok: false,
+          datos: "ya existe un documento con este timestamp",
+        });
+        return;
+      }
+      let filtrado = await filtradoPost(
+        variable,
+        registroGeneral,
+        ultimoRegistro
+      );
+      console.log("respuesta ", filtrado);
+
+      await filtrado.save();
+      res.status(200).json({
+        ok: true,
+        datos: filtrado,
+      });
+    } else {
+      console.log("variable inexistente: ", id_variable);
       res.status(500).json({
         ok: false,
-        datos: "ya existe un documento con este timestamp",
+        datos: `variable inexistente: , ${id_variable}`,
       });
-      return;
     }
-    let filtrado = await filtradoPost(
-      variable,
-      registroGeneral,
-      ultimoRegistro
-    );
-    console.log("respuesta ", filtrado);
-
-    await filtrado.save();
-    res.status(200).json({
-      ok: true,
-      datos: filtrado,
-    });
   } catch (error) {
     console.log("registro general post error: ", error);
     res.status(500).json({
