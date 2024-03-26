@@ -30,6 +30,24 @@ const postRegistroTS = async (req, res) => {
   console.log("variables: ", variables);
   console.log("last registros: ", lastRegistros);
 
+  if (lastRegistros.length == 0) {
+    const firstRegistro = new RegistroGeneralts(registroGeneral);
+    console.log("registros filtrado si dios quiere: ", firstRegistro);
+    await firstRegistro.save();
+    return res.status(200).json({
+      ok: true,
+      datos: firstRegistro,
+    });
+  }
+  const existeDocumento = await RegistroGeneralts.find({
+    fecha_lectura: registroGeneral.fecha_lectura,
+  });
+  if (existeDocumento.length > 0) {
+    return res.status(500).json({
+      ok: false,
+      datos: "ya existe un documento con ese time_stamp",
+    });
+  }
   const matchingObjects = [registroGeneral].map(
     ({ time_stamp, fecha_lectura, metaData }) => ({
       fecha_lectura: fecha_lectura,
@@ -133,12 +151,12 @@ const postRegistroTS = async (req, res) => {
     const RegFiltrado = new RegistroGeneralts(filtrado[0]);
     console.log("registros filtrado si dios quiere: ", RegFiltrado);
     await RegFiltrado.save();
-    res.status(200).json({
+    return res.status(200).json({
       ok: true,
       datos: RegFiltrado,
     });
   } catch (error) {
-    console.log("error en el api algo paso: ", error);
+    return console.log("error en el api algo paso: ", error);
   }
 };
 
