@@ -29,8 +29,8 @@ const RegistroGeneralTSSchema = Schema(
   },
   {
     timeseries: {
-      timeField: fecha_lectura,
-      metaField: metaData,
+      timeField: "fecha_lectura",
+      metaField: "metaData",
       granularity: "seconds",
     },
   }
