@@ -5,6 +5,7 @@ const axios = require("axios");
 var token;
 var rtoken;
 var decoded;
+var listVariables;
 var usuario = {
   username: "Admin",
   password: "Admin123$",
@@ -33,132 +34,88 @@ servClient.on("connect", function () {
         decoded = parseJwt(token);
         console.log("token decoded", decoded.exp);
       });
+    await axios
+      .get("http://rest-api:3001/api/variables", {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then(async (response) => {
+        console.log(response.status);
+        listVariables = response.data;
+      });
   });
 });
 
-servClient.on("message", function (topic, message) {
-  axios
-    .get("http://rest-api:3001/api/variables", {
-      headers: { Authorization: `Bearer ${token}` },
-    })
-    .then(async (response) => {
-      console.log(response.status);
-      var listVariables = response.data;
-      var messageJSON = JSON.parse(message.toString());
-      /*
-          armar algo primero: usar el nombre de la variable para hacer un get
-          y sacar el ultimo registro con ese id, luego realizar todas las operaciones
-          correspondientes para decidir si se guarda o no
+servClient.on("message", async function (topic, message) {
+  try {
+    var lVariables = listVariables;
+    var messageJSON = JSON.parse(message.toString());
 
-          si el tipo de trigger es cambio de valor, guardar el ultimo valor que llega en
-          trigger valor y comparar el nuevo valor con ese, si el valor es diferente se actualiza
-          trigger valor y se procede a hacer el insert.
+    console.log("mensaje: ", messageJSON, "lista variables: ", lVariables);
 
-          si el tipo de trigger es tiempo chequea si el ultimo valor es al menos ese x_tiempo
-          mas viejo que el nuevo valor que acaba de llegar (compara el timestamp nuevo con 
-          el timestamp en la db + x_tiempo)
-            */
-      const variableMap = listVariables.reduce((map, { nombre, _id }) => {
+    const variableMap = lVariables.reduce((map, { nombre, _id }) => {
+      let variable = map.get(nombre) || [];
+      variable.push(_id);
+      return map.set(nombre, variable[0]);
+    }, new Map());
+
+    const variableMapObject = lVariables.reduce(
+      (map, { nombre, _id, id_trigger, trigger_valor }) => {
         let variable = map.get(nombre) || [];
-        variable.push(_id);
-        return map.set(nombre, variable);
-      }, new Map());
+        variable.push({ nombre, _id, id_trigger, trigger_valor });
+        return map.set(nombre, variable[0]);
+      },
+      new Map()
+    );
 
-      const array = messageJSON.map(({ n, v, ts }) => ({
-        valor_lectura: v,
-        id_variable: variableMap.get(n) || "",
-        fecha_lectura: new Date(),
-        time_stamp: dateSlicer(ts),
-      }));
+    const array = messageJSON.map(({ fl, ts, metaData }) => ({
+      fecha_lectura: dateSlicer(fl),
+      metaData: metaData.map(({ n, v }) => ({
+        datos: v,
+        id_variable: variableMapObject.get(n),
+      })),
+      time_stamp: new Date(),
+    }));
+    const vList = messageJSON[0].metaData.map(({ n }) =>
+      variableMapObject.get(n)
+    );
 
-      for (let index = 0; index < array.length; index++) {
-        console.log("despues del map: ", array[index]);
-        await axios
-          .post(`http://rest-api:3001/api/registro-general`, array[index], {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "content-type": "application/json",
-            },
-          })
-          .then((res) => {
-            console.log(`statusCode: ${res.status}`);
-            console.log(res.data);
-          })
-          .catch((error) => {
-            /*
-              hay que revisar esta parte y ver que pasa cuando mandamos un mensaje y justo el token se expira
-              actualmente el token tiene 10m de duracion
-                */
-            return console.log("error post: ", error.response.data);
-          });
-      }
-    })
-    .catch(async (error) => {
-      if (error.response) {
-        console.log("error data: ", error.response.data);
-        console.log(error.response.status);
-        if (error.response.status == 403) {
-          console.log("refrescando el token...");
-          await axios
-            .post("http://rest-api:3001/api/refresh", { token: rtoken })
-            .then((response) => {
-              token = response.data.accessToken;
-              rtoken = response.data.refreshToken;
-              decoded = parseJwt(token);
-              console.log(
-                "token refrescado exitosamente: ",
-                token,
-                "refresh token: ",
-                rtoken
-              );
-            });
-          const variableMap = listVariables.reduce((map, { nombre, _id }) => {
-            let variable = map.get(nombre) || [];
-            variable.push(_id);
-            return map.set(nombre, variable);
-          }, new Map());
-
-          const array = messageJSON.map(({ n, v, ts }) => ({
-            valor_lectura: v,
-            id_variable: variableMap.get(n) || "",
-            fecha_lectura: new Date(),
-            time_stamp: dateSlicer(ts),
-          }));
-
-          for (let index = 0; index < array.length; index++) {
-            console.log("despues del map: ", array[index]);
-            await axios
-              .post(`http://rest-api:3001/api/registro-general`, array[index], {
-                headers: {
-                  Authorization: `Bearer ${token}`,
-                  "content-type": "application/json",
-                },
-              })
-              .then((res) => {
-                console.log(`statusCode: ${res.status}`);
-                console.log(res.data);
-              })
-              .catch((error) => {
-                /*
-                    hay que revisar esta parte y ver que pasa cuando mandamos un mensaje y justo el token se expira
-                    actualmente el token tiene 10m de duracion
-                      */
-                return console.log("error post: ", error.response.data);
-              });
-          }
-          return console.log(error);
+    console.log("documento formateado: ", array[0], "variables: ", vList);
+    await axios
+      .post(
+        `http://rest-api:3001/api/registro-general-ts`,
+        { datos: array[0], vList: vList },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "content-type": "application/json",
+          },
         }
-        return console.log(error);
-      } else if (error.request) {
-        console.log("Error request: ", error.request);
-        return console.log(error);
-      } else {
-        console.log("else error: ", error);
-        return console.log("error del servidor: ", error);
-      }
-    });
-
-  console.log("string message: ", message.toString());
+      )
+      .then((res) => {
+        console.log(`statusCode: ${res.status}`);
+        console.log(res.data);
+      })
+      .catch((error) => {
+        return console.log("error post: ", error.response.data);
+      });
+  } catch (error) {
+    if (error.response) {
+      console.log(
+        "error data: ",
+        error.response.data,
+        "status code: ",
+        error.response.status
+      );
+      return console.log(error);
+    } else if (error.request) {
+      console.log("Error request: ", error.request);
+      return console.log(error);
+    } else {
+      console.log("else error: ", error);
+      return console.log("error del servidor: ", error);
+    }
+  }
+  return console.log("string message: ", message.toString());
 });
 
 servClient.on("error", function (error) {
@@ -181,3 +138,136 @@ function dateSlicer(text) {
     text.slice(13, 15);
   return formatedDate;
 }
+// [
+//   {
+//   "fl": "20210315:171858",
+//   "metaData": [
+//     {
+//       "v": 0.6296,
+//       "n":"TagliTagliaf"
+//     },
+//     {
+//       "v": 1.6412,
+//       "n":"Pressioneestrusione"
+//     },
+//     {
+//       "v": 0.6296,
+//       "n":"Temperaturaestrusione"
+//     },
+//     {
+//       "v": 0.6296,
+//       "n":"Temperaturaestrusione"
+//     },
+//     {
+//       "v": 0.6296,
+//       "n":"Vuoto"
+//     },
+//     {
+//       "v": 0.6412,
+//       "n":"Correntemotoreestrusore"
+//     },
+//     {
+//       "v": 0.6412,
+//       "n":"Velocitamotoreestrusore"
+//     },
+//     {
+//       "v": 0.6412,
+//       "n":"Potenzamotoreestrusore"
+//     }
+//   ],
+//   "ts": "20210315:171858"
+// }]
+
+// [
+//   {
+//     _id: '657a051796126234e81623cb',
+//     nombre: 'TagliTagliaf',
+//     trigger_valor: '',
+//     __v: 0,
+//     time_stamp: '2023-12-01T03:00:00.000Z'
+//   },
+//   {
+//     _id: '6544fde05c4420c935a5aa65',
+//     nombre: 'Pressioneestrusione',
+//     trigger_valor: '',
+//     __v: 0,
+//     time_stamp: '2023-12-02T03:00:00.000Z'
+//   },
+//   {
+//     _id: '6544fdff5c4420c935a5aa6f',
+//     nombre: 'Temperaturaestrusione',
+//     trigger_valor: '',
+//     __v: 0,
+//     time_stamp: '2023-12-03T03:00:00.000Z'
+//   },
+//   {
+//     _id: '6544fe155c4420c935a5aa79',
+//     nombre: 'Vuoto',
+//     trigger_valor: '',
+//     __v: 0,
+//     time_stamp: '2023-12-04T03:00:00.000Z'
+//   },
+//   {
+//     _id: '6544fe375c4420c935a5aa83',
+//     nombre: 'Correntemotoreestrusore',
+//     trigger_valor: '',
+//     __v: 0,
+//     time_stamp: '2023-12-05T03:00:00.000Z'
+//   },
+//   {
+//     _id: '6544fe505c4420c935a5aa8d',
+//     nombre: 'Velocitamotoreestrusore',
+
+//     trigger_valor: '',
+//     __v: 0,
+//     time_stamp: '2023-12-06T03:00:00.000Z'
+//   },
+//   {
+//     _id: '6544fe6b5c4420c935a5aa97',
+//     nombre: 'Potenzamotoreestrusore',
+
+//     trigger_valor: '',
+//     __v: 0,
+//     time_stamp: '2023-12-07T03:00:00.000Z'
+//   },
+//   {
+//     _id: '6544fe805c4420c935a5aaa1',
+//     nombre: 'Correntemotoreaspo',
+
+//     trigger_valor: '',
+//     __v: 0,
+//     time_stamp: '2023-12-08T03:00:00.000Z'
+//   },
+//   {
+//     _id: '6544fe9d5c4420c935a5aaab',
+//     nombre: 'Correntemotoredegasatore',
+
+//     trigger_valor: '',
+//     __v: 0,
+//     time_stamp: '2023-12-09T03:00:00.000Z'
+//   },
+//   {
+//     _id: '6544feb15c4420c935a5aab5',
+//     nombre: 'Velocitamotoredegasatore',
+
+//     trigger_valor: '',
+//     __v: 0,
+//     time_stamp: '2023-12-10T03:00:00.000Z'
+//   },
+//   {
+//     _id: '6544fece5c4420c935a5aabf',
+//     nombre: 'Potenzamotoredegasatore',
+
+//     trigger_valor: '',
+//     __v: 0,
+//     time_stamp: '2023-12-11T03:00:00.000Z'
+//   },
+//   {
+//     _id: '6544fee85c4420c935a5aac9',
+//     nombre: 'Codicemateriale',
+
+//     trigger_valor: '',
+//     __v: 0,
+//     time_stamp: '2023-12-12T03:00:00.000Z'
+//   }
+// ]

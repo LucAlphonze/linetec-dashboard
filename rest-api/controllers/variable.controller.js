@@ -35,6 +35,20 @@ const obtenerVariableById = async (req, res) => {
     });
   }
 };
+const obtenerVariableByNombre = async (req, res) => {
+  let nombre = req.params.nombre;
+  try {
+    const variable = await Variable.find({
+      nombre: nombre,
+    }).populate("id_trigger", "nombre descripcion");
+    res.send(variable);
+  } catch (error) {
+    res.status(500).json({
+      ok: false,
+      error,
+    });
+  }
+};
 
 const crearVariable = async (req, res) => {
   try {
@@ -135,4 +149,5 @@ module.exports = {
   obtenerVariableById,
   borrarVariable,
   editarVariable,
+  obtenerVariableByNombre,
 };

@@ -86,14 +86,12 @@ const obtenerRegistrosGeneral = async (req, res) => {
 };
 
 const crearRegistroGeneral = async (req, res) => {
-  const registroGeneral = new RegistroGeneral(req.body);
+  const registroGeneral = new RegistroGeneral(req.body.datos);
   const id_variable = registroGeneral.id_variable;
   const time_stamp = registroGeneral.time_stamp;
-
+  const variable = req.body.variable;
+  console.log("variable:", req.body);
   try {
-    const variable = await Variable.findOne({
-      _id: id_variable,
-    }).populate("id_trigger", "nombre descripcion");
     if (variable) {
       const ultimoRegistro = await RegistroGeneral.findOne({
         id_variable: id_variable,
@@ -106,22 +104,6 @@ const crearRegistroGeneral = async (req, res) => {
         "registro nuevo: ",
         registroGeneral
       );
-      const existeTimestamp = await RegistroGeneral.find({
-        time_stamp: time_stamp,
-        id_variable: id_variable,
-      });
-
-      if (existeTimestamp.length > 0) {
-        console.log(
-          "registro general post error, ya existe un documento con este timestamp: ",
-          existeTimestamp
-        );
-        res.status(500).json({
-          ok: false,
-          datos: "ya existe un documento con este timestamp",
-        });
-        return;
-      }
       let filtrado = await filtradoPost(
         variable,
         registroGeneral,
@@ -202,12 +184,6 @@ const crearRegistroGeneralArray = async (req, res) => {
             id_variable: id_variable,
             time_stamp: { $lt: documentosFiltrados[0].time_stamp },
           }).sort({ time_stamp: -1 });
-
-          // console.log("ultimo registro i = 0: ", ultimoRegistro);
-          // console.log(
-          //   "documento filtrado posicion 0: ",
-          //   documentosFiltrados[0]
-          // );
         }
         console.log("indice: ", i);
         let filtrado = await filtradoPost(
@@ -218,12 +194,6 @@ const crearRegistroGeneralArray = async (req, res) => {
 
         if (filtrado != 0) {
           yaTermino.documentosQuePasaron.push(filtrado);
-          // console.log(
-          //   "ultimo registro: ",
-          //   ultimoRegistro,
-          //   "documentos que pasaron: ",
-          //   yaTermino.documentosQuePasaron
-          // );
         }
 
         if (i == documentosFiltrados.length - 1) {

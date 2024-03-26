@@ -46,6 +46,10 @@ app.use("/api/maquinas", require("./routes/maquina.route"));
 app.use("/api/proceso", require("./routes/proceso.route"));
 app.use("/api/linea-produccion", require("./routes/linea-produccion.route"));
 app.use("/api/registro-general", require("./routes/registroGeneral.route"));
+app.use(
+  "/api/registro-general-ts",
+  require("./routes/registroGeneralTS.route")
+);
 app.use("/api/personal", require("./routes/personal.route"));
 app.use("/api/trigger", require("./routes/trigger.route"));
 app.use("/api/logout", require("./routes/logout.route"));
