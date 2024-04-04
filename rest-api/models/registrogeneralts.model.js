@@ -26,15 +26,15 @@ const RegistroGeneralTSSchema = Schema(
     time_stamp: {
       type: Date,
     },
-  },
-  {
-    timeseries: {
-      timeField: "fecha_lectura",
-      metaField: "metaData",
-      granularity: "seconds",
-    },
   }
+  // {
+  //   timeseries: {
+  //     timeField: "fecha_lectura",
+  //     metaField: "metaData",
+  //     granularity: "seconds",
+  //   },
+  // }
 );
-RegistroGeneralTSSchema.index({ metaData: 1, fecha_lectura: -1 });
+RegistroGeneralTSSchema.index({ fecha_lectura: -1, metaData: 1 });
 
-module.exports = model("RegistroGeneralts", RegistroGeneralTSSchema);
+module.exports = model("RegistroGeneralnew", RegistroGeneralTSSchema);

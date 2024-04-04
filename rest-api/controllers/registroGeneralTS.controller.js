@@ -39,15 +39,32 @@ const postRegistroTS = async (req, res) => {
       datos: firstRegistro,
     });
   }
-  const existeDocumento = await RegistroGeneralts.find({
+  const existeDocumento = await RegistroGeneralts.findOne({
     fecha_lectura: registroGeneral.fecha_lectura,
   });
-  if (existeDocumento.length > 0) {
-    return res.status(500).json({
-      ok: false,
-      datos: "ya existe un documento con ese time_stamp",
+  if (existeDocumento) {
+    console.log("existe documento: ", existeDocumento);
+    const filtrarDiferentes = registroGeneral.metaData.filter(
+      (obj1) =>
+        !existeDocumento.metaData.some(
+          (obj2) =>
+            obj1.id_variable._id.toString() === obj2.id_variable.toString()
+        )
+    );
+    //ver la parte de actualizar
+    console.log("metaData distinta: ", filtrarDiferentes);
+    existeDocumento.metaData = [
+      ...existeDocumento.metaData,
+      ...filtrarDiferentes,
+    ];
+    console.log("documento Updateado: ", existeDocumento);
+    existeDocumento.save();
+    return res.status(200).json({
+      ok: true,
+      datos: "documento actualizado",
     });
   }
+
   const matchingObjects = [registroGeneral].map(
     ({ time_stamp, fecha_lectura, metaData }) => ({
       fecha_lectura: fecha_lectura,
@@ -194,7 +211,6 @@ async function getLastRegistros() {
   ]);
   return lastRegistros;
 }
-
 module.exports = {
   getAllRegistrosTS,
   postRegistroTS,

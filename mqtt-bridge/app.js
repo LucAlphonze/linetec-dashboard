@@ -138,6 +138,12 @@ function dateSlicer(text) {
     text.slice(13, 15);
   return formatedDate;
 }
+
+// [
+//   {"fl": "20210315:171858","metaData": [{"v": 0.6296,"n":"TagliTagliaf"},{"v": 1.6412,"n":"Pressioneestrusione"},{"v": 0.6296,"n":"Temperaturaestrusione"},],"ts": "20210315:171858"},
+//   {"fl": "20210316:171858","metaData": [{"v": 0.6296,"n":"TagliTagliaf"},{"v": 1.6412,"n":"Pressioneestrusione"},{"v": 0.6296,"n":"Temperaturaestrusione"},],"ts": "20210316:171858"},
+//   {"fl": "20210317:171858","metaData": [{"v": 0.6296,"n":"TagliTagliaf"},{"v": 1.6412,"n":"Pressioneestrusione"},{"v": 0.6296,"n":"Temperaturaestrusione"},],"ts": "20210317:171858"}
+//   ]
 // [
 //   {
 //   "fl": "20210315:171858",
@@ -271,3 +277,58 @@ function dateSlicer(text) {
 //     time_stamp: '2023-12-12T03:00:00.000Z'
 //   }
 // ]
+
+// [{
+//   "fl": "20240326:101137",
+//   "metaData": [
+//     {
+//       "v": 16,
+//       "n": "TagliTagliaf"
+//     },
+//     {
+//       "v": 23,
+//       "n": "Pressioneestrusione"
+//     },
+//     {
+//       "v": 19,
+//       "n": "Temperaturaestrusione"
+//     },
+//     {
+//       "v": 30,
+//       "n": "Vuoto"
+//     },
+//     {
+//       "v": 27,
+//       "n":"Correntemotoreestrusore"
+//     },
+//     {
+//       "v": 18,
+//       "n": "Velocitamotoreestrusore"
+//     },
+//     {
+//       "v": 22,
+//       "n": "Potenzamotoreestrusore"
+//     },
+//     {
+//       "v": 24,
+//       "n": "Correntemotoreaspo"
+//     },
+//     {
+//       "v": 27,
+//       "n": "Correntemotoredegasatore"
+//     },
+//     {
+//       "v": 10,
+//       "n": "Velocitamotoredegasatore"
+//     },
+//     {
+//       "v": 15,
+//       "n":"Potenzamotoredegasatore"
+//     },
+//     {
+//       "v": 13,
+//       "n": "Codicemateriale"
+//     }
+//   ],
+//   "ts": "20240326:101137"
+// }]
