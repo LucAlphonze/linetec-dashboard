@@ -95,7 +95,27 @@ servClient.on("message", async function (topic, message) {
         console.log(`statusCode: ${res.status}`);
         console.log(res.data);
       })
-      .catch((error) => {
+      .catch(async (error) => {
+        if (error.response) {
+          console.log("error data: ", error.response.data);
+          console.log(error.response.status);
+          if (error.response.status == 403) {
+            console.log("refrescando token...");
+            await axios
+              .post("http://rest-api:3001/api/refresh", { token: rtoken })
+              .then((response) => {
+                token = response.data.accessToken;
+                rtoken = response.data.refreshToken;
+                decoded = parseJwt(token);
+                console.log(
+                  "token refrescado exitosamente: ",
+                  token,
+                  "refresh Token:",
+                  rtoken
+                );
+              });
+          }
+        }
         return console.log("error post: ", error.response.data);
       });
   } catch (error) {
@@ -139,11 +159,6 @@ function dateSlicer(text) {
   return formatedDate;
 }
 
-// [
-//   {"fl": "20210315:171858","metaData": [{"v": 0.6296,"n":"TagliTagliaf"},{"v": 1.6412,"n":"Pressioneestrusione"},{"v": 0.6296,"n":"Temperaturaestrusione"},],"ts": "20210315:171858"},
-//   {"fl": "20210316:171858","metaData": [{"v": 0.6296,"n":"TagliTagliaf"},{"v": 1.6412,"n":"Pressioneestrusione"},{"v": 0.6296,"n":"Temperaturaestrusione"},],"ts": "20210316:171858"},
-//   {"fl": "20210317:171858","metaData": [{"v": 0.6296,"n":"TagliTagliaf"},{"v": 1.6412,"n":"Pressioneestrusione"},{"v": 0.6296,"n":"Temperaturaestrusione"},],"ts": "20210317:171858"}
-//   ]
 // [
 //   {
 //   "fl": "20210315:171858",

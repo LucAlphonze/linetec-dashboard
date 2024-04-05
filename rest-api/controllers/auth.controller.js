@@ -5,8 +5,8 @@ let refreshTokens = [];
 
 function genTokens(User) {
   // token expiracion 12h- refreshtoken expiracion 13h
-  var token = jwt.sign(User, process.env.SECRET, { expiresIn: "12h" });
-  var rToken = jwt.sign(User, process.env.RTSECRET, { expiresIn: "13m" });
+  var token = jwt.sign(User, process.env.SECRET, { expiresIn: "10m" });
+  var rToken = jwt.sign(User, process.env.RTSECRET, { expiresIn: "13h" });
   refreshTokens.push(rToken);
   return { accessToken: token, refreshToken: rToken };
 }

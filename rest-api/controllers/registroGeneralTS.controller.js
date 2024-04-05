@@ -176,6 +176,125 @@ const postRegistroTS = async (req, res) => {
     return console.log("error en el api algo paso: ", error);
   }
 };
+const getRegistrosFiltrados = async (req, res) => {
+  var sti = req.params.startdate;
+  var stf = req.params.enddate;
+  var granularidad = req.params.granularidad;
+
+  try {
+    const registrosFiltrados = await RegistroGeneralts.aggregate([
+      {
+        $match: {
+          fecha_lectura: {
+            $gte: new Date(parseInt(sti)),
+            $lte: new Date(parseInt(stf)),
+          },
+        },
+      },
+      {
+        $unwind: {
+          path: "$metaData",
+        },
+      },
+      {
+        $group: {
+          _id: {
+            id_variable: "$metaData.id_variable",
+            date: {
+              $dateToString: {
+                date: "$fecha_lectura",
+                format: "%Y-%m-%d",
+              },
+            },
+          },
+          datos: {
+            $push: {
+              valor_lectura: "$metaData.datos",
+              fecha_lectura: "$fecha_lectura",
+            },
+          },
+        },
+      },
+      {
+        $group: {
+          _id: "$_id.id_variable",
+          info: {
+            $push: {
+              date: "$_id.date",
+              max: {
+                $max: "$datos",
+              },
+              min: {
+                $min: "$datos",
+              },
+              avg: {
+                $avg: "$datos.valor_lectura",
+              },
+              sum: {
+                $sum: "$datos.valor_lectura",
+              },
+            },
+          },
+        },
+      },
+    ]);
+    res.status(200).json({
+      ok: true,
+      datos: registrosFiltrados,
+    });
+  } catch (error) {
+    res.status(500).json({
+      ok: false,
+      error: error,
+    });
+  }
+};
+
+const getAllInRange = async (req, res) => {
+  var idVariable = req.params.idVariable;
+  var sti = req.params.startdate;
+  var stf = req.params.enddate;
+  try {
+    const allInRange = await RegistroGeneralts.aggregate([
+      [
+        {
+          $unwind: {
+            path: "$metaData",
+          },
+        },
+        {
+          $match: {
+            $and: [
+              {
+                fecha_lectura: {
+                  $gte: new Date(parseInt(sti)),
+                  $lte: new Date(parseInt(stf)),
+                },
+                "metaData.id_variable": idVariable,
+              },
+            ],
+          },
+        },
+        {
+          $project: {
+            valor_lectura: "$metaData.datos",
+            id_variable: "$metaData.id_variable",
+            time_stamp: "$fecha_lectura",
+          },
+        },
+      ],
+    ]);
+    res.status(200).json({
+      ok: true,
+      datos: allInRange,
+    });
+  } catch (error) {
+    res.status(500).json({
+      ok: false,
+      error: error,
+    });
+  }
+};
 
 async function getLastRegistros() {
   const lastRegistros = await RegistroGeneralts.aggregate([
