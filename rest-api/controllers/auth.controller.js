@@ -41,7 +41,7 @@ const handleRefreshTokens = (req, res) => {
       return res.sendStatus(403);
     }
   });
-  const accessToken = jwt.sign(User, process.env.SECRET, { expiresIn: "12h" });
+  const accessToken = jwt.sign(User, process.env.SECRET, { expiresIn: "10m" });
   const refreshToken = jwt.sign(User, process.env.RTSECRET, {
     expiresIn: "13h",
   });
