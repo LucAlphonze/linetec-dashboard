@@ -114,6 +114,24 @@ servClient.on("message", async function (topic, message) {
                   rtoken
                 );
               });
+            await axios
+              .post(
+                `http://rest-api:3001/api/registro-general-ts`,
+                { datos: array[0], vList: vList },
+                {
+                  headers: {
+                    Authorization: `Bearer ${token}`,
+                    "content-type": "application/json",
+                  },
+                }
+              )
+              .then((res) => {
+                console.log(`statusCode: ${res.status}`);
+                console.log(res.data);
+              })
+              .catch((error) => {
+                console.log("error post: ", error.response.data);
+              });
           }
         }
         return console.log("error post: ", error.response.data);
