@@ -5,7 +5,7 @@ let refreshTokens = [];
 
 function genTokens(User) {
   // token expiracion 12h- refreshtoken expiracion 13h
-  var token = jwt.sign(User, process.env.SECRET, { expiresIn: "10m" });
+  var token = jwt.sign(User, process.env.SECRET, { expiresIn: "12h" });
   var rToken = jwt.sign(User, process.env.RTSECRET, { expiresIn: "13h" });
   refreshTokens.push(rToken);
   return { accessToken: token, refreshToken: rToken };
@@ -41,7 +41,7 @@ const handleRefreshTokens = (req, res) => {
       return res.sendStatus(403);
     }
   });
-  const accessToken = jwt.sign(User, process.env.SECRET, { expiresIn: "10m" });
+  const accessToken = jwt.sign(User, process.env.SECRET, { expiresIn: "12h" });
   const refreshToken = jwt.sign(User, process.env.RTSECRET, {
     expiresIn: "13h",
   });
