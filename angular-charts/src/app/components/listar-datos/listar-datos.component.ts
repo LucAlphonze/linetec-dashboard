@@ -180,7 +180,7 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
               (x: any) =>
                 (this.dato = {
                   y: parseFloat(x.max.valor_lectura.toFixed(2)),
-                  x: new Date(x.max.time_stamp).getTime(),
+                  x: new Date(x.max.fecha_lectura).getTime(),
                 })
             );
           this.chart.update();
@@ -200,7 +200,7 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
               (x: any) =>
                 (this.dato = {
                   y: parseFloat(x.min.valor_lectura.toFixed(2)),
-                  x: new Date(x.min.time_stamp).getTime(),
+                  x: new Date(x.min.fecha_lectura).getTime(),
                 })
             );
           this.chartList2[i].chart.update();
@@ -257,7 +257,7 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
               (x: any) =>
                 (this.dato = {
                   y: parseFloat(x.max.valor_lectura.toFixed(2)),
-                  x: new Date(x.max.time_stamp).getTime(),
+                  x: new Date(x.max.fecha_lectura).getTime(),
                 })
             );
           this.chart.update();
@@ -277,7 +277,7 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
               (x: any) =>
                 (this.dato = {
                   y: parseFloat(x.min.valor_lectura.toFixed(2)),
-                  x: new Date(x.min.time_stamp).getTime(),
+                  x: new Date(x.min.fecha_lectura).getTime(),
                 })
             );
           this.chartList2[i].chart.update();

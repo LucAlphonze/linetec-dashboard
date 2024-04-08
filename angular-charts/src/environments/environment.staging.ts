@@ -9,6 +9,8 @@ export const environment = {
   API_URL_ROLES: 'http://automatismopalmar.ddns.net:3001/api/role/',
   API_URL_RGENERAL:
     'http://automatismopalmar.ddns.net:3001/api/registro-general/',
+  API_URL_RGENERALTS:
+    'http://automatismopalmar.ddns.net:3001/api/registro-general-ts/',
   API_URL_VARIABLES: 'http://automatismopalmar.ddns.net:3001/api/variables/',
   API_URL_PAISES: 'https://countriesnow.space/api/v0.1/countries/',
   API_URL_PROVINCIAS: 'https://countriesnow.space/api/v0.1/countries/states',

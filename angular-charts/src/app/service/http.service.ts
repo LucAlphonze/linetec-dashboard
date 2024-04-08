@@ -9,6 +9,7 @@ import { RegistroFiltrado } from '../models/datos.model';
 })
 export class HttpService {
   registroGeneral = environment.API_URL_RGENERAL;
+  registroGeneralts = environment.API_URL_RGENERALTS;
   variables = environment.API_URL_VARIABLES;
   // chartUrl = environment.API_URL_CHARTS;
   private listaVariablesSource = new Subject();
@@ -36,7 +37,7 @@ export class HttpService {
   constructor(private http: HttpClient) {}
 
   getValores(variable: string): Observable<any> {
-    return this.http.get(this.registroGeneral + 'all/' + variable, {
+    return this.http.get(this.registroGeneralts + 'all/' + variable, {
       headers: {
         Authorization: 'Bearer ' + sessionStorage.getItem('token')?.toString(),
       },
@@ -71,7 +72,7 @@ export class HttpService {
     granularidad: string
   ): Observable<any> {
     return this.http.get(
-      this.registroGeneral + `granularidad/${inicio}/${fin}/${granularidad}`,
+      this.registroGeneralts + `granularidad/${inicio}/${fin}/${granularidad}`,
       {
         headers: {
           Authorization:
@@ -86,7 +87,7 @@ export class HttpService {
     fin: String
   ): Observable<any> {
     return this.http.get(
-      this.registroGeneral + `all/${variable}/${inicio}/${fin}/`,
+      this.registroGeneralts + `all/${variable}/${inicio}/${fin}/`,
       {
         headers: {
           Authorization:

@@ -333,4 +333,6 @@ async function getLastRegistros() {
 module.exports = {
   getAllRegistrosTS,
   postRegistroTS,
+  getRegistrosFiltrados,
+  getAllInRange,
 };
