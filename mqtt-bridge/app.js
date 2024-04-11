@@ -18,6 +18,7 @@ const servClient = mqtt.connect(`mqtt://mosquitto:1883`, {
   username: process.env.MQTT_USER,
   password: process.env.MQTT_PASSWORD,
 });
+
 servClient.on("connect", function () {
   servClient.subscribe("rgeneral", async function (err) {
     console.log("servClient conectado");
@@ -51,12 +52,6 @@ servClient.on("message", async function (topic, message) {
     var messageJSON = JSON.parse(message.toString());
 
     console.log("mensaje: ", messageJSON, "lista variables: ", lVariables);
-
-    const variableMap = lVariables.reduce((map, { nombre, _id }) => {
-      let variable = map.get(nombre) || [];
-      variable.push(_id);
-      return map.set(nombre, variable[0]);
-    }, new Map());
 
     const variableMapObject = lVariables.reduce(
       (map, { nombre, _id, id_trigger, trigger_valor }) => {
@@ -179,43 +174,40 @@ function dateSlicer(text) {
 
 // [
 //   {
-//   "fl": "20210315:171858",
-//   "metaData": [
-//     {
-//       "v": 0.6296,
-//       "n":"TagliTagliaf"
-//     },
-//     {
-//       "v": 1.6412,
-//       "n":"Pressioneestrusione"
-//     },
-//     {
-//       "v": 0.6296,
-//       "n":"Temperaturaestrusione"
-//     },
-//     {
-//       "v": 0.6296,
-//       "n":"Temperaturaestrusione"
-//     },
-//     {
-//       "v": 0.6296,
-//       "n":"Vuoto"
-//     },
-//     {
-//       "v": 0.6412,
-//       "n":"Correntemotoreestrusore"
-//     },
-//     {
-//       "v": 0.6412,
-//       "n":"Velocitamotoreestrusore"
-//     },
-//     {
-//       "v": 0.6412,
-//       "n":"Potenzamotoreestrusore"
-//     }
-//   ],
-//   "ts": "20210315:171858"
-// }]
+//     fl: "20210315:171858",
+//     metaData: [
+//       {
+//         v: 0.6296,
+//         n: "TagliTagliaf",
+//       },
+//       {
+//         v: 1.6412,
+//         n: "Pressioneestrusione",
+//       },
+//       {
+//         v: 0.6296,
+//         n: "Temperaturaestrusione",
+//       },
+//       {
+//         v: 0.6296,
+//         n: "Vuoto",
+//       },
+//       {
+//         v: 0.6412,
+//         n: "Correntemotoreestrusore",
+//       },
+//       {
+//         v: 0.6412,
+//         n: "Velocitamotoreestrusore",
+//       },
+//       {
+//         v: 0.6412,
+//         n: "Potenzamotoreestrusore",
+//       },
+//     ],
+//     ts: "20210315:171858",
+//   },
+// ];
 
 // [
 //   {

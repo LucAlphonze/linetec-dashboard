@@ -3,6 +3,11 @@ version: "3"
 services:
   mongo:
     image: mongo
+    deploy:
+      resources:
+        limits:
+          cpus: "0.50"
+          memory: 500M
     # env_file: .env-mongo
     container_name: mongo
     restart: always
@@ -22,6 +27,11 @@ services:
 
   mosquitto:
     image: eclipse-mosquitto
+    deploy:
+      resources:
+        limits:
+          cpus: "0.10"
+          memory: 100M
     container_name: mosquitto
     ports:
       - ${MQTT_PORT}:${MQTT_PORT}
@@ -38,6 +48,11 @@ services:
   mqtt-bridge:
     build: ./mqtt-bridge
     container_name: mqtt-bridge
+    deploy:
+      resources:
+        limits:
+          cpus: "0.10"
+          memory: 100M
     depends_on:
       - rest-api
     networks:
@@ -56,6 +71,11 @@ services:
   rest-api:
     build: ./rest-api
     container_name: rest-api
+    deploy:
+      resources:
+        limits:
+          cpus: "0.10"
+          memory: 100M
     depends_on:
       - mongo
     networks:
@@ -73,6 +93,11 @@ services:
 
   angular-app:
     image: nginx
+    deploy:
+      resources:
+        limits:
+          cpus: "0.10"
+          memory: 100M
     container_name: angular-app
     networks:
       - code-network

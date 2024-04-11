@@ -58,3 +58,8 @@ label {
 .icono {
   color: #c82d3b;
 }
+@media screen and (max-width: 450) {
+  #select_variable {
+    width: 180px;
+  }
+}

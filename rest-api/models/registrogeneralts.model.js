@@ -15,6 +15,7 @@ const RegistroGeneralTSSchema = Schema(
         id_variable: {
           type: Schema.Types.ObjectId,
           ref: "Variable",
+          required: true,
         },
         _id: false,
       },
