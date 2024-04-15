@@ -147,7 +147,7 @@ export class AuthService {
     this.user = user;
     // this.expirationCounter(this.timeout);
     if (sessionStorage.getItem('userrole') == 'admin') {
-      this.router.navigate(['home5']);
+      this.router.navigate(['admin']);
     } else {
       this.router.navigate(['']);
     }

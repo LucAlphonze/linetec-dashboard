@@ -25,11 +25,7 @@ Chart.defaults.font.weight = '400';
 })
 export class ListarDatosComponent implements OnInit, OnDestroy {
   listDatos: any;
-
-  listDatos2: RegistroFiltrado[] = [];
-  listDatos3: any[] = [];
   listVariables: any[] = [];
-  listCheckbox: any[] = [];
   todayDate: Date = new Date();
   sixMonthAgoDate!: Date;
   dato!: Dato;

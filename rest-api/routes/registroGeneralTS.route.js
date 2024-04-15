@@ -19,7 +19,6 @@ router.get(
   verifyToken,
   getRegistrosFiltrados
 );
-router.get("/", verifyToken, getAllRegistrosTS);
 router.post("/", verifyToken, postRegistroTS);
 
 module.exports = router;

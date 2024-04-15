@@ -10,7 +10,7 @@ import { Home5Component } from './components/home5/home5.component';
 
 const routes: Routes = [
   { path: '', component: ListarDatosComponent, canActivate: [authGuard] },
-  { path: 'home5', component: Home5Component, canActivate: [authGuard] },
+  { path: 'admin', component: Home5Component, canActivate: [authGuard] },
   { path: 'register', component: RegisterComponent },
   { path: 'login', component: LoginComponent },
   { path: 'user', component: UserlistingComponent, canActivate: [authGuard] },

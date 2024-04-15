@@ -3,8 +3,6 @@ import { AuthService } from 'src/app/service/auth.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { MatDialog } from '@angular/material/dialog';
-import { UpdatepopupComponent } from '../updatepopup/updatepopup.component';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
@@ -31,6 +29,7 @@ export class UserlistingComponent implements OnInit {
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
     });
+    this.service.getUser();
   }
 
   displayedColumns: string[] = ['username', 'name', 'email', 'role', 'status'];

@@ -33,7 +33,7 @@ const routes = [{
   component: _components_listar_datos_listar_datos_component__WEBPACK_IMPORTED_MODULE_0__.ListarDatosComponent,
   canActivate: [_guard_auth_guard__WEBPACK_IMPORTED_MODULE_4__.authGuard]
 }, {
-  path: 'home5',
+  path: 'admin',
   component: _components_home5_home5_component__WEBPACK_IMPORTED_MODULE_5__.Home5Component,
   canActivate: [_guard_auth_guard__WEBPACK_IMPORTED_MODULE_4__.authGuard]
 }, {
@@ -339,7 +339,7 @@ class AppComponent {
     selectors: [["app-root"]],
     decls: 3,
     vars: 1,
-    consts: [["class", "toolbar flex items-center", 4, "ngIf"], ["role", "main"], [1, ""], [1, "toolbar", "flex", "items-center"], [1, "grid", "grid-cols-3", "grid-rows-1", "gap-4", "content-center"], [1, "col-span-1", "pl-5"], ["routerLink", "/", 1, "navbar-menu"], ["src", "assets/3- ISOTIPO LINETEC (T con fondo) PNG.png", "alt", "", 1, "lintec_logo"], [1, "col-span-1", "pt-5"], ["routerLink", "/home5", "class", "navbar-menu", 4, "ngIf"], ["routerLink", "/user", "class", "navbar-menu", 4, "ngIf"], [1, "spacer"], [1, "perfil"], [1, "profile"], ["class", "fullName", 4, "ngIf"], ["xmlns", "http://www.w3.org/2000/svg", "width", "24", "height", "24", "viewBox", "0 0 24 24", "fill", "none", 1, "navbar-menu", "m-5", 3, "click"], ["clip-path", "url(#clip0_137_246)"], ["d", "M22.829 9.17192L18.95 5.29292C18.7614 5.11076 18.5088 5.00997 18.2466 5.01224C17.9844 5.01452 17.7336 5.11969 17.5482 5.3051C17.3628 5.49051 17.2576 5.74132 17.2553 6.00352C17.2531 6.26571 17.3539 6.51832 17.536 6.70692L21.415 10.5859C21.5303 10.7034 21.631 10.8344 21.715 10.9759C21.7 10.9759 21.688 10.9679 21.673 10.9679L5.98901 10.9999C5.7238 10.9999 5.46944 11.1053 5.28191 11.2928C5.09437 11.4803 4.98901 11.7347 4.98901 11.9999C4.98901 12.2651 5.09437 12.5195 5.28191 12.707C5.46944 12.8946 5.7238 12.9999 5.98901 12.9999L21.667 12.9679C21.695 12.9679 21.718 12.9539 21.745 12.9519C21.6563 13.1211 21.5438 13.2767 21.411 13.4139L17.532 17.2929C17.4365 17.3852 17.3603 17.4955 17.3079 17.6175C17.2555 17.7395 17.2279 17.8707 17.2268 18.0035C17.2256 18.1363 17.2509 18.268 17.3012 18.3909C17.3515 18.5138 17.4257 18.6254 17.5196 18.7193C17.6135 18.8132 17.7252 18.8875 17.8481 18.9377C17.971 18.988 18.1026 19.0133 18.2354 19.0122C18.3682 19.011 18.4994 18.9834 18.6214 18.931C18.7434 18.8786 18.8538 18.8024 18.946 18.7069L22.825 14.8279C23.5749 14.0778 23.9962 13.0606 23.9962 11.9999C23.9962 10.9393 23.5749 9.92203 22.825 9.17192H22.829Z", "fill", "#c82d3b"], ["d", "M7 22H5C4.20435 22 3.44129 21.6839 2.87868 21.1213C2.31607 20.5587 2 19.7956 2 19V5C2 4.20435 2.31607 3.44129 2.87868 2.87868C3.44129 2.31607 4.20435 2 5 2H7C7.26522 2 7.51957 1.89464 7.70711 1.70711C7.89464 1.51957 8 1.26522 8 1C8 0.734784 7.89464 0.48043 7.70711 0.292893C7.51957 0.105357 7.26522 0 7 0L5 0C3.67441 0.00158786 2.40356 0.528882 1.46622 1.46622C0.528882 2.40356 0.00158786 3.67441 0 5L0 19C0.00158786 20.3256 0.528882 21.5964 1.46622 22.5338C2.40356 23.4711 3.67441 23.9984 5 24H7C7.26522 24 7.51957 23.8946 7.70711 23.7071C7.89464 23.5196 8 23.2652 8 23C8 22.7348 7.89464 22.4804 7.70711 22.2929C7.51957 22.1054 7.26522 22 7 22Z", "fill", "#c82d3b"], ["id", "clip0_137_246"], ["width", "24", "height", "24", "fill", "white"], ["routerLink", "/home5", 1, "navbar-menu"], ["routerLink", "/user", 1, "navbar-menu"], [1, "fullName"]],
+    consts: [["class", "toolbar flex items-center", 4, "ngIf"], ["role", "main"], [1, ""], [1, "toolbar", "flex", "items-center"], [1, "grid", "grid-cols-3", "grid-rows-1", "gap-4", "content-center"], [1, "col-span-1", "pl-5"], ["routerLink", "/", 1, "navbar-menu"], ["src", "assets/3- ISOTIPO LINETEC (T con fondo) PNG.png", "alt", "", 1, "lintec_logo"], [1, "col-span-1", "pt-5"], ["routerLink", "/admin", "class", "navbar-menu", 4, "ngIf"], ["routerLink", "/user", "class", "navbar-menu", 4, "ngIf"], [1, "spacer"], [1, "perfil"], [1, "profile"], ["class", "fullName", 4, "ngIf"], ["xmlns", "http://www.w3.org/2000/svg", "width", "24", "height", "24", "viewBox", "0 0 24 24", "fill", "none", 1, "navbar-menu", "m-5", 3, "click"], ["clip-path", "url(#clip0_137_246)"], ["d", "M22.829 9.17192L18.95 5.29292C18.7614 5.11076 18.5088 5.00997 18.2466 5.01224C17.9844 5.01452 17.7336 5.11969 17.5482 5.3051C17.3628 5.49051 17.2576 5.74132 17.2553 6.00352C17.2531 6.26571 17.3539 6.51832 17.536 6.70692L21.415 10.5859C21.5303 10.7034 21.631 10.8344 21.715 10.9759C21.7 10.9759 21.688 10.9679 21.673 10.9679L5.98901 10.9999C5.7238 10.9999 5.46944 11.1053 5.28191 11.2928C5.09437 11.4803 4.98901 11.7347 4.98901 11.9999C4.98901 12.2651 5.09437 12.5195 5.28191 12.707C5.46944 12.8946 5.7238 12.9999 5.98901 12.9999L21.667 12.9679C21.695 12.9679 21.718 12.9539 21.745 12.9519C21.6563 13.1211 21.5438 13.2767 21.411 13.4139L17.532 17.2929C17.4365 17.3852 17.3603 17.4955 17.3079 17.6175C17.2555 17.7395 17.2279 17.8707 17.2268 18.0035C17.2256 18.1363 17.2509 18.268 17.3012 18.3909C17.3515 18.5138 17.4257 18.6254 17.5196 18.7193C17.6135 18.8132 17.7252 18.8875 17.8481 18.9377C17.971 18.988 18.1026 19.0133 18.2354 19.0122C18.3682 19.011 18.4994 18.9834 18.6214 18.931C18.7434 18.8786 18.8538 18.8024 18.946 18.7069L22.825 14.8279C23.5749 14.0778 23.9962 13.0606 23.9962 11.9999C23.9962 10.9393 23.5749 9.92203 22.825 9.17192H22.829Z", "fill", "#c82d3b"], ["d", "M7 22H5C4.20435 22 3.44129 21.6839 2.87868 21.1213C2.31607 20.5587 2 19.7956 2 19V5C2 4.20435 2.31607 3.44129 2.87868 2.87868C3.44129 2.31607 4.20435 2 5 2H7C7.26522 2 7.51957 1.89464 7.70711 1.70711C7.89464 1.51957 8 1.26522 8 1C8 0.734784 7.89464 0.48043 7.70711 0.292893C7.51957 0.105357 7.26522 0 7 0L5 0C3.67441 0.00158786 2.40356 0.528882 1.46622 1.46622C0.528882 2.40356 0.00158786 3.67441 0 5L0 19C0.00158786 20.3256 0.528882 21.5964 1.46622 22.5338C2.40356 23.4711 3.67441 23.9984 5 24H7C7.26522 24 7.51957 23.8946 7.70711 23.7071C7.89464 23.5196 8 23.2652 8 23C8 22.7348 7.89464 22.4804 7.70711 22.2929C7.51957 22.1054 7.26522 22 7 22Z", "fill", "#c82d3b"], ["id", "clip0_137_246"], ["width", "24", "height", "24", "fill", "white"], ["routerLink", "/admin", 1, "navbar-menu"], ["routerLink", "/user", 1, "navbar-menu"], [1, "fullName"]],
     template: function AppComponent_Template(rf, ctx) {
       if (rf & 1) {
         _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵtemplate"](0, AppComponent_mat_toolbar_0_Template, 20, 4, "mat-toolbar", 0);
@@ -846,10 +846,7 @@ class ListarDatosComponent {
     this.spinnerService = spinnerService;
     this.builder = builder;
     this.chartService = chartService;
-    this.listDatos2 = [];
-    this.listDatos3 = [];
     this.listVariables = [];
-    this.listCheckbox = [];
     this.todayDate = new Date();
     this.sensor_1 = 'sensor 1';
     this.sensor_2 = 'sensor 2';
@@ -2406,6 +2403,7 @@ class UserlistingComponent {
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
     });
+    this.service.getUser();
   }
   editableToggle() {
     this.editable = !this.editable;
@@ -4974,7 +4972,8 @@ const authGuard = (route, state) => {
   if (service.IsLoggedIn()) {
     if (route.url.length > 0) {
       let menu = route.url[0].path;
-      if (menu == 'user') {
+      console.log('authService', menu);
+      if (menu == 'user' || 'admin') {
         if (service.getUserRole() == 'admin') {
           return true;
         } else {
@@ -4982,9 +4981,7 @@ const authGuard = (route, state) => {
           router.navigate(['']);
           return false;
         }
-      } else {
-        return true;
-      }
+      } else {}
     } else {
       return true;
     }
@@ -5209,7 +5206,7 @@ class AuthService {
     this.user = user;
     // this.expirationCounter(this.timeout);
     if (sessionStorage.getItem('userrole') == 'admin') {
-      this.router.navigate(['home5']);
+      this.router.navigate(['admin']);
     } else {
       this.router.navigate(['']);
     }
