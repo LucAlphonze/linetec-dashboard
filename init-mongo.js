@@ -28,7 +28,7 @@ db.users.insertOne({
   password: "Admin123$",
   email: "admin@mail.com",
   role: ObjectId("64d3cdd575d7a2df083079bd"),
-  isActive: active,
+  isActive: "active",
   __v: 0,
 });
 
@@ -38,7 +38,7 @@ db.users.insertOne({
   name: "usuario",
   password: "Admin123$",
   email: "usuario@mail.com",
-  isActive: active,
+  isActive: "active",
   __v: 0,
   role: ObjectId("64f1f60e918724a5f931d909"),
 });
