@@ -6,8 +6,8 @@ services:
     deploy:
       resources:
         limits:
-          cpus: "0.50"
-          memory: 500M
+          cpus: "0.75"
+          memory: 1000M
     # env_file: .env-mongo
     container_name: mongo
     restart: always
@@ -31,7 +31,7 @@ services:
       resources:
         limits:
           cpus: "0.10"
-          memory: 100M
+          memory: 150M
     container_name: mosquitto
     ports:
       - ${MQTT_PORT}:${MQTT_PORT}
@@ -52,7 +52,7 @@ services:
       resources:
         limits:
           cpus: "0.10"
-          memory: 100M
+          memory: 150M
     depends_on:
       - rest-api
     networks:
@@ -75,7 +75,7 @@ services:
       resources:
         limits:
           cpus: "0.10"
-          memory: 100M
+          memory: 150M
     depends_on:
       - mongo
     networks:
