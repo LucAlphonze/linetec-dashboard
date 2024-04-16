@@ -6,8 +6,8 @@ services:
     deploy:
       resources:
         limits:
-          cpus: "0.75"
-          memory: 1G
+          cpus: "1"
+          memory: 2G
     # env_file: .env-mongo
     container_name: mongo
     restart: always
