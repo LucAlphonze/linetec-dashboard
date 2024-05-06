@@ -1,14 +1,5 @@
 <div class="grid grid-flow-row grid-cols-1 sm:grid-cols-1 p-3 fondo">
   <div class="p-3">
-    <a
-      mat-raised-button
-      class="flex justify-start filtrar mb-5"
-      [matMenuTriggerFor]="menu"
-    >
-      <mat-icon svgIcon="ajustes-deslizadores" id="ajustes_icon"></mat-icon>
-      <p class="boton_texto">Filtrar</p>
-      <mat-icon iconPositionEnd id="expand_icon">expand_more</mat-icon>
-    </a>
     <mat-menu [hasBackdrop]="true" #menu="matMenu" class="menu">
       <div
         class="grid grid-cols-2 grid-flow-row sm:grid-cols-2 grid-row-2 gap-4 m-3"
@@ -56,21 +47,94 @@
         </div>
         <div class="col-span-2 row-start-2">
           <!-- <button mat-button (click)="range.reset()">Reset</button> -->
-          <button
+          <!-- <button
             mat-raised-button
             (click)="getFiltrados()"
             class="boton_wide"
             [disabled]="!range.value.start || !range.value.end"
           >
             Aplicar
-          </button>
+          </button> -->
         </div>
       </div>
     </mat-menu>
 
     <mat-card>
-      <mat-card-header>
-        <h2 class="titulo">Todas Las variables</h2>
+      <mat-card-header
+        [formGroup]="interval"
+        class="grid justify-content-stretch grid-cols-1 sm:grid-cols-3"
+      >
+        <mat-card-title>
+          <h2 class="titulo div1 mat">Todas Las variables</h2>
+        </mat-card-title>
+        <div class="flex flex-row mr-5">
+          <div class="d-input mr-5">
+            <select
+              class="input-field"
+              [value]="selectInterval[0].binSize"
+              formControlName="intervalo"
+            >
+              <option
+                *ngFor="let intervalo of selectInterval"
+                [value]="intervalo.binSize"
+                (click)="[tooltip.show(), setInterval(intervalo)]"
+              >
+                {{ intervalo.option }}
+              </option>
+            </select>
+          </div>
+          <div class="d-input">
+            <select
+              [value]="selectValue[2].value"
+              class="input-field"
+              formControlName="medida"
+            >
+              <option
+                *ngFor="let valor of selectValue"
+                [value]="valor.value"
+                (click)="
+                  [changeCurrentValues(valor.value), setValue(valor.value)]
+                "
+              >
+                {{ valor.option }}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <div class="div3">
+          <mat-button-toggle-group formControlName="tiempo">
+            <mat-button-toggle
+              *ngFor="let time of selectTime"
+              [value]="time.value"
+              (click)="[tooltip.show(), setTime(time.value)]"
+            >
+              {{ time.option }}
+            </mat-button-toggle>
+            <mat-button-toggle [matMenuTriggerFor]="menu">
+              <mat-icon
+                svgIcon="calendario"
+                class="calendario"
+                iconPositionEnd
+              ></mat-icon>
+            </mat-button-toggle>
+          </mat-button-toggle-group>
+          <button
+            mat-flat-button
+            #tooltip="matTooltip"
+            matTooltip="Confirmar los cambios"
+            matTooltipPosition="above"
+            (click)="getValuesByInterval()"
+          >
+            Enviar
+          </button>
+        </div>
+
+        <mat-menu #menuTimeout="matMenu">
+          <button mat-menu-item *ngFor="let timeOut of selectTimeOut">
+            {{ timeOut.option }}
+          </button>
+        </mat-menu>
       </mat-card-header>
       <mat-card-content>
         <canvas id="myChart"></canvas>

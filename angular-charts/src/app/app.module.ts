@@ -40,6 +40,7 @@ import {
 } from '@angular/material/core';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DepartamentosComponent } from './forms/departamentos/departamentos.component';
+import { ToolbarComponent } from './components/toolbar/toolbar.component';
 
 export function tokenGetter() {
   return localStorage.getItem('token');
@@ -79,6 +80,7 @@ const MY_DATE_FORMAT = {
     TablaComponent,
     LoginModalComponent,
     DepartamentosComponent,
+    ToolbarComponent,
   ],
   imports: [
     BrowserModule,

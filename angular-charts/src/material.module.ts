@@ -22,6 +22,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
 @NgModule({
   exports: [
@@ -48,6 +49,7 @@ import { MatTabsModule } from '@angular/material/tabs';
     MatMenuModule,
     MatProgressBarModule,
     MatTabsModule,
+    MatButtonToggleModule,
   ],
 })
 export class MaterialModule {}

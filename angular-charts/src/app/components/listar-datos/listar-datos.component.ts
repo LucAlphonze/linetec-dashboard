@@ -41,8 +41,140 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
   subscription!: Subscription;
   open: boolean = false;
   range!: any;
+  rangeSub!: any;
+  interval!: any;
   chartList: any = [];
   chartList2: any = [];
+
+  selectInterval: any = [
+    {
+      option: '1 segundo',
+      binSize: 1,
+      unit: 'second',
+    },
+    {
+      option: '5 segundos',
+      binSize: 5,
+      unit: 'second',
+    },
+    {
+      option: '10 segundos',
+      binSize: 10,
+      unit: 'second',
+    },
+    {
+      option: '1 minuto',
+      binSize: 1,
+      unit: 'minute',
+    },
+    {
+      option: '5 minutos',
+      binSize: 5,
+      unit: 'minute',
+    },
+    {
+      option: '15 minutos',
+      binSize: 15,
+      unit: 'minute',
+    },
+    {
+      option: '1 hora',
+      binSize: 1,
+      unit: 'hour',
+    },
+    {
+      option: '6 horas',
+      binSize: 6,
+      unit: 'hour',
+    },
+    // {
+    //   option: '1 día',
+    //   binSize: 1,
+    //   unit: 'day',
+    // },
+    // {
+    //   option: '7 días',
+    //   binSize: 7,
+    //   unit: 'day',
+    // },
+    // {
+    //   option: '30 días',
+    //   binSize: 30,
+    //   unit: 'day',
+    // },
+  ];
+  selectedInterval = this.selectInterval[0];
+  isOpen = false;
+  selectValue: any = [
+    {
+      option: 'Media',
+      value: 'avg',
+    },
+    {
+      option: 'Mínimo',
+      value: 'min',
+    },
+    {
+      option: 'Máximo',
+      value: 'max',
+    },
+  ];
+  selectedValue = this.selectValue[2];
+
+  selectTime: any = [
+    {
+      option: '1h',
+      value: 3600000,
+    },
+    {
+      option: '3h',
+      value: 10800000,
+    },
+    {
+      option: '12h',
+      value: 43200000,
+    },
+    {
+      option: '1d',
+      value: 86400000,
+    },
+    {
+      option: '3d',
+      value: 259200000,
+    },
+    {
+      option: '1w',
+      value: 604800000,
+    },
+  ];
+  selectedTime = this.selectTime[0];
+
+  selectTimeOut: any = [
+    {
+      option: 'Desactivado',
+      value: 'null',
+    },
+    {
+      option: '30Seg',
+      value: '30s',
+    },
+    {
+      option: '1 Minuto',
+      value: '1m',
+    },
+    {
+      option: '2 Minutos',
+      value: '2m',
+    },
+    {
+      option: '5 Minutos',
+      value: '5m',
+    },
+    {
+      option: '15 Minutos',
+      value: '15m',
+    },
+  ];
 
   canvasBackgroundColor = {
     id: 'canvasBackgroundColor',
@@ -101,6 +233,13 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
       end: new FormControl<Date | null>(null),
       granularidad: new FormControl<string>('day'),
     });
+
+    this.interval = this.builder.group({
+      intervalo: new FormControl<Number | null>(1),
+      medida: new FormControl<String | null>('max'),
+      tiempo: new FormControl<Number | null>(60 * 60 * 1000),
+    });
+
     this.chart = new Chart('myChart', {
       type: 'line',
       data: {
@@ -201,6 +340,11 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
             );
           this.chartList2[i].chart.update();
         }
+      }
+    );
+    this.subscription = this._httpService.rangeInfo.subscribe(
+      (message: any) => {
+        this.rangeSub = message;
       }
     );
   }
@@ -353,5 +497,139 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
     var inicio: any = this.range.value.start._d?.getTime().toString();
     var final: any = this.range.value.end._d?.getTime().toString();
     this._httpService.set_Inicio_Final(inicio, final);
+  }
+
+  toggleIsOpen() {
+    this.isOpen = !this.isOpen;
+    console.log('is open value', this.isOpen);
+  }
+  changeCurrentValues(val: string) {
+    console.log('change current values: ', val);
+    var sortedList = this.listVariables;
+    sortedList = sortedList.map((item: { _id: any }) => {
+      const item2 = this.listDatos.find(
+        (i2: { _id: any }) => i2._id === item._id
+      );
+      return item2 ? { ...item, ...item2 } : item;
+    });
+    if (this.listDatos.length > 0) {
+      switch (val) {
+        case 'max':
+          for (let i = 0; i < sortedList.length; i++) {
+            this.chart.data.datasets[i].data = sortedList[i]?.info
+              .sort(
+                (objA: any, objB: any) =>
+                  Number(new Date(objA.date)) - Number(new Date(objB.date))
+              )
+              .map(
+                (x: any) =>
+                  (this.dato = {
+                    y: parseFloat(x.max.valor_lectura.toFixed(2)),
+                    x: new Date(x.max.fecha_lectura).getTime(),
+                  })
+              );
+            this.chart.update();
+
+            if (i == this.listVariables.length - 1) {
+              this.spinnerService.detenerSpinner('grafico');
+              console.log('sorted list: ', sortedList);
+
+              this.chart.update();
+            }
+          }
+          break;
+
+        case 'min':
+          for (let i = 0; i < this.listVariables.length; i++) {
+            this.chart.data.datasets[i].data = sortedList[i]?.info
+              .sort(
+                (objA: any, objB: any) =>
+                  Number(new Date(objA.date)) - Number(new Date(objB.date))
+              )
+              .map(
+                (x: any) =>
+                  (this.dato = {
+                    y: parseFloat(x.min.valor_lectura.toFixed(2)),
+                    x: new Date(x.min.fecha_lectura).getTime(),
+                  })
+              );
+            this.chart.update();
+
+            if (i == this.listVariables.length - 1) {
+              this.spinnerService.detenerSpinner('grafico');
+              console.log('sorted list: ', sortedList);
+
+              this.chart.update();
+            }
+          }
+          break;
+
+        case 'avg':
+          for (let i = 0; i < this.listVariables.length; i++) {
+            this.chart.data.datasets[i].data = sortedList[i]?.info
+              .sort(
+                (objA: any, objB: any) =>
+                  Number(new Date(objA.date)) - Number(new Date(objB.date))
+              )
+              .map(
+                (x: any) =>
+                  (this.dato = {
+                    y: parseFloat(x.avg.toFixed(2)),
+                    x: new Date(x.date).getTime(),
+                  })
+              );
+            this.chart.update();
+
+            if (i == this.listVariables.length - 1) {
+              this.spinnerService.detenerSpinner('grafico');
+              console.log('sorted list: ', sortedList);
+
+              this.chart.update();
+            }
+          }
+          break;
+
+        default:
+          break;
+      }
+    } else {
+      console.log('no hay datos');
+    }
+  }
+
+  getValuesByInterval() {
+    const currentDateObj = new Date();
+    const final = this.rangeSub[1]
+      ? this.rangeSub[1]
+      : currentDateObj.getTime();
+    const millis = this.selectedTime;
+    const inicio = this.rangeSub[1] ? this.rangeSub[0] : final - millis;
+
+    this.spinnerService.llamarSpinner('grafico');
+    this._httpService
+      .getInterval(
+        inicio,
+        final,
+        this.selectedInterval.unit,
+        this.selectedInterval.binSize
+      )
+      .subscribe((data) => {
+        this.listDatos = data['datos'];
+        console.log('getInterval: ', data);
+
+        this.spinnerService.detenerSpinner('grafico');
+
+        this.changeCurrentValues(this.selectedValue.value);
+      });
+  }
+  setTime(time: any) {
+    this.rangeSub = [];
+    this.selectedTime = time;
+  }
+  setInterval(interval: any) {
+    this.selectedInterval = interval;
+  }
+  setValue(value: any) {
+    this.selectedValue = value;
   }
 }

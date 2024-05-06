@@ -21,6 +21,7 @@ export class HttpService {
   private listaDatosInRangeSource = new BehaviorSubject(<[]>[]);
   private listChartInfoSource = new Subject();
   private listCharDatatInfoSource = new Subject();
+  private listIntervalSource = new Subject();
   private rangeSource = new Subject();
 
   listaVariables = this.listaVariablesSource.asObservable();
@@ -29,6 +30,7 @@ export class HttpService {
   listaDatos3 = this.listaDatosSource3.asObservable();
   listaDatosInRange = this.listaDatosInRangeSource.asObservable();
   listChartInfo = this.listChartInfoSource.asObservable();
+  listInterval = this.listIntervalSource.asObservable();
   listChartDataInfo = this.listCharDatatInfoSource.asObservable();
   rangeInfo = this.rangeSource.asObservable();
   inicio_str: string = '';
@@ -103,6 +105,22 @@ export class HttpService {
       },
     });
   }
+  getInterval(
+    inicio: string,
+    final: string,
+    unit: string,
+    binsize: string
+  ): Observable<any> {
+    return this.http.get(
+      `${this.registroGeneralts}intervals/${inicio}/${final}/${unit}/${binsize}`,
+      {
+        headers: {
+          Authorization:
+            'Bearer ' + sessionStorage.getItem('token')?.toString(),
+        },
+      }
+    );
+  }
   httpGet(url: string) {
     return this.http.get(url);
   }
@@ -142,6 +160,9 @@ export class HttpService {
   }
   stream_ChartData_Info(chartDataInfo: any) {
     this.listCharDatatInfoSource.next(chartDataInfo);
+  }
+  stream_Interval(interval: any) {
+    this.listIntervalSource.next(interval);
   }
   set_Inicio_Final(inicio: string, final: string) {
     this.rangeSource.next([inicio, final]);

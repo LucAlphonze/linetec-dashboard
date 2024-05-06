@@ -256,33 +256,31 @@ const getAllInRange = async (req, res) => {
   var stf = req.params.enddate;
   try {
     const allInRange = await RegistroGeneralts.aggregate([
-      [
-        {
-          $unwind: {
-            path: "$metaData",
-          },
+      {
+        $unwind: {
+          path: "$metaData",
         },
-        {
-          $match: {
-            $and: [
-              {
-                fecha_lectura: {
-                  $gte: new Date(parseInt(sti)),
-                  $lte: new Date(parseInt(stf)),
-                },
-                "metaData.id_variable": idVariable,
+      },
+      {
+        $match: {
+          $and: [
+            {
+              fecha_lectura: {
+                $gte: new Date(parseInt(sti)),
+                $lte: new Date(parseInt(stf)),
               },
-            ],
-          },
+              "metaData.id_variable": new mongoose.Types.ObjectId(idVariable),
+            },
+          ],
         },
-        {
-          $project: {
-            valor_lectura: "$metaData.datos",
-            id_variable: "$metaData.id_variable",
-            time_stamp: "$fecha_lectura",
-          },
+      },
+      {
+        $project: {
+          valor_lectura: "$metaData.datos",
+          id_variable: "$metaData.id_variable",
+          time_stamp: "$fecha_lectura",
         },
-      ],
+      },
     ]);
     res.status(200).json({
       ok: true,
@@ -292,6 +290,92 @@ const getAllInRange = async (req, res) => {
     res.status(500).json({
       ok: false,
       error: error,
+    });
+  }
+};
+
+const getByIntervals = async (req, res) => {
+  // const currentDateObj = new Date();
+  // const numberOfMlSeconds = currentDateObj.getTime();
+  // const addMlSeconds = 60 * 60 * 1000;
+  // const newDateObj = new Date(numberOfMlSeconds - addMlSeconds);
+
+  // desde front darle valores por default
+  const inicio = new Date(parseInt(req.params.inicio));
+  const final = new Date(parseInt(req.params.final));
+  const binsize = parseInt(req.params.binsize);
+  const unit = req.params.unit;
+  try {
+    const results = await RegistroGeneralts.aggregate([
+      {
+        $match: {
+          fecha_lectura: {
+            $gte: inicio,
+            $lte: final,
+          },
+        },
+      },
+      {
+        $unwind: {
+          path: "$metaData",
+        },
+      },
+      {
+        $group: {
+          _id: {
+            id_variable: "$metaData.id_variable",
+            date: {
+              $dateTrunc: {
+                date: "$fecha_lectura",
+                unit: unit,
+                binSize: binsize,
+              },
+            },
+          },
+          datos: {
+            $push: {
+              valor_lectura: "$metaData.datos",
+              fecha_lectura: "$fecha_lectura",
+            },
+          },
+        },
+      },
+      {
+        $sort: {
+          "_id.date": 1,
+        },
+      },
+      {
+        $group: {
+          _id: "$_id.id_variable",
+          info: {
+            $push: {
+              date: "$_id.date",
+              max: {
+                $max: "$datos",
+              },
+              min: {
+                $min: "$datos",
+              },
+              avg: {
+                $avg: "$datos.valor_lectura",
+              },
+              sum: {
+                $sum: "$datos.valor_lectura",
+              },
+            },
+          },
+        },
+      },
+    ]);
+    res.status(200).json({
+      datos: results,
+      ok: true,
+    });
+  } catch (error) {
+    res.status(500).json({
+      error: error,
+      ok: false,
     });
   }
 };
@@ -335,4 +419,5 @@ module.exports = {
   postRegistroTS,
   getRegistrosFiltrados,
   getAllInRange,
+  getByIntervals,
 };

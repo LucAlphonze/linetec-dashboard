@@ -8,6 +8,7 @@ const {
   postRegistroTS,
   getAllInRange,
   getRegistrosFiltrados,
+  getByIntervals,
 } = require("../controllers/registroGeneralTS.controller");
 const { verifyToken } = require("../controllers/auth.controller");
 
@@ -20,5 +21,6 @@ router.get(
   getRegistrosFiltrados
 );
 router.post("/", verifyToken, postRegistroTS);
+router.get("/intervals/:inicio/:final/:unit/:binsize", getByIntervals);
 
 module.exports = router;
