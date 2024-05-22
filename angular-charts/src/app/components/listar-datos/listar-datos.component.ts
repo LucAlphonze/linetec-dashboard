@@ -7,7 +7,7 @@ import { AuthService } from 'src/app/service/auth.service';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { UtilsService } from 'src/app/service/utils.service';
 import { Dato, RegistroFiltrado } from 'src/app/models/datos.model';
-import { Subscription } from 'rxjs';
+import { Subscription, catchError } from 'rxjs';
 import { SpinnerService } from 'src/app/service/spinner.service';
 import { FormBuilder, FormControl } from '@angular/forms';
 import { MatMenu, MatMenuTrigger } from '@angular/material/menu';
@@ -45,65 +45,8 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
   interval!: any;
   chartList: any = [];
   chartList2: any = [];
-
-  selectInterval: any = [
-    {
-      option: '1 segundo',
-      binSize: 1,
-      unit: 'second',
-    },
-    {
-      option: '5 segundos',
-      binSize: 5,
-      unit: 'second',
-    },
-    {
-      option: '10 segundos',
-      binSize: 10,
-      unit: 'second',
-    },
-    {
-      option: '1 minuto',
-      binSize: 1,
-      unit: 'minute',
-    },
-    {
-      option: '5 minutos',
-      binSize: 5,
-      unit: 'minute',
-    },
-    {
-      option: '15 minutos',
-      binSize: 15,
-      unit: 'minute',
-    },
-    {
-      option: '1 hora',
-      binSize: 1,
-      unit: 'hour',
-    },
-    {
-      option: '6 horas',
-      binSize: 6,
-      unit: 'hour',
-    },
-    // {
-    //   option: '1 día',
-    //   binSize: 1,
-    //   unit: 'day',
-    // },
-    // {
-    //   option: '7 días',
-    //   binSize: 7,
-    //   unit: 'day',
-    // },
-    // {
-    //   option: '30 días',
-    //   binSize: 30,
-    //   unit: 'day',
-    // },
-  ];
-  selectedInterval = this.selectInterval[0];
+  i: any = null;
+  tabla: any = 'tabla';
   isOpen = false;
   selectValue: any = [
     {
@@ -119,32 +62,45 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
       value: 'max',
     },
   ];
-  selectedValue = this.selectValue[2];
+  selectedValue = this.selectValue[2].value;
+  selectedInterval = this.selectValue[0];
 
   selectTime: any = [
     {
       option: '1h',
       value: 3600000,
+      binSize: 1,
+      unit: 'second',
     },
     {
       option: '3h',
       value: 10800000,
+      binSize: 10,
+      unit: 'second',
     },
     {
       option: '12h',
       value: 43200000,
+      binSize: 5,
+      unit: 'minute',
     },
     {
       option: '1d',
       value: 86400000,
+      binSize: 15,
+      unit: 'minute',
     },
     {
       option: '3d',
       value: 259200000,
+      binSize: 1,
+      unit: 'hour',
     },
     {
       option: '1w',
       value: 604800000,
+      binSize: 6,
+      unit: 'hour',
     },
   ];
   selectedTime = this.selectTime[0];
@@ -347,6 +303,17 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
         this.rangeSub = message;
       }
     );
+    this.subscription = this.chartService.chartInfo.subscribe(
+      (message: any) => {
+        console.log('chart info datos: ', message.datos);
+        this.changeCurrentValues(
+          this.chartList2[message.index].chart,
+          message.value,
+          message.datos ? message.datos : this.chartList2.datos,
+          message.index
+        );
+      }
+    );
   }
 
   ngOnDestroy(): void {
@@ -420,6 +387,7 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
                   x: new Date(x.min.fecha_lectura).getTime(),
                 })
             );
+          this.chartList2[i].datos = [sortedList[i]];
           this.chartList2[i].chart.update();
         }
       });
@@ -451,6 +419,7 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
           this.canvasBackgroundColor
         );
         this.chartList2 = this.chartService.getCharts();
+        this.chartService.streamCharts(this.chartList2);
       }, 500);
     });
   }
@@ -497,26 +466,51 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
     var inicio: any = this.range.value.start._d?.getTime().toString();
     var final: any = this.range.value.end._d?.getTime().toString();
     this._httpService.set_Inicio_Final(inicio, final);
+    var difference = parseInt(final) - parseInt(inicio);
+    if (difference < this.selectTime[4].value) {
+      this.setInterval({
+        binSize: 15,
+        unit: 'minute',
+      });
+    } else if (difference < this.selectTime[5].value) {
+      this.setInterval({
+        binSize: 1,
+        unit: 'hour',
+      });
+    } else if (difference < this.selectTime[5].value * 3) {
+      this.setInterval({
+        binSize: 6,
+        unit: 'hour',
+      });
+    } else {
+      this.setInterval({
+        binSize: 1,
+        unit: 'day',
+      });
+    }
   }
 
   toggleIsOpen() {
     this.isOpen = !this.isOpen;
     console.log('is open value', this.isOpen);
   }
-  changeCurrentValues(val: string) {
+  changeCurrentValues(chart: any, val: string, datos: any, index?: number) {
     console.log('change current values: ', val);
     var sortedList = this.listVariables;
-    sortedList = sortedList.map((item: { _id: any }) => {
-      const item2 = this.listDatos.find(
-        (i2: { _id: any }) => i2._id === item._id
-      );
-      return item2 ? { ...item, ...item2 } : item;
-    });
-    if (this.listDatos.length > 0) {
+    sortedList = sortedList
+      .map((item: { _id: any }) => {
+        const item2 = datos.find((i2: { _id: any }) => i2._id === item._id);
+        return item2;
+      })
+      .filter((e) => {
+        return e !== undefined;
+      });
+    console.log('change current values sorted list: ', sortedList);
+    if (datos.length > 0) {
       switch (val) {
         case 'max':
           for (let i = 0; i < sortedList.length; i++) {
-            this.chart.data.datasets[i].data = sortedList[i]?.info
+            chart.data.datasets[i].data = sortedList[i]?.info
               .sort(
                 (objA: any, objB: any) =>
                   Number(new Date(objA.date)) - Number(new Date(objB.date))
@@ -528,20 +522,20 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
                     x: new Date(x.max.fecha_lectura).getTime(),
                   })
               );
-            this.chart.update();
+            chart.update();
 
-            if (i == this.listVariables.length - 1) {
+            if (i == sortedList.length - 1) {
               this.spinnerService.detenerSpinner('grafico');
               console.log('sorted list: ', sortedList);
 
-              this.chart.update();
+              chart.update();
             }
           }
           break;
 
         case 'min':
-          for (let i = 0; i < this.listVariables.length; i++) {
-            this.chart.data.datasets[i].data = sortedList[i]?.info
+          for (let i = 0; i < sortedList.length; i++) {
+            chart.data.datasets[i].data = sortedList[i]?.info
               .sort(
                 (objA: any, objB: any) =>
                   Number(new Date(objA.date)) - Number(new Date(objB.date))
@@ -553,20 +547,20 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
                     x: new Date(x.min.fecha_lectura).getTime(),
                   })
               );
-            this.chart.update();
+            chart.update();
 
-            if (i == this.listVariables.length - 1) {
+            if (i == sortedList.length - 1) {
               this.spinnerService.detenerSpinner('grafico');
               console.log('sorted list: ', sortedList);
 
-              this.chart.update();
+              chart.update();
             }
           }
           break;
 
         case 'avg':
-          for (let i = 0; i < this.listVariables.length; i++) {
-            this.chart.data.datasets[i].data = sortedList[i]?.info
+          for (let i = 0; i < sortedList.length; i++) {
+            chart.data.datasets[i].data = sortedList[i]?.info
               .sort(
                 (objA: any, objB: any) =>
                   Number(new Date(objA.date)) - Number(new Date(objB.date))
@@ -578,13 +572,13 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
                     x: new Date(x.date).getTime(),
                   })
               );
-            this.chart.update();
+            chart.update();
 
-            if (i == this.listVariables.length - 1) {
-              this.spinnerService.detenerSpinner('grafico');
+            if (i == sortedList.length - 1) {
+              this.spinnerService.detenerSpinner(`grafico${index}`);
               console.log('sorted list: ', sortedList);
 
-              this.chart.update();
+              chart.update();
             }
           }
           break;
@@ -613,13 +607,23 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
         this.selectedInterval.unit,
         this.selectedInterval.binSize
       )
+      .pipe(
+        catchError(async (error) => {
+          console.log(error.message);
+          return error;
+        })
+      )
       .subscribe((data) => {
         this.listDatos = data['datos'];
         console.log('getInterval: ', data);
 
         this.spinnerService.detenerSpinner('grafico');
 
-        this.changeCurrentValues(this.selectedValue.value);
+        this.changeCurrentValues(
+          this.chart,
+          this.selectedValue,
+          this.listDatos
+        );
       });
   }
   setTime(time: any) {
@@ -627,9 +631,11 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
     this.selectedTime = time;
   }
   setInterval(interval: any) {
+    console.log('set interval', interval);
     this.selectedInterval = interval;
   }
   setValue(value: any) {
     this.selectedValue = value;
+    this.changeCurrentValues(this.chart, this.selectedValue, this.listDatos);
   }
 }

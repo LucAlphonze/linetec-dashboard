@@ -74,8 +74,8 @@ services:
     deploy:
       resources:
         limits:
-          cpus: "0.10"
-          memory: 150M
+          cpus: "0.20"
+          memory: 1G
     depends_on:
       - mongo
     networks:

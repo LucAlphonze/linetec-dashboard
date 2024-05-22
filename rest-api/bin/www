@@ -54,6 +54,7 @@ function normalizePort(val) {
 
 function onError(error) {
   if (error.syscall !== "listen") {
+    console.log("error syscal", error);
     throw error;
   }
 
@@ -70,6 +71,7 @@ function onError(error) {
       process.exit(1);
       break;
     default:
+      console.log("el error esta pasando por aca: ", error);
       throw error;
   }
 }

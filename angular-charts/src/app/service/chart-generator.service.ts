@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Chart, registerables } from 'chart.js';
 import 'chartjs-adapter-date-fns';
 import 'date-fns/locale';
+import { Subject } from 'rxjs';
 Chart.register(...registerables);
 Chart.defaults.font.family = 'DIN-PRO';
 Chart.defaults.font.size = 14;
@@ -11,6 +12,14 @@ Chart.defaults.font.weight = '400';
 })
 export class ChartGeneratorService {
   chartList: any = [];
+  private chartListSource = new Subject();
+  private chartRangeSource = new Subject();
+  private chartIntervalInfoSource = new Subject();
+
+  listaDeCharts = this.chartListSource.asObservable();
+  rangeInfo = this.chartRangeSource.asObservable();
+  chartInfo = this.chartIntervalInfoSource.asObservable();
+
   constructor() {}
 
   generate(idList: any[], decimation: any, canvasBackgroundColor?: any) {
@@ -67,7 +76,8 @@ export class ChartGeneratorService {
           plugins: [canvasBackgroundColor],
         }),
         titulo: idList[i].titulo,
-        id: idList[i].id,
+        variable: idList[i].id,
+        id: i,
       };
       this.chartList.push(generatedChart);
     }
@@ -76,5 +86,14 @@ export class ChartGeneratorService {
 
   getCharts() {
     return this.chartList;
+  }
+  streamCharts(chartList: any) {
+    this.chartListSource.next(chartList);
+  }
+  set_Inicio_Final(inicio: string, final: string) {
+    this.chartRangeSource.next([inicio, final]);
+  }
+  streamChartIntervalInfo(chartInfo: any) {
+    this.chartIntervalInfoSource.next(chartInfo);
   }
 }

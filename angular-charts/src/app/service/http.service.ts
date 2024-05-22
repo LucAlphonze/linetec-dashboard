@@ -45,13 +45,6 @@ export class HttpService {
       },
     });
   }
-  // getCharts(): Observable<any> {
-  //   return this.http.get(this.chartUrl, {
-  //     headers: {
-  //       Authorization: 'Bearer ' + sessionStorage.getItem('token')?.toString(),
-  //     },
-  //   });
-  // }
   getValoresFiltrados(
     variable: String,
     inicio: String,

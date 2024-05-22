@@ -1,56 +1,14 @@
-<mat-card class="mat-elevation-z8 carta">
+<mat-card class="carta_tabla">
   <div>
-    <mat-card-header class="flex justify-between">
-      <h2 class="titulo">Alerta de valores excedidos</h2>
-      <button
-        [disabled]="exceedList.length == 0"
-        mat-icon-button
-        (click)="downloadCSV()"
-        matTooltip="Descargar Informe"
-      >
-        <mat-icon class="icono">download</mat-icon>
-      </button>
-    </mat-card-header>
+    <app-toolbar
+      [value]="tabla"
+      [selectTime]="selectTime"
+      [indice]="i"
+      [tabla]="table"
+    ></app-toolbar>
   </div>
 
   <mat-card-content>
-    <div
-      class="grid justify-content-stretch grid-cols-1 sm:grid-cols-2"
-      [formGroup]="valor"
-    >
-      <div class="">
-        <label for="valor_limite" class="subtitulo">Valor límite</label>
-        <input
-          id="valor_limite"
-          class="d-input mr-2"
-          formControlName="threshold"
-        />
-      </div>
-      <div class="">
-        <label for="selec_variable" class="subtitulo">Elegir variable</label>
-        <select
-          class="select d-input mr-2"
-          id="select_variable"
-          (change)="variableSelected($event)"
-        >
-          <option
-            *ngFor="let variable of listVariables"
-            value="{{ variable._id }}"
-          >
-            {{ variable.nombre }}
-          </option>
-        </select>
-      </div>
-      <button
-        class="boton mt-4"
-        mat-raised-button
-        (click)="getInRangeTabla(id_variable)"
-        [disabled]="!range[0] || !range[1]"
-      >
-        Aplicar
-      </button>
-    </div>
-
     <mat-table matSort [dataSource]="dataSource">
       <!-- Position Column -->
       <ng-container matColumnDef="exceed_value">

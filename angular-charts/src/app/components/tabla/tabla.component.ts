@@ -19,6 +19,16 @@ export class TablaComponent implements OnInit {
     private spinnerService: SpinnerService,
     private builder: FormBuilder
   ) {}
+  tabla: any = {
+    titulo: 'Alerta de valores excedidos',
+  };
+  table: any = {
+    inicio: '',
+    final: '',
+    id_variable: '',
+  };
+  selectValue: any = null;
+  i: any = null;
   exceedList: any = [];
   dataSource: any;
   listVariables: any = [];
@@ -27,6 +37,44 @@ export class TablaComponent implements OnInit {
   csv: any = '';
   valor: any;
   range: any = [];
+  selectTime: any = [
+    {
+      option: '1h',
+      value: 3600000,
+      binSize: 1,
+      unit: 'second',
+    },
+    {
+      option: '3h',
+      value: 10800000,
+      binSize: 10,
+      unit: 'second',
+    },
+    {
+      option: '12h',
+      value: 43200000,
+      binSize: 5,
+      unit: 'minute',
+    },
+    {
+      option: '1d',
+      value: 86400000,
+      binSize: 15,
+      unit: 'minute',
+    },
+    {
+      option: '3d',
+      value: 259200000,
+      binSize: 1,
+      unit: 'hour',
+    },
+    {
+      option: '1w',
+      value: 604800000,
+      binSize: 6,
+      unit: 'hour',
+    },
+  ];
   id_variable!: string;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -50,6 +98,7 @@ export class TablaComponent implements OnInit {
     this.subscription = this.service.rangeInfo.subscribe((message: any) => {
       console.log('inicio', message[0], 'final', message[1]);
       this.range = message;
+      this.getInRangeTabla(this.table);
     });
   }
 
@@ -114,38 +163,40 @@ export class TablaComponent implements OnInit {
     'diferencia',
   ];
 
-  getInRangeTabla(id_variable: string) {
+  getInRangeTabla(tabla: any) {
     this.spinnerService.llamarSpinner('tabla');
     var inicio: any = this.range[0];
     var final: any = this.range[1];
-    this.service.getAllInRange(id_variable, inicio, final).subscribe((data) => {
-      this.exceedList = data['datos'].filter((x: any) => {
-        return x.valor_lectura > this.valor.value.threshold;
-      });
-      this.notExceedList = data['datos'].filter((n: any) => {
-        return n.valor_lectura < this.valor.value.threshold;
-      });
-      var notDuplicatedExceedList = this.removeDuplicates(this.exceedList);
-      var notDuplicatedNotExceedList = this.removeDuplicates(
-        this.notExceedList
-      );
-      console.log(
-        'exceed: ',
-        notDuplicatedExceedList,
-        'not exceed: ',
-        notDuplicatedNotExceedList
-      );
-      if (data['datos'].length == 0) {
+    this.service
+      .getAllInRange(tabla.id_variable, inicio, final)
+      .subscribe((data) => {
+        this.exceedList = data['datos'].filter((x: any) => {
+          return x.valor_lectura > tabla.threshold;
+        });
+        this.notExceedList = data['datos'].filter((n: any) => {
+          return n.valor_lectura < tabla.threshold;
+        });
+        var notDuplicatedExceedList = this.removeDuplicates(this.exceedList);
+        var notDuplicatedNotExceedList = this.removeDuplicates(
+          this.notExceedList
+        );
+        console.log(
+          'exceed: ',
+          notDuplicatedExceedList,
+          'not exceed: ',
+          notDuplicatedNotExceedList
+        );
+        if (data['datos'].length == 0) {
+          this.spinnerService.detenerSpinner('tabla');
+          this.service.stream_DatosInRange([]);
+        }
         this.spinnerService.detenerSpinner('tabla');
-        this.service.stream_DatosInRange([]);
-      }
-      this.spinnerService.detenerSpinner('tabla');
-      var result = this.notExceedListPusher(
-        notDuplicatedNotExceedList,
-        notDuplicatedExceedList
-      );
-      this.enviarDatos(result[0], result[1]);
-    });
+        var result = this.notExceedListPusher(
+          notDuplicatedNotExceedList,
+          notDuplicatedExceedList
+        );
+        this.enviarDatos(result[0], result[1]);
+      });
   }
   formatTime(notExceed: number, exceed: number) {
     var seconds = (notExceed - exceed) / 1000;

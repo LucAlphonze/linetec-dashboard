@@ -295,16 +295,12 @@ const getAllInRange = async (req, res) => {
 };
 
 const getByIntervals = async (req, res) => {
-  // const currentDateObj = new Date();
-  // const numberOfMlSeconds = currentDateObj.getTime();
-  // const addMlSeconds = 60 * 60 * 1000;
-  // const newDateObj = new Date(numberOfMlSeconds - addMlSeconds);
-
   // desde front darle valores por default
   const inicio = new Date(parseInt(req.params.inicio));
   const final = new Date(parseInt(req.params.final));
   const binsize = parseInt(req.params.binsize);
   const unit = req.params.unit;
+
   try {
     const results = await RegistroGeneralts.aggregate([
       {

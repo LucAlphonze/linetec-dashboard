@@ -1,6 +1,4 @@
-.carta {
-  max-width: 700px;
-  margin: auto;
+.carta_tabla {
   width: 100%;
   border: 1px solid #c82d3b;
 }

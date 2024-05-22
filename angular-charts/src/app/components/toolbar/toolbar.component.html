@@ -1,1 +1,123 @@
-<p>toolbar works!</p>
+<mat-menu [hasBackdrop]="true" #menu="matMenu" class="menu">
+  <div
+    class="grid grid-cols-2 grid-flow-row sm:grid-cols-2 grid-row-2 gap-4 m-3"
+    [formGroup]="range"
+    (click)="$event.stopPropagation()"
+  >
+    <div>
+      <h2 class="subtitulo">Desde</h2>
+      <div class="d-input">
+        <mat-datepicker-toggle [for]="startpicker">
+          <mat-icon
+            svgIcon="calendario"
+            class="calendario"
+            matDatepickerToggleIcon
+          ></mat-icon>
+        </mat-datepicker-toggle>
+        <input
+          [matDatepicker]="startpicker"
+          formControlName="start"
+          class="input-field"
+          type="date"
+        />
+      </div>
+      <mat-datepicker #startpicker></mat-datepicker>
+    </div>
+    <div>
+      <h2 class="subtitulo">Hasta</h2>
+      <div class="d-input">
+        <mat-datepicker-toggle [for]="endpicker">
+          <mat-icon
+            svgIcon="calendario"
+            class="calendario"
+            matDatepickerToggleIcon
+          ></mat-icon>
+        </mat-datepicker-toggle>
+        <input
+          formControlName="end"
+          [matDatepicker]="endpicker"
+          class="input-field"
+          type="date"
+          (dateChange)="setInicioFinal(indice, tabla)"
+        />
+      </div>
+      <mat-datepicker #endpicker></mat-datepicker>
+    </div>
+    <div class="col-span-2 row-start-2"></div>
+  </div>
+</mat-menu>
+<mat-card-header
+  [formGroup]="interval"
+  class="grid justify-content-stretch grid-cols-1 grid-row-3 sm:grid-cols-2 grid-rows-2"
+>
+  <mat-card-title>
+    <h2 class="titulo col-span-2">{{ value.titulo }}</h2>
+  </mat-card-title>
+
+  <div *ngIf="!tabla" class="flex flex-row mr-5 sm:row-start-2">
+    <div class="d-input">
+      <select
+        class="input-field"
+        formControlName="medida"
+        #selectMedida
+        (change)="[setSelectValue(selectMedida.value, indice)]"
+      >
+        <option *ngFor="let valor of selectValue" value="{{ valor.value }}">
+          {{ valor.option }}
+        </option>
+      </select>
+    </div>
+  </div>
+
+  <div class="d-input flex flex-row mr-5 sm:row-start-2" *ngIf="tabla">
+    <input
+      id="valor_limite"
+      class="input-field"
+      placeholder="Elegir valor limite"
+      (change)="setThreshold()"
+      formControlName="threshold"
+    />
+  </div>
+
+  <div class="d-input lex flex-row mr-5 sm:row-start-2" *ngIf="tabla">
+    <select
+      id="select_variable"
+      class="input-field"
+      #selectVariable
+      (change)="variableSelected(selectVariable.value)"
+    >
+      <option value="null">Elegir variable</option>
+      <option *ngFor="let variable of listVariables" value="{{ variable._id }}">
+        {{ variable.nombre }}
+      </option>
+    </select>
+  </div>
+
+  <div class="sm:row-start-2" [ngClass]="value ? '' : 'col-span-2'">
+    <mat-button-toggle-group>
+      <mat-button-toggle
+        *ngFor="let time of selectTime"
+        [value]="time"
+        (click)="[setSelectTimeInterval(time, indice, tabla)]"
+      >
+        {{ time.option }}
+      </mat-button-toggle>
+      <mat-button-toggle [matMenuTriggerFor]="menu">
+        <mat-icon
+          svgIcon="calendario"
+          class="calendario"
+          iconPositionEnd
+        ></mat-icon>
+      </mat-button-toggle>
+    </mat-button-toggle-group>
+    <button
+      mat-flat-button
+      #tooltip="matTooltip"
+      matTooltip="Confirmar los cambios"
+      matTooltipPosition="above"
+      (click)="getValuesByInterval(indice, tabla)"
+    >
+      Enviar
+    </button>
+  </div>
+</mat-card-header>

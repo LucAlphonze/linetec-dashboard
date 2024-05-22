@@ -1,100 +1,82 @@
 <div class="grid grid-flow-row grid-cols-1 sm:grid-cols-1 p-3 fondo">
   <div class="p-3">
-    <mat-menu [hasBackdrop]="true" #menu="matMenu" class="menu">
-      <div
-        class="grid grid-cols-2 grid-flow-row sm:grid-cols-2 grid-row-2 gap-4 m-3"
-        [formGroup]="range"
-        (click)="$event.stopPropagation()"
-      >
-        <div>
-          <h2 class="subtitulo">Desde</h2>
-          <div class="d-input">
-            <mat-datepicker-toggle [for]="startpicker">
-              <mat-icon
-                svgIcon="calendario"
-                class="calendario"
-                matDatepickerToggleIcon
-              ></mat-icon>
-            </mat-datepicker-toggle>
-            <input
-              [matDatepicker]="startpicker"
-              formControlName="start"
-              class="input-field"
-              type="date"
-            />
-          </div>
-          <mat-datepicker #startpicker></mat-datepicker>
-        </div>
-        <div>
-          <h2 class="subtitulo">Hasta</h2>
-          <div class="d-input">
-            <mat-datepicker-toggle [for]="endpicker">
-              <mat-icon
-                svgIcon="calendario"
-                class="calendario"
-                matDatepickerToggleIcon
-              ></mat-icon>
-            </mat-datepicker-toggle>
-            <input
-              formControlName="end"
-              [matDatepicker]="endpicker"
-              class="input-field"
-              type="date"
-              (dateChange)="setInicio_final()"
-            />
-          </div>
-          <mat-datepicker #endpicker></mat-datepicker>
-        </div>
-        <div class="col-span-2 row-start-2">
-          <!-- <button mat-button (click)="range.reset()">Reset</button> -->
-          <!-- <button
-            mat-raised-button
-            (click)="getFiltrados()"
-            class="boton_wide"
-            [disabled]="!range.value.start || !range.value.end"
-          >
-            Aplicar
-          </button> -->
-        </div>
-      </div>
-    </mat-menu>
-
     <mat-card>
+      <mat-menu [hasBackdrop]="true" #menu="matMenu" class="menu">
+        <div
+          class="grid grid-cols-2 grid-flow-row sm:grid-cols-2 grid-row-2 gap-4 m-3"
+          [formGroup]="range"
+          (click)="$event.stopPropagation()"
+        >
+          <div>
+            <h2 class="subtitulo">Desde</h2>
+            <div class="d-input">
+              <mat-datepicker-toggle [for]="startpicker">
+                <mat-icon
+                  svgIcon="calendario"
+                  class="calendario"
+                  matDatepickerToggleIcon
+                ></mat-icon>
+              </mat-datepicker-toggle>
+              <input
+                [matDatepicker]="startpicker"
+                formControlName="start"
+                class="input-field"
+                type="date"
+              />
+            </div>
+            <mat-datepicker #startpicker></mat-datepicker>
+          </div>
+          <div>
+            <h2 class="subtitulo">Hasta</h2>
+            <div class="d-input">
+              <mat-datepicker-toggle [for]="endpicker">
+                <mat-icon
+                  svgIcon="calendario"
+                  class="calendario"
+                  matDatepickerToggleIcon
+                ></mat-icon>
+              </mat-datepicker-toggle>
+              <input
+                formControlName="end"
+                [matDatepicker]="endpicker"
+                class="input-field"
+                type="date"
+                (dateChange)="setInicio_final()"
+              />
+            </div>
+            <mat-datepicker #endpicker></mat-datepicker>
+          </div>
+          <div class="col-span-2 row-start-2">
+            <!-- <button mat-button (click)="range.reset()">Reset</button> -->
+            <!-- <button
+              mat-raised-button
+              (click)="getFiltrados()"
+              class="boton_wide"
+              [disabled]="!range.value.start || !range.value.end"
+            >
+              Aplicar
+            </button> -->
+          </div>
+        </div>
+      </mat-menu>
       <mat-card-header
         [formGroup]="interval"
         class="grid justify-content-stretch grid-cols-1 sm:grid-cols-3"
       >
         <mat-card-title>
-          <h2 class="titulo div1 mat">Todas Las variables</h2>
+          <h2 class="titulo">Todas Las variables</h2>
         </mat-card-title>
         <div class="flex flex-row mr-5">
-          <div class="d-input mr-5">
-            <select
-              class="input-field"
-              [value]="selectInterval[0].binSize"
-              formControlName="intervalo"
-            >
-              <option
-                *ngFor="let intervalo of selectInterval"
-                [value]="intervalo.binSize"
-                (click)="[tooltip.show(), setInterval(intervalo)]"
-              >
-                {{ intervalo.option }}
-              </option>
-            </select>
-          </div>
           <div class="d-input">
             <select
-              [value]="selectValue[2].value"
               class="input-field"
+              #selectMedida
               formControlName="medida"
+              (change)="[setValue(selectMedida.value)]"
             >
               <option
                 *ngFor="let valor of selectValue"
-                [value]="valor.value"
-                (click)="
-                  [changeCurrentValues(valor.value), setValue(valor.value)]
-                "
+                value="{{ valor.value }}"
               >
                 {{ valor.option }}
               </option>
@@ -103,11 +85,11 @@
         </div>
 
         <div class="div3">
-          <mat-button-toggle-group formControlName="tiempo">
+          <mat-button-toggle-group>
             <mat-button-toggle
               *ngFor="let time of selectTime"
-              [value]="time.value"
-              (click)="[tooltip.show(), setTime(time.value)]"
+              [value]="time"
+              (click)="[tooltip.show(), setTime(time.value), setInterval(time)]"
             >
               {{ time.option }}
             </mat-button-toggle>
@@ -153,13 +135,25 @@
 </div>
 
 <div class="grid grid-flow-row grid-cols-1 sm:grid-cols-2 p-3 fondo">
-  <div class="p-3" *ngFor="let chart of chartList">
+  <div class="p-3" *ngFor="let chart of chartList; index as i">
     <mat-card>
-      <mat-card-header>
-        <h2 class="titulo">{{ chart.titulo }}</h2>
-      </mat-card-header>
+      <app-toolbar
+        [value]="chart"
+        [selectValue]="selectValue"
+        [selectTime]="selectTime"
+        [indice]="i"
+      ></app-toolbar>
       <mat-card-content>
         <canvas id="{{ chart.titulo }}"></canvas>
+        <ngx-spinner
+          bdColor="rgba(51,51,51,0.8)"
+          size="medium"
+          color="#fff"
+          type="ball-spin-clockwise"
+          [fullScreen]="false"
+          name="grafico{{ i }}"
+        >
+        </ngx-spinner>
       </mat-card-content>
     </mat-card>
   </div>
