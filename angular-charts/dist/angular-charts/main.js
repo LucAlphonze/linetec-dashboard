@@ -1026,7 +1026,7 @@ class ListarDatosComponent {
       this.rangeSub = message;
     });
     this.subscription = this.chartService.chartInfo.subscribe(message => {
-      console.log('chart info datos: ', message.datos);
+      console.log('chart info datos: ', message);
       this.changeCurrentValues(this.chartList2[message.index].chart, message.value, message.datos ? message.datos : this.chartList2.datos, message.index);
     });
   }
@@ -2489,12 +2489,12 @@ class ToolbarComponent {
       };
     }())).subscribe(data => {
       data.index = i;
-      data.value = this.chartList[i].sValue;
+      data.value = this.interval.value.medida;
       const datosFilter = data.datos.filter(e => {
         return e._id == this.chartList[i].variable;
       });
       data.datos = datosFilter;
-      console.log('filter data: ', data);
+      console.log('filter data: ', data, 'medida: ', this.interval.value.medida);
       this.chartList[i].datos = data.datos;
       this.chartService.streamChartIntervalInfo(data);
       this.spinnerService.detenerSpinner(`grafico${i}`);

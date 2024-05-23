@@ -305,7 +305,7 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
     );
     this.subscription = this.chartService.chartInfo.subscribe(
       (message: any) => {
-        console.log('chart info datos: ', message.datos);
+        console.log('chart info datos: ', message);
         this.changeCurrentValues(
           this.chartList2[message.index].chart,
           message.value,
