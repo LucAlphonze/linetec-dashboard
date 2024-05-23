@@ -190,12 +190,17 @@ export class ToolbarComponent implements OnInit {
       )
       .subscribe((data) => {
         data.index = i;
-        data.value = this.chartList[i].sValue;
+        data.value = this.interval.value.medida;
         const datosFilter = data.datos.filter((e: any) => {
           return e._id == this.chartList[i].variable;
         });
         data.datos = datosFilter;
-        console.log('filter data: ', data);
+        console.log(
+          'filter data: ',
+          data,
+          'medida: ',
+          this.interval.value.medida
+        );
         this.chartList[i].datos = data.datos;
         this.chartService.streamChartIntervalInfo(data);
         this.spinnerService.detenerSpinner(`grafico${i}`);
