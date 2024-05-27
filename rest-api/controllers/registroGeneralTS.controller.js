@@ -1,8 +1,7 @@
 const mongoose = require("mongoose");
-const RegistroGeneralts = require("../models/registrogeneralts.model");
-const Variable = require("../models/variable.model");
-const { filtradoPost, filtradoPostArray } = require("./middleware.controller");
-
+const schemas = require("../models/registrogeneralts.model");
+var RegistroGeneralts = schemas.RegistroGeneralts;
+var lastRegistro = schemas.lastRegistro;
 const getAllRegistrosTS = async (req, res) => {
   try {
     const registrosGeneralesTS = await RegistroGeneralts.find({})
@@ -410,10 +409,20 @@ async function getLastRegistros() {
   ]);
   return lastRegistros;
 }
+const prueba = async (req, res) => {
+  const results = await lastRegistro.find({});
+
+  res.status(200).json({
+    datos: results,
+    ok: true,
+  });
+};
+
 module.exports = {
   getAllRegistrosTS,
   postRegistroTS,
   getRegistrosFiltrados,
   getAllInRange,
   getByIntervals,
+  prueba,
 };

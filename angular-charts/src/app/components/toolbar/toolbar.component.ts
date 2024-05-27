@@ -18,6 +18,50 @@ export class ToolbarComponent implements OnInit {
   rangeSub!: any;
   listVariables: any;
   valor: any;
+  selectTime2: any = [
+    {
+      option: '1h',
+      value: 3600000,
+      binSize: 1,
+      unit: 'second',
+    },
+    {
+      option: '3h',
+      value: 10800000,
+      binSize: 10,
+      unit: 'second',
+    },
+    {
+      option: '12h',
+      value: 43200000,
+      binSize: 5,
+      unit: 'minute',
+    },
+    {
+      option: '1d',
+      value: 86400000,
+      binSize: 15,
+      unit: 'minute',
+    },
+    {
+      option: '3d',
+      value: 259200000,
+      binSize: 1,
+      unit: 'hour',
+    },
+    {
+      option: '1w',
+      value: 604800000,
+      binSize: 6,
+      unit: 'hour',
+    },
+    {
+      option: '1m',
+      binSize: 1,
+      unit: 'day',
+      value: 2419200000,
+    },
+  ];
 
   @Input() value: any;
   @Input() selectValue: any;
@@ -81,6 +125,8 @@ export class ToolbarComponent implements OnInit {
     console.log('select value: ', this.chartList[i], 'indice: ', i);
   }
   setSelectTimeInterval(sTime: any, i: number, tabla?: any) {
+    this.chartList[i].inicio = null;
+    this.chartList[i].final = null;
     tabla
       ? (tabla.sTime = sTime.value)
       : (this.chartList[i].sTime = sTime.value);
@@ -118,41 +164,33 @@ export class ToolbarComponent implements OnInit {
       parseInt(tabla ? tabla.final : this.chartList[i].final) -
       parseInt(tabla ? tabla.inicio : this.chartList[i].inicio);
     if (difference < this.selectTime[4].value) {
-      this.setSelectTimeInterval(
-        {
-          binSize: 15,
-          unit: 'minute',
-        },
-        i,
-        tabla
-      );
+      tabla
+        ? (tabla.sTime = this.selectTime2[3].value)
+        : (this.chartList[i].sTime = this.selectTime2[3].value);
+      tabla
+        ? (tabla.sInterval = this.selectTime2[3])
+        : (this.chartList[i].sInterval = this.selectTime2[3]);
     } else if (difference < this.selectTime[5].value) {
-      this.setSelectTimeInterval(
-        {
-          binSize: 1,
-          unit: 'hour',
-        },
-        i,
-        tabla
-      );
+      tabla
+        ? (tabla.sTime = this.selectTime2[4].value)
+        : (this.chartList[i].sTime = this.selectTime2[4].value);
+      tabla
+        ? (tabla.sInterval = this.selectTime2[4])
+        : (this.chartList[i].sInterval = this.selectTime2[4]);
     } else if (difference < this.selectTime[5].value * 3) {
-      this.setSelectTimeInterval(
-        {
-          binSize: 6,
-          unit: 'hour',
-        },
-        i,
-        tabla
-      );
+      tabla
+        ? (tabla.sTime = this.selectTime2[5].value)
+        : (this.chartList[i].sTime = this.selectTime2[5].value);
+      tabla
+        ? (tabla.sInterval = this.selectTime2[5])
+        : (this.chartList[i].sInterval = this.selectTime2[5]);
     } else {
-      this.setSelectTimeInterval(
-        {
-          binSize: 1,
-          unit: 'day',
-        },
-        i,
-        tabla
-      );
+      tabla
+        ? (tabla.sTime = this.selectTime2[6].value)
+        : (this.chartList[i].sTime = this.selectTime2[6].value);
+      tabla
+        ? (tabla.sInterval = this.selectTime2[6])
+        : (this.chartList[i].sInterval = this.selectTime2[6]);
     }
   }
 
@@ -173,6 +211,7 @@ export class ToolbarComponent implements OnInit {
     const inicio = this.chartList[i].final
       ? this.chartList[i].inicio
       : final - millis;
+    console.log('inicio: ', inicio, 'final: ', final);
 
     this.spinnerService.llamarSpinner(`grafico${i}`);
     this._httpService

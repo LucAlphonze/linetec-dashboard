@@ -496,6 +496,8 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
   }
   changeCurrentValues(chart: any, val: string, datos: any, index?: number) {
     console.log('change current values: ', val);
+    console.log('chart: ', chart);
+
     var sortedList = this.listVariables;
     sortedList = sortedList
       .map((item: { _id: any }) => {
@@ -587,6 +589,8 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
           break;
       }
     } else {
+      chart.data.datasets[0].data = [];
+      chart.update();
       console.log('no hay datos');
     }
   }
@@ -598,7 +602,6 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
       : currentDateObj.getTime();
     const millis = this.selectedTime;
     const inicio = this.rangeSub[1] ? this.rangeSub[0] : final - millis;
-
     this.spinnerService.llamarSpinner('grafico');
     this._httpService
       .getInterval(
