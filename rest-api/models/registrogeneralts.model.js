@@ -38,4 +38,45 @@ const RegistroGeneralTSSchema = Schema(
 );
 RegistroGeneralTSSchema.index({ fecha_lectura: -1, metaData: 1 });
 
-module.exports = model("RegistroGeneralnew", RegistroGeneralTSSchema);
+const RegistroGeneralts = model("RegistroGeneralnew", RegistroGeneralTSSchema);
+const lastRegistro = model("LastRegistro", RegistroGeneralTSSchema);
+
+lastRegistro.createCollection({
+  viewOn: "registrogeneralnews",
+  pipeline: [
+    {
+      $unwind: {
+        path: "$metaData",
+      },
+    },
+    {
+      $group: {
+        _id: "$metaData.id_variable",
+        lastTimestamp: {
+          $first: "$fecha_lectura",
+        },
+        lastDocument: {
+          $first: "$$ROOT",
+        },
+      },
+    },
+    {
+      $replaceRoot: {
+        newRoot: "$lastDocument",
+      },
+    },
+    {
+      $limit: 12,
+    },
+    {
+      $sort: {
+        fecha_lectura: -1,
+      },
+    },
+  ],
+});
+const schemas = {
+  lastRegistro: lastRegistro,
+  RegistroGeneralts: RegistroGeneralts,
+};
+module.exports = schemas;

@@ -38,7 +38,9 @@
           [matDatepicker]="endpicker"
           class="input-field"
           type="date"
-          (dateChange)="setInicioFinal(indice, tabla)"
+          (dateChange)="
+            [setInicioFinal(indice, tabla), getValuesByInterval(indice, tabla)]
+          "
         />
       </div>
       <mat-datepicker #endpicker></mat-datepicker>
@@ -98,7 +100,12 @@
       <mat-button-toggle
         *ngFor="let time of selectTime"
         [value]="time"
-        (click)="[setSelectTimeInterval(time, indice, tabla)]"
+        (click)="
+          [
+            setSelectTimeInterval(time, indice, tabla),
+            getValuesByInterval(indice, tabla)
+          ]
+        "
       >
         {{ time.option }}
       </mat-button-toggle>
@@ -110,14 +117,5 @@
         ></mat-icon>
       </mat-button-toggle>
     </mat-button-toggle-group>
-    <button
-      mat-flat-button
-      #tooltip="matTooltip"
-      matTooltip="Confirmar los cambios"
-      matTooltipPosition="above"
-      (click)="getValuesByInterval(indice, tabla)"
-    >
-      Enviar
-    </button>
   </div>
 </mat-card-header>
