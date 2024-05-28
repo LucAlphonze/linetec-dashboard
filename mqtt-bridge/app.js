@@ -52,7 +52,7 @@ servClient.on("message", async function (topic, message) {
     var messageJSON = JSON.parse(message.toString());
     var fechaActual = new Date();
     var messageJSONRestApi;
-    const api_url = "http://rest-api:3001/api/registro-general-ts/test/";
+    const api_url = "http://rest-api:3001/api/registro-general-ts/";
 
     if( !verificarFormatoJSON(messageJSON)){
       console.log("ERROR: Formato JSON INCORRECTO");
