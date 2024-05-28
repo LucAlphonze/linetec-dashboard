@@ -23,6 +23,5 @@ router.get(
 );
 router.post("/", verifyToken, postRegistroTS);
 router.get("/intervals/:inicio/:final/:unit/:binsize", getByIntervals);
-router.get("/prueba", prueba);
 
 module.exports = router;

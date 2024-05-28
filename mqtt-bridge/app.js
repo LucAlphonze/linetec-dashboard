@@ -30,17 +30,17 @@ servClient.on("connect", function () {
       .then((response) => {
         token = response.data.token;
         rtoken = response.data.rtoken;
-        console.log("logeo exitoso: ", token, "refresh token: ", rtoken);
+        console.log("logeo exitoso: ");//, token, "refresh token: ", rtoken);
 
         decoded = parseJwt(token);
-        console.log("token decoded", decoded.exp);
+        //console.log("token decoded", decoded.exp);
       });
     await axios
       .get("http://rest-api:3001/api/variables", {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then(async (response) => {
-        console.log(response.status);
+        //console.log(response.status);
         listVariables = response.data;
       });
   });
@@ -50,35 +50,28 @@ servClient.on("message", async function (topic, message) {
   try {
     var lVariables = listVariables;
     var messageJSON = JSON.parse(message.toString());
+    var fechaActual = new Date();
+    var messageJSONRestApi;
+    const api_url = "http://rest-api:3001/api/registro-general-ts/test/";
 
-    console.log("mensaje: ", messageJSON, "lista variables: ", lVariables);
+    if( !verificarFormatoJSON(messageJSON)){
+      console.log("ERROR: Formato JSON INCORRECTO");
+      console.log("Hora: ", fechaActual.toLocaleTimeString('es-AR', { timeZone: 'America/Argentina/Buenos_Aires' }),
+      " Mensaje: ", JSON.stringify(messageJSON, null, 2));
+      return;
+    }
 
-    const variableMapObject = lVariables.reduce(
-      (map, { nombre, _id, id_trigger, trigger_valor }) => {
-        let variable = map.get(nombre) || [];
-        variable.push({ nombre, _id, id_trigger, trigger_valor });
-        return map.set(nombre, variable[0]);
-      },
-      new Map()
-    );
+    if( !esFechaHoraValida(messageJSON.fl) ){
+      console.log("ERROR: Fomato fecha:hora INCORRECTO");
+      return;
+    }  
 
-    const array = messageJSON.map(({ fl, ts, metaData }) => ({
-      fecha_lectura: dateSlicer(fl),
-      metaData: metaData.map(({ n, v }) => ({
-        datos: v,
-        id_variable: variableMapObject.get(n),
-      })),
-      time_stamp: new Date(),
-    }));
-    const vList = messageJSON[0].metaData.map(({ n }) =>
-      variableMapObject.get(n)
-    );
+    //messageJSON.fl = dateSlicer(messageJSON.fl);
+    messageJSONRestApi = messageJSON;
+    console.log(messageJSONRestApi)  
 
-    console.log("documento formateado: ", array[0], "variables: ", vList);
     await axios
-      .post(
-        `http://rest-api:3001/api/registro-general-ts`,
-        { datos: array[0], vList: vList },
+      .post( api_url, messageJSONRestApi,  
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -93,7 +86,7 @@ servClient.on("message", async function (topic, message) {
       .catch(async (error) => {
         if (error.response) {
           console.log("error data: ", error.response.data);
-          console.log(error.response.status);
+          //console.log(error.response.status);
           if (error.response.status == 403) {
             console.log("refrescando token...");
             await axios
@@ -110,9 +103,7 @@ servClient.on("message", async function (topic, message) {
                 );
               });
             await axios
-              .post(
-                `http://rest-api:3001/api/registro-general-ts`,
-                { datos: array[0], vList: vList },
+              .post(api_url, messageJSONRestApi,
                 {
                   headers: {
                     Authorization: `Bearer ${token}`,
@@ -121,7 +112,7 @@ servClient.on("message", async function (topic, message) {
                 }
               )
               .then((res) => {
-                console.log(`statusCode: ${res.status}`);
+                //console.log(`statusCode: ${res.status}`);
                 console.log(res.data);
               })
               .catch((error) => {
@@ -156,21 +147,74 @@ servClient.on("error", function (error) {
   throw new Error(error.message);
 });
 
-function dateSlicer(text) {
-  var formatedDate =
-    text.slice(0, 4) +
-    "-" +
-    text.slice(4, 6) +
-    "-" +
-    text.slice(6, 8) +
-    ":" +
-    text.slice(9, 11) +
-    ":" +
-    text.slice(11, 13) +
-    ":" +
-    text.slice(13, 15);
-  return formatedDate;
+function esFechaHoraValida(cadena) {
+
+  // Extraer las partes de la cadena: año, mes, día, hora, minuto y segundo
+  var año = parseInt(cadena.substr(0, 4));
+  var mes = parseInt(cadena.substr(4, 2));
+  var dia = parseInt(cadena.substr(6, 2));
+  var hora = parseInt(cadena.substr(9, 2));
+  var minuto = parseInt(cadena.substr(11, 2));
+  var segundo = parseInt(cadena.substr(13, 2));
+
+  // Verificar si las partes son números válidos
+  if (isNaN(año) || isNaN(mes) || isNaN(dia) || isNaN(hora) || isNaN(minuto) || isNaN(segundo)) {
+    return false;
+  }
+
+  // Crear un objeto Date con las partes
+  var fecha = new Date(año, mes - 1, dia, hora, minuto, segundo);
+
+  console.log(fecha)
+
+  if(isNaN(fecha.getTime())){
+    return false;
+  }
+
+  if( fecha.getFullYear() === año &&
+    fecha.getMonth() === mes - 1 &&
+    fecha.getDate() === dia &&
+    fecha.getHours() === hora &&
+    fecha.getMinutes() === minuto &&
+    fecha.getSeconds() === segundo ){
+      return(true);
+    }
+  return false;
 }
+
+function verificarFormatoJSON(objeto) {
+  try {
+    // Verificar si el objeto tiene la propiedad "fl" y "metaData"
+    if (!objeto.hasOwnProperty('fl') || !objeto.hasOwnProperty('metaData')) {
+      return false;
+    }
+
+    // Verificar si "fl" es una cadena y "metaData" es un array
+    if (typeof objeto.fl !== 'string' || !Array.isArray(objeto.metaData)) {
+      return false;
+    }
+
+    // Verificar la longitud del valor de la propiedad "fl"
+    if (objeto.fl.length !== "20240313:152403".length) {
+      return false; // La longitud del valor de "fl" debe ser de 15 caracteres
+    }
+
+    // Verificar el formato de cada objeto dentro de "metaData"
+    for (var i = 0; i < objeto.metaData.length; i++) {
+      var item = objeto.metaData[i];
+      // Verificar si cada objeto tiene las propiedades "v" y "n" y si sus valores son del tipo esperado
+      if (!item.hasOwnProperty('v') || !item.hasOwnProperty('n') || typeof item.v !== 'number' || typeof item.n !== 'string') {
+        return false;
+      }
+    }
+    // Si se pasan todas las verificaciones, el objeto tiene el formato esperado
+    return true;
+  } catch (error) {
+    console.error('La variable no contiene una cadena JSON válida.');
+  }
+  return false
+}
+
 
 // [
 //   {
