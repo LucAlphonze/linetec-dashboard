@@ -1,9 +1,8 @@
 const mongoose = require("mongoose");
-const schemas = require("../models/registrogeneralts.model");
+const RegistroGeneralts = require("../models/registrogeneralts.model");
 const Variable = require("../models/variable.model");
 
-var RegistroGeneralts = schemas.RegistroGeneralts;
-var lastRegistro = schemas.lastRegistro;
+
 
 const getAllRegistrosTS = async (req, res) => {
   var fecha_mes_atras = new Date();
@@ -11,7 +10,7 @@ const getAllRegistrosTS = async (req, res) => {
   try {
     const variables = await getAllVariables();
     const idVariables = variables.map(variable => variable._id);
-    const lastRegistros = await getLastRegistrosFromdate(idVariables, fecha_mes_atras);
+    const lastRegistros = await getLastRegistrosFromdate(idVariables, fecha_mes_atras, new Date());
 
     // Crear un diccionario para acceder rápidamente a los nombres por id_variable
     const variableMap = variables.reduce((acc, variable) => {
@@ -158,10 +157,10 @@ const postRegistroTS = async (req, res) => {
   
   //---- Obtener los ultimos registros de id_variables que tengan, desde 7 días atras
   const idVariables = nuevoregistroToInsert.metaData.map(item => item.id_variable);
-  dateFrom = new Date(nuevoregistroToInsert.fecha_lectura); 
-  dateFrom.setDate(dateFrom.getDate() - 7); // Resta 7 días
+  dateTil = new Date(nuevoregistroToInsert.fecha_lectura); 
+  dateFrom = new Date(dateFrom.getDate() - 7);
   
-  const lastRegistros = await getLastRegistrosFromdate(idVariables, dateFrom);
+  const lastRegistros = await getLastRegistrosFromdate(idVariables, dateFrom, dateTil);
   
   let elementosParaEliminar = [];
   
@@ -494,42 +493,9 @@ const getByIntervals = async (req, res) => {
   }
 };
 
-async function getLastRegistros() {
-  const lastRegistros = await RegistroGeneralts.aggregate([
-    {
-      $unwind: {
-        path: "$metaData",
-      },
-    },
-    {
-      $group: {
-        _id: "$metaData.id_variable",
-        lastTimestamp: {
-          $first: "$fecha_lectura",
-        },
-        lastDocument: {
-          $first: "$$ROOT",
-        },
-      },
-    },
-    {
-      $replaceRoot: {
-        newRoot: "$lastDocument",
-      },
-    },
-    {
-      $limit: 12,
-    },
-    {
-      $sort: {
-        fecha_lectura: -1,
-      },
-    },
-  ]);
-  return lastRegistros;
-}
 
-async function getLastRegistrosFromdate(id_variable, fromDate){
+
+async function getLastRegistrosFromdate(id_variable, fromDate, dateTil){
   const objectIdVariable = id_variable.map(str => new mongoose.Types.ObjectId(str));
   const lastRegistros = await RegistroGeneralts.aggregate([
     {
@@ -545,7 +511,8 @@ async function getLastRegistrosFromdate(id_variable, fromDate){
     }, {
       '$match': {
         'fecha_lectura': {
-          '$gte': fromDate
+          '$gte': fromDate,
+          '$lte': dateTil 
         }
       }
     },{

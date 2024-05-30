@@ -9,7 +9,6 @@ const {
   getAllInRange,
   getRegistrosFiltrados,
   getByIntervals,
-  prueba,
 } = require("../controllers/registroGeneralTS.controller");
 const { verifyToken } = require("../controllers/auth.controller");
 
