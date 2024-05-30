@@ -49,6 +49,11 @@ export class ChartGeneratorService {
             plugins: {
               decimation: decimation,
             },
+            elements: {
+              line: {
+                tension: 0.5,
+              },
+            },
             scales: {
               y: {
                 type: 'linear',

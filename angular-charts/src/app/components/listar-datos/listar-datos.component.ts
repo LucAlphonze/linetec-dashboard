@@ -165,7 +165,7 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
     id: 'decimation',
     enabled: true,
     algorithm: 'lttb',
-    samples: 100,
+    samples: 500,
     threshold: 50,
   };
   @ViewChild(MatMenuTrigger) trigger!: MatMenuTrigger;
@@ -205,6 +205,11 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
       options: {
         // hay que arreglar esto para que funcione la data decimation
         // Turn off animations and data parsing for performance
+        elements: {
+          line: {
+            tension: 0.5,
+          },
+        },
         aspectRatio: 1,
         maintainAspectRatio: false,
         animation: false,
