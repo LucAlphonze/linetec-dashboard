@@ -30,7 +30,7 @@ servClient.on("connect", function () {
       .then((response) => {
         token = response.data.token;
         rtoken = response.data.rtoken;
-        console.log("logeo exitoso: ");//, token, "refresh token: ", rtoken);
+        console.log("logeo exitoso: "); //, token, "refresh token: ", rtoken);
 
         decoded = parseJwt(token);
         //console.log("token decoded", decoded.exp);
@@ -51,77 +51,82 @@ servClient.on("message", async function (topic, message) {
     var lVariables = listVariables;
     var messageJSON = JSON.parse(message.toString());
     var fechaActual = new Date();
-    var messageJSONRestApi;
+    var messageJSONRestApi = [];
     const api_url = "http://rest-api:3001/api/registro-general-ts/";
+    for (let i = 0; i < messageJSON.length; i++) {
+      if (!verificarFormatoJSON(messageJSON[i])) {
+        console.log("ERROR: Formato JSON INCORRECTO");
+        console.log(
+          "Hora: ",
+          fechaActual.toLocaleTimeString("es-AR", {
+            timeZone: "America/Argentina/Buenos_Aires",
+          }),
+          " Mensaje: ",
+          JSON.stringify(messageJSON[i], null, 2)
+        );
+        continue;
+      }
 
-    if( !verificarFormatoJSON(messageJSON)){
-      console.log("ERROR: Formato JSON INCORRECTO");
-      console.log("Hora: ", fechaActual.toLocaleTimeString('es-AR', { timeZone: 'America/Argentina/Buenos_Aires' }),
-      " Mensaje: ", JSON.stringify(messageJSON, null, 2));
-      return;
+      if (!esFechaHoraValida(messageJSON[i].fl)) {
+        console.log("ERROR: Fomato fecha:hora INCORRECTO");
+        continue;
+      }
+
+      //messageJSON.fl = dateSlicer(messageJSON.fl);
+      messageJSONRestApi.push(messageJSON[i]);
+      console.log(messageJSONRestApi);
+
+      if (i === messageJSON.length - 1) {
+        await axios
+          .post(api_url, messageJSONRestApi, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "content-type": "application/json",
+            },
+          })
+          .then((res) => {
+            console.log(`statusCode: ${res.status}`);
+            console.log(res.data);
+          })
+          .catch(async (error) => {
+            if (error.response) {
+              console.log("error data: ", error.response.data);
+              //console.log(error.response.status);
+              if (error.response.status == 403) {
+                console.log("refrescando token...");
+                await axios
+                  .post("http://rest-api:3001/api/refresh", { token: rtoken })
+                  .then((response) => {
+                    token = response.data.accessToken;
+                    rtoken = response.data.refreshToken;
+                    decoded = parseJwt(token);
+                    console.log(
+                      "token refrescado exitosamente: ",
+                      token,
+                      "refresh Token:",
+                      rtoken
+                    );
+                  });
+                await axios
+                  .post(api_url, messageJSONRestApi, {
+                    headers: {
+                      Authorization: `Bearer ${token}`,
+                      "content-type": "application/json",
+                    },
+                  })
+                  .then((res) => {
+                    //console.log(`statusCode: ${res.status}`);
+                    console.log(res.data);
+                  })
+                  .catch((error) => {
+                    console.log("error post: ", error.response.data);
+                  });
+              }
+            }
+            return console.log("error post: ", error.response.data);
+          });
+      }
     }
-
-    if( !esFechaHoraValida(messageJSON.fl) ){
-      console.log("ERROR: Fomato fecha:hora INCORRECTO");
-      return;
-    }  
-
-    //messageJSON.fl = dateSlicer(messageJSON.fl);
-    messageJSONRestApi = messageJSON;
-    console.log(messageJSONRestApi)  
-
-    await axios
-      .post( api_url, messageJSONRestApi,  
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "content-type": "application/json",
-          },
-        }
-      )
-      .then((res) => {
-        console.log(`statusCode: ${res.status}`);
-        console.log(res.data);
-      })
-      .catch(async (error) => {
-        if (error.response) {
-          console.log("error data: ", error.response.data);
-          //console.log(error.response.status);
-          if (error.response.status == 403) {
-            console.log("refrescando token...");
-            await axios
-              .post("http://rest-api:3001/api/refresh", { token: rtoken })
-              .then((response) => {
-                token = response.data.accessToken;
-                rtoken = response.data.refreshToken;
-                decoded = parseJwt(token);
-                console.log(
-                  "token refrescado exitosamente: ",
-                  token,
-                  "refresh Token:",
-                  rtoken
-                );
-              });
-            await axios
-              .post(api_url, messageJSONRestApi,
-                {
-                  headers: {
-                    Authorization: `Bearer ${token}`,
-                    "content-type": "application/json",
-                  },
-                }
-              )
-              .then((res) => {
-                //console.log(`statusCode: ${res.status}`);
-                console.log(res.data);
-              })
-              .catch((error) => {
-                console.log("error post: ", error.response.data);
-              });
-          }
-        }
-        return console.log("error post: ", error.response.data);
-      });
   } catch (error) {
     if (error.response) {
       console.log(
@@ -139,6 +144,7 @@ servClient.on("message", async function (topic, message) {
       return console.log("error del servidor: ", error);
     }
   }
+
   return console.log("string message: ", message.toString());
 });
 
@@ -148,7 +154,6 @@ servClient.on("error", function (error) {
 });
 
 function esFechaHoraValida(cadena) {
-
   // Extraer las partes de la cadena: año, mes, día, hora, minuto y segundo
   var año = parseInt(cadena.substr(0, 4));
   var mes = parseInt(cadena.substr(4, 2));
@@ -158,39 +163,48 @@ function esFechaHoraValida(cadena) {
   var segundo = parseInt(cadena.substr(13, 2));
 
   // Verificar si las partes son números válidos
-  if (isNaN(año) || isNaN(mes) || isNaN(dia) || isNaN(hora) || isNaN(minuto) || isNaN(segundo)) {
+  if (
+    isNaN(año) ||
+    isNaN(mes) ||
+    isNaN(dia) ||
+    isNaN(hora) ||
+    isNaN(minuto) ||
+    isNaN(segundo)
+  ) {
     return false;
   }
 
   // Crear un objeto Date con las partes
   var fecha = new Date(año, mes - 1, dia, hora, minuto, segundo);
 
-  console.log(fecha)
+  console.log(fecha);
 
-  if(isNaN(fecha.getTime())){
+  if (isNaN(fecha.getTime())) {
     return false;
   }
 
-  if( fecha.getFullYear() === año &&
+  if (
+    fecha.getFullYear() === año &&
     fecha.getMonth() === mes - 1 &&
     fecha.getDate() === dia &&
     fecha.getHours() === hora &&
     fecha.getMinutes() === minuto &&
-    fecha.getSeconds() === segundo ){
-      return(true);
-    }
+    fecha.getSeconds() === segundo
+  ) {
+    return true;
+  }
   return false;
 }
 
 function verificarFormatoJSON(objeto) {
   try {
     // Verificar si el objeto tiene la propiedad "fl" y "metaData"
-    if (!objeto.hasOwnProperty('fl') || !objeto.hasOwnProperty('metaData')) {
+    if (!objeto.hasOwnProperty("fl") || !objeto.hasOwnProperty("metaData")) {
       return false;
     }
 
     // Verificar si "fl" es una cadena y "metaData" es un array
-    if (typeof objeto.fl !== 'string' || !Array.isArray(objeto.metaData)) {
+    if (typeof objeto.fl !== "string" || !Array.isArray(objeto.metaData)) {
       return false;
     }
 
@@ -203,18 +217,22 @@ function verificarFormatoJSON(objeto) {
     for (var i = 0; i < objeto.metaData.length; i++) {
       var item = objeto.metaData[i];
       // Verificar si cada objeto tiene las propiedades "v" y "n" y si sus valores son del tipo esperado
-      if (!item.hasOwnProperty('v') || !item.hasOwnProperty('n') || typeof item.v !== 'number' || typeof item.n !== 'string') {
+      if (
+        !item.hasOwnProperty("v") ||
+        !item.hasOwnProperty("n") ||
+        typeof item.v !== "number" ||
+        typeof item.n !== "string"
+      ) {
         return false;
       }
     }
     // Si se pasan todas las verificaciones, el objeto tiene el formato esperado
     return true;
   } catch (error) {
-    console.error('La variable no contiene una cadena JSON válida.');
+    console.error("La variable no contiene una cadena JSON válida.");
   }
-  return false
+  return false;
 }
-
 
 // [
 //   {
