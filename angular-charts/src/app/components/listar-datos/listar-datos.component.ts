@@ -649,7 +649,6 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
     this.selectedTime = time;
   }
   setInterval(interval: any) {
-    console.log('set interval', interval);
     this.setTime(interval.value);
     this.selectedInterval = interval;
   }

@@ -1250,7 +1250,6 @@ class ListarDatosComponent {
     this.selectedTime = time;
   }
   setInterval(interval) {
-    console.log('set interval', interval);
     this.setTime(interval.value);
     this.selectedInterval = interval;
   }
