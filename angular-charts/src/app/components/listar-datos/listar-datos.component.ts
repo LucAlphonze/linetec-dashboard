@@ -470,27 +470,34 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
   setInicio_final() {
     var inicio: any = this.range.value.start._d?.getTime().toString();
     var final: any = this.range.value.end._d?.getTime().toString();
-    this._httpService.set_Inicio_Final(inicio, final);
     var difference = parseInt(final) - parseInt(inicio);
     if (difference < this.selectTime[4].value) {
       this.setInterval({
+        option: '1d',
+        value: 86400000,
         binSize: 15,
         unit: 'minute',
       });
     } else if (difference < this.selectTime[5].value) {
       this.setInterval({
+        option: '3d',
+        value: 259200000,
         binSize: 1,
         unit: 'hour',
       });
     } else if (difference < this.selectTime[5].value * 3) {
       this.setInterval({
+        option: '1w',
+        value: 604800000,
         binSize: 6,
         unit: 'hour',
       });
     } else {
       this.setInterval({
+        option: '1m',
         binSize: 1,
         unit: 'day',
+        value: 2419200000,
       });
     }
   }
@@ -602,11 +609,14 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
 
   getValuesByInterval() {
     const currentDateObj = new Date();
-    const final = this.rangeSub[1]
-      ? this.rangeSub[1]
+    const final = this.range.value.end._d
+      ? this.range.value.end._d?.getTime()
       : currentDateObj.getTime();
-    const millis = this.selectedTime;
-    const inicio = this.rangeSub[1] ? this.rangeSub[0] : final - millis;
+    const millis = this.selectedTime.value;
+    const inicio = this.range.value.end._d
+      ? this.range.value.start._d?.getTime()
+      : final - millis;
+    console.log(`get values interval inicio: ${inicio}, final: ${final}`);
     this.spinnerService.llamarSpinner('grafico');
     this._httpService
       .getInterval(
@@ -640,6 +650,7 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
   }
   setInterval(interval: any) {
     console.log('set interval', interval);
+    this.setTime(interval.value);
     this.selectedInterval = interval;
   }
   setValue(value: any) {
