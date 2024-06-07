@@ -76,7 +76,7 @@ const postRegistroTS = async (req, res) => {
       }
       res.status(200).json({
         ok: true,
-        datos: registroArray,
+        datos: registroArray.length,
       });
       console.timeEnd("postRegGeneral");
       return;
