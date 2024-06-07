@@ -74,7 +74,6 @@ const postRegistroTS = async (req, res) => {
         console.timeEnd("postRegGeneral");
         return;
       }
-      await RegistroGeneralts.insertMany(registroArray);
       res.status(200).json({
         ok: true,
         datos: registroArray,
@@ -662,7 +661,7 @@ async function postRegGeneral(
     nuevoregistroToInsert.time_stamp = new Date();
     const RegFiltrado = new RegistroGeneralts(nuevoregistroToInsert);
     console.log("regfiltrado ", RegFiltrado);
-
+    RegFiltrado.save();
     return RegFiltrado;
   } catch (error) {
     return console.log("error en el api algo paso: ", error);
