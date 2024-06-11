@@ -44,6 +44,8 @@ const postRegistroTS = async (req, res) => {
   const registroToInsertArray = req.body;
   const variables = await getAllVariables();
   var registroArray = [];
+  var registroError = [];
+  var registroActualizado = [];
   console.time("postRegGeneral");
 
   for (let i = 0; i < registroToInsertArray.length; i++) {
@@ -61,8 +63,18 @@ const postRegistroTS = async (req, res) => {
       dateTil,
       res
     );
-    if (filtrado != null) {
-      registroArray.push(filtrado);
+    switch (filtrado) {
+      case null:
+        registroError.push(filtrado);
+        break;
+      case "actualizado":
+        console.log("actualizado: ", filtrado);
+        registroActualizado.push(filtrado);
+        break;
+
+      default:
+        registroArray.push(filtrado);
+        break;
     }
 
     if (i === registroToInsertArray.length - 1) {
@@ -70,6 +82,8 @@ const postRegistroTS = async (req, res) => {
         res.status(200).json({
           ok: true,
           "Datos Insertados": 0,
+          actualizados: registroActualizado.length,
+          errores: registroError.length,
         });
         console.timeEnd("postRegGeneral");
         return;
@@ -77,6 +91,8 @@ const postRegistroTS = async (req, res) => {
       res.status(200).json({
         ok: true,
         datos: registroArray.length,
+        errores: registroError.length,
+        actualizados: registroActualizado.length,
       });
       console.timeEnd("postRegGeneral");
       return;
@@ -376,19 +392,13 @@ async function postRegGeneral(
   res
 ) {
   if (!verificarFormatoJSON(registroToInsert)) {
-    res.status(500).json({
-      ok: false,
-      datos: "Formato de JSON incorrecto",
-    });
-    return;
+    console.log("Formato de JSON incorrecto: ", registroToInsert);
+    return null;
   }
 
   if (flToDate(registroToInsert.fl) == false) {
-    res.status(500).json({
-      ok: false,
-      datos: "Formato de JSON incorrecto. Ver campo fl",
-    });
-    return;
+    console.log("Formato de JSON incorrecto. Ver campo fl:", registroToInsert);
+    return null;
   }
 
   registroToInsert.fecha_lectura = flToDate(registroToInsert.fl);
@@ -417,11 +427,8 @@ async function postRegGeneral(
   };
 
   if (registroToInsertfilter.metaData.length == 0) {
-    res.status(200).json({
-      ok: false,
-      datos: "No hay variables en el sistema que conicida con lo enviado",
-    });
-    return;
+    console.log("No hay variables en el sistema que conicida con lo enviado");
+    return null;
   }
 
   // Crear un objeto de mapeo para los nombres y sus respectivos _id
@@ -457,13 +464,14 @@ async function postRegGeneral(
           // Si los id_variable coinciden, actualizamos los datos
           if (
             existeItem.id_variable.toString() ===
-            nuevoItem.id_variable.toString()
+              nuevoItem.id_variable.toString() &&
+            existeDocumento.metaData[existeIndex].datos != nuevoItem.datos
           ) {
             existeDocumento.metaData[existeIndex].datos = nuevoItem.datos;
+            console.log("algo pasa aca: ", nuevoItem.datos);
           }
         });
       });
-      existeDocumento.save();
 
       //----Almacena los id_variables que se actualizaron
       for (const metaDatoExiste of existeDocumento.metaData) {
@@ -478,6 +486,8 @@ async function postRegGeneral(
           }
         }
       }
+      existeDocumento.save();
+      return "actualizado";
     }
   }
 
@@ -493,10 +503,8 @@ async function postRegGeneral(
 
   //---- Puede ser que no se tenga mas datos para procesar.
   if (registroToInsertfilter.metaData.length == 0) {
-    return res.status(200).json({
-      ok: true,
-      datos: "documento actualizado",
-    });
+    console.log("documento actualizado");
+    return;
   }
 
   //---- Obtener los ultimos registros de id_variables que tengan, desde 7 días atras
@@ -654,13 +662,13 @@ async function postRegGeneral(
 
   //--- No hay datos para insertar en la DB ---
   if (nuevoregistroToInsert.metaData.length == 0) {
+    console.log("esto no tenia logs");
     return null;
   }
 
   try {
     nuevoregistroToInsert.time_stamp = new Date();
     const RegFiltrado = new RegistroGeneralts(nuevoregistroToInsert);
-    console.log("regfiltrado ", RegFiltrado);
     RegFiltrado.save();
     return RegFiltrado;
   } catch (error) {
