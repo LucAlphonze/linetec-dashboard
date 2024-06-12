@@ -52,7 +52,9 @@ const postRegistroTS = async (req, res) => {
     const dateTil = new Date(registroToInsertArray[i].fl);
     const dateFrom = new Date(dateTil);
     var horasARestar = 1; //0 * 24;
-
+    if (registroToInsertArray.length === 1) {
+      horasARestar = 168;
+    }
     const miliSegundosARestar = horasARestar * 60 * 60 * 1000;
     dateFrom.setTime(dateFrom.getTime() - miliSegundosARestar);
 
@@ -60,8 +62,7 @@ const postRegistroTS = async (req, res) => {
       registroToInsertArray[i],
       variables,
       dateFrom,
-      dateTil,
-      res
+      dateTil
     );
     switch (filtrado) {
       case null:
@@ -384,13 +385,7 @@ async function getAllVariables() {
 //agregar el resto de parametros, probar si hace falta agregar un parametro de fecha inicio/final
 // arreglar el uso de inicio final de los graficos
 
-async function postRegGeneral(
-  registroToInsert,
-  variables,
-  dateFrom,
-  dateTil,
-  res
-) {
+async function postRegGeneral(registroToInsert, variables, dateFrom, dateTil) {
   if (!verificarFormatoJSON(registroToInsert)) {
     console.log("Formato de JSON incorrecto: ", registroToInsert);
     return null;
