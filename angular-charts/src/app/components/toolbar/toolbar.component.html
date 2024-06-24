@@ -55,7 +55,7 @@
   <h2 class="titulo col-span-3 row-start-1">
     {{ value.titulo }}
   </h2>
-  <div *ngIf="!tabla" class="flex flex-row mr-5 sm:row-start-2">
+  <div *ngIf="!tabla" class="flex flex-row sm:row-start-2">
     <div class="d-input">
       <select
         class="input-field"
@@ -70,7 +70,7 @@
     </div>
   </div>
 
-  <div class="d-input flex flex-row mr-5 sm:row-start-2" *ngIf="tabla">
+  <div class="d-input flex flex-row pl-2 sm:row-start-2" *ngIf="tabla">
     <input
       id="valor_limite"
       class="input-field"
@@ -80,7 +80,7 @@
     />
   </div>
 
-  <div class="d-input lex flex-row sm:row-start-2" *ngIf="tabla">
+  <div class="d-input flex flex-row sm:row-start-2" *ngIf="tabla">
     <select
       id="select_variable"
       class="input-field"
