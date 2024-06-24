@@ -1,0 +1,22 @@
+.titulo {
+  color: var(--Azul, #231e46);
+  text-align: center;
+  font-family: "D-DIN-PRO";
+  font-size: 26px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+}
+
+.subtitulo {
+  color: var(--Gris-oscuro, #333);
+  font-family: "DIN-PRO";
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+.btn-aceptar {
+  color: white !important;
+  background-color: #52b48f;
+}

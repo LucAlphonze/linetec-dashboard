@@ -50,12 +50,11 @@
 </mat-menu>
 <mat-card-header
   [formGroup]="interval"
-  class="grid justify-content-stretch grid-cols-1 grid-row-3 sm:grid-cols-2 grid-rows-2"
+  class="grid grid-cols-1 grid-row-3 sm:grid-cols-2 grid-rows-2"
 >
-  <mat-card-title>
-    <h2 class="titulo col-span-2">{{ value.titulo }}</h2>
-  </mat-card-title>
-
+  <h2 class="titulo col-span-3 row-start-1">
+    {{ value.titulo }}
+  </h2>
   <div *ngIf="!tabla" class="flex flex-row mr-5 sm:row-start-2">
     <div class="d-input">
       <select
@@ -81,7 +80,7 @@
     />
   </div>
 
-  <div class="d-input lex flex-row mr-5 sm:row-start-2" *ngIf="tabla">
+  <div class="d-input lex flex-row sm:row-start-2" *ngIf="tabla">
     <select
       id="select_variable"
       class="input-field"
@@ -95,7 +94,7 @@
     </select>
   </div>
 
-  <div class="sm:row-start-2" [ngClass]="value ? '' : 'col-span-2'">
+  <div class="sm:row-start-2 pl-5" [ngClass]="value ? '' : 'col-span-2'">
     <mat-button-toggle-group>
       <mat-button-toggle
         *ngFor="let time of selectTime"

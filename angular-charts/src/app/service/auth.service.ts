@@ -1,14 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import {
-  Subscription,
-  catchError,
-  delay,
-  Observable,
-  BehaviorSubject,
-  Subject,
-  of,
-} from 'rxjs';
+import { Subscription, catchError, delay, BehaviorSubject, of } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { Router } from '@angular/router';
@@ -16,6 +8,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { DialogOverviewExampleDialog } from '../dialog.component';
 import { LoginModalComponent } from '../login-modal/login-modal.component';
 import { ToastrService } from 'ngx-toastr';
+import { ListarDatosModal } from '../components/listar-datos/listar-daatos-modal/listar-datos-modal.component';
 
 @Injectable({
   providedIn: 'root',
@@ -102,6 +95,17 @@ export class AuthService {
       exitAnimationDuration: '500ms',
       width: '571px',
       height: '292px',
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      console.log('The dialog was closed');
+    });
+  }
+  openDialog3(): void {
+    const dialogRef = this.dialog.open(ListarDatosModal, {
+      enterAnimationDuration: '500ms',
+      exitAnimationDuration: '500ms',
+      width: '571px',
     });
 
     dialogRef.afterClosed().subscribe((result) => {

@@ -1,0 +1,13 @@
+<h2 mat-dialog-title class="titulo">
+  Aviso sobre la visualización de los datos
+</h2>
+<div mat-dialog-content>
+  <p class="subtitulo">
+    Es posible que los cálculos de los valores medios de las variables
+    <span *ngFor="let variable of listVariables"> {{ variable.nombre }}, </span>
+    difieran de la realidad
+  </p>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-button [mat-dialog-close] class="btn-aceptar">Aceptar</button>
+</div>

@@ -153,20 +153,18 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
           width,
           y.getPixelForValue(bracketLow) - y.getPixelForValue(bracketHigh)
         );
+        console.log(`chart: ${chart}, min: ${y.min}, max ${y.max}`);
+        ctx.restore();
       }
-      bgColors(
-        0,
-        parseInt(y._labelItems[y._labelItems.length - 1].label),
-        'rgba(111, 151, 255, 0.30)'
-      );
+      bgColors(y.min, y.max, 'rgba(111, 151, 255, 0.30)');
     },
   };
   decimation: any = {
     id: 'decimation',
     enabled: true,
     algorithm: 'lttb',
-    samples: 500,
-    threshold: 50,
+    samples: 5000,
+    threshold: 1000,
   };
   @ViewChild(MatMenuTrigger) trigger!: MatMenuTrigger;
 
@@ -213,10 +211,6 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
         aspectRatio: 1,
         maintainAspectRatio: false,
         animation: false,
-        parsing: false,
-        plugins: {
-          decimation: this.decimation,
-        },
         scales: {
           y: {
             beginAtZero: true,
@@ -485,7 +479,7 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
         binSize: 1,
         unit: 'hour',
       });
-    } else if (difference < this.selectTime[5].value * 3) {
+    } else if (difference < this.selectTime[5].value * 5) {
       this.setInterval({
         option: '1w',
         value: 604800000,
@@ -493,11 +487,12 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
         unit: 'hour',
       });
     } else {
+      //cambiar intervalo para mostrar mas puntos en el grafico, usar la version de cada 6 horas para sumar x4 los puntos a graficar
       this.setInterval({
         option: '1m',
+        value: 2419200000,
         binSize: 1,
         unit: 'day',
-        value: 2419200000,
       });
     }
   }
@@ -573,6 +568,12 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
           break;
 
         case 'avg':
+          const hasSinFiltro = this.listVariables.some(
+            (x) => x.id_trigger.nombre === 'sin-filtro'
+          );
+          if (hasSinFiltro) {
+            this.authService.openDialog3();
+          }
           for (let i = 0; i < sortedList.length; i++) {
             chart.data.datasets[i].data = sortedList[i]?.info
               .sort(

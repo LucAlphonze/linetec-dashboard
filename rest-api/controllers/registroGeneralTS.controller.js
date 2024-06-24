@@ -49,7 +49,9 @@ const postRegistroTS = async (req, res) => {
   console.time("postRegGeneral");
 
   for (let i = 0; i < registroToInsertArray.length; i++) {
-    const dateTil = new Date(registroToInsertArray[i].fl);
+    const dateTil = new Date(
+      registroToInsertArray[i].fl ? registroToInsertArray[i].fl : new Date()
+    );
     const dateFrom = new Date(dateTil);
     var horasARestar = 1; //0 * 24;
     if (registroToInsertArray.length === 1) {
