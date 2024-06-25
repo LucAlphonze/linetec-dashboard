@@ -50,13 +50,13 @@
 </mat-menu>
 <mat-card-header
   [formGroup]="interval"
-  class="grid grid-cols-1 grid-row-3 sm:grid-cols-2 grid-rows-2"
+  class="grid grid-cols-1 grid-rows-3 sm:grid-cols-1 grid-rows-2"
 >
   <h2 class="titulo col-span-3 row-start-1">
     {{ value.titulo }}
   </h2>
-  <div *ngIf="!tabla" class="flex flex-row sm:row-start-2">
-    <div class="d-input">
+  <div class="flex flex-row justify-end sm:row-start-2">
+    <div *ngIf="!tabla" class="d-input px-3">
       <select
         class="input-field"
         formControlName="medida"
@@ -68,53 +68,54 @@
         </option>
       </select>
     </div>
-  </div>
+    <div *ngIf="tabla" class="d-input px-3 mr-5">
+      <input
+        id="valor_limite"
+        class="input-field"
+        placeholder="Elegir valor limite"
+        (change)="setThreshold()"
+        formControlName="threshold"
+      />
+    </div>
 
-  <div class="d-input flex flex-row pl-2 sm:row-start-2" *ngIf="tabla">
-    <input
-      id="valor_limite"
-      class="input-field"
-      placeholder="Elegir valor limite"
-      (change)="setThreshold()"
-      formControlName="threshold"
-    />
-  </div>
-
-  <div class="d-input flex flex-row sm:row-start-2" *ngIf="tabla">
-    <select
-      id="select_variable"
-      class="input-field"
-      #selectVariable
-      (change)="variableSelected(selectVariable.value)"
-    >
-      <option value="null">Elegir variable</option>
-      <option *ngFor="let variable of listVariables" value="{{ variable._id }}">
-        {{ variable.nombre }}
-      </option>
-    </select>
-  </div>
-
-  <div class="sm:row-start-2 pl-5" [ngClass]="value ? '' : 'col-span-2'">
-    <mat-button-toggle-group>
-      <mat-button-toggle
-        *ngFor="let time of selectTime"
-        [value]="time"
-        (click)="
-          [
-            setSelectTimeInterval(time, indice, tabla),
-            getValuesByInterval(indice, tabla)
-          ]
-        "
+    <div *ngIf="tabla" class="d-input px-3">
+      <select
+        id="select_variable"
+        class="input-field"
+        #selectVariable
+        (change)="variableSelected(selectVariable.value)"
       >
-        {{ time.option }}
-      </mat-button-toggle>
-      <mat-button-toggle [matMenuTriggerFor]="menu">
-        <mat-icon
-          svgIcon="calendario"
-          class="calendario"
-          iconPositionEnd
-        ></mat-icon>
-      </mat-button-toggle>
-    </mat-button-toggle-group>
+        <option value="null">Elegir variable</option>
+        <option
+          *ngFor="let variable of listVariables"
+          value="{{ variable._id }}"
+        >
+          {{ variable.nombre }}
+        </option>
+      </select>
+    </div>
+    <div class="pl-5">
+      <mat-button-toggle-group>
+        <mat-button-toggle
+          *ngFor="let time of selectTime"
+          [value]="time"
+          (click)="
+            [
+              setSelectTimeInterval(time, indice, tabla),
+              getValuesByInterval(indice, tabla)
+            ]
+          "
+        >
+          {{ time.option }}
+        </mat-button-toggle>
+        <mat-button-toggle [matMenuTriggerFor]="menu">
+          <mat-icon
+            svgIcon="calendario"
+            class="calendario"
+            iconPositionEnd
+          ></mat-icon>
+        </mat-button-toggle>
+      </mat-button-toggle-group>
+    </div>
   </div>
 </mat-card-header>
