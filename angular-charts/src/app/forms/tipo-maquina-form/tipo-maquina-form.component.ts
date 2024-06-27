@@ -63,7 +63,7 @@ export class TipoMaquinaFormComponent {
   }
   GetAllTiposMaquina() {
     this.service.getForm(this.apiTipoMaquina).subscribe((res: any) => {
-      console.log(res);
+      console.log('tipo maquinas: ', res);
       this.listTipoMaquina = res['datos'];
     });
   }

@@ -153,7 +153,6 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
           width,
           y.getPixelForValue(bracketLow) - y.getPixelForValue(bracketHigh)
         );
-        console.log(`chart: ${chart}, min: ${y.min}, max ${y.max}`);
         ctx.restore();
       }
       bgColors(y.min, y.max, 'rgba(111, 151, 255, 0.30)');
@@ -323,7 +322,7 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
 
   getRegistros() {
     var inicio = new Date('2023-05-01').getTime().toString();
-    var final = new Date('2023-12-31').getTime().toString();
+    var final = new Date('2024-12-31').getTime().toString();
     var sortedList = this.listVariables;
     this.spinnerService.llamarSpinner('grafico');
     this._httpService
@@ -337,7 +336,8 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
           );
           return item2 ? { ...item, ...item2 } : item;
         });
-        if (this.chart.data.datasets.length < this.listVariables.length) {
+        sortedList = sortedList.filter((e) => 'info' in e);
+        if (this.chart.data.datasets.length < sortedList.length) {
           for (let j = 0; j < sortedList.length; j++) {
             const dsColor = this.utils.namedColor(
               this.chart.data.datasets.length
@@ -353,7 +353,7 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
         }
 
         console.log('sortedList: ', sortedList);
-        for (let i = 0; i < this.listVariables.length; i++) {
+        for (let i = 0; i < sortedList.length; i++) {
           this.chart.data.datasets[i].data = sortedList[i]?.info
             .sort(
               (objA: any, objB: any) =>
@@ -368,7 +368,7 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
             );
           this.chart.update();
 
-          if (i == this.listVariables.length - 1) {
+          if (i == sortedList.length - 1) {
             this.spinnerService.detenerSpinner('grafico');
             this.chart.update();
           }

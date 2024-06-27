@@ -7,13 +7,18 @@
       <mat-form-field>
         <mat-label>Elegir una Linea</mat-label>
         <mat-select>
-          <mat-option
-            *ngFor="let linea of listLineas"
-            [value]="linea._id"
-            (click)="[setLinea(linea._id, linea.nombre)]"
-          >
-            <p>{{ linea.nombre }}</p>
-          </mat-option>
+          <div class="flex flex-col p-5" *ngFor="let linea of listLineas">
+            <mat-option
+              [value]="linea._id"
+              (click)="[setLinea(linea._id, linea.nombre)]"
+            >
+              <p>{{ linea.nombre }}</p>
+            </mat-option>
+            <mat-divider></mat-divider>
+            <p>
+              {{ linea.descripcion }}
+            </p>
+          </div>
         </mat-select>
       </mat-form-field>
     </div>

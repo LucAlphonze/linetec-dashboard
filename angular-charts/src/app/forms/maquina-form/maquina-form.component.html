@@ -5,18 +5,23 @@
       <mat-form-field>
         <mat-label>Elegir una maquina</mat-label>
         <mat-select>
-          <mat-option
-            *ngFor="let maquina of listMaquinas"
-            [value]="maquina._id"
-            (click)="
-              [
-                setMaquina(maquina._id, maquina.nombre),
-                StreamMaquinaSelected(maquina._id)
-              ]
-            "
-          >
-            <p>{{ maquina.nombre }}</p>
-          </mat-option>
+          <div class="flex flex-col p-5" *ngFor="let maquina of listMaquinas">
+            <mat-option
+              [value]="maquina._id"
+              (click)="
+                [
+                  setMaquina(maquina._id, maquina.nombre),
+                  StreamMaquinaSelected(maquina._id)
+                ]
+              "
+            >
+              <p>{{ maquina.nombre }}</p>
+            </mat-option>
+            <mat-divider></mat-divider>
+            <p>
+              {{ maquina.detalle }}
+            </p>
+          </div>
         </mat-select>
       </mat-form-field>
     </div>
