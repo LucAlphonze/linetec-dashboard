@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { Subscription, catchError, delay, BehaviorSubject, of } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { JwtHelperService } from '@auth0/angular-jwt';
@@ -9,6 +9,12 @@ import { DialogOverviewExampleDialog } from '../dialog.component';
 import { LoginModalComponent } from '../login-modal/login-modal.component';
 import { ToastrService } from 'ngx-toastr';
 import { ListarDatosModal } from '../components/listar-datos/listar-daatos-modal/listar-datos-modal.component';
+import {
+  DOCUMENT,
+  Location,
+  LocationStrategy,
+  PlatformLocation,
+} from '@angular/common';
 
 @Injectable({
   providedIn: 'root',
@@ -19,9 +25,13 @@ export class AuthService {
     private jwtHelper: JwtHelperService,
     private router: Router,
     public dialog: MatDialog,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    @Inject(DOCUMENT) private document: Document,
+    private location: Location,
+    private locationStrategy: LocationStrategy,
+    private plaformLocation: PlatformLocation
   ) {}
-  apiUrl = environment.API_URL_USERS;
+  apiUsers = environment.API_URL_USERS;
   apiRole = environment.API_URL_ROLES;
   authToken: any;
   user: any;
@@ -116,7 +126,7 @@ export class AuthService {
   // get
 
   GetAll() {
-    return this.http.get(this.apiUrl);
+    return this.http.get(this.apiUsers);
   }
 
   //
@@ -126,11 +136,12 @@ export class AuthService {
   }
 
   GetById(id: any) {
-    return this.http.get(this.apiUrl + '/' + id);
+    return this.http.get(this.apiUsers + '/' + id);
   }
 
   LogIn(body: any) {
-    return this.http.post(this.apiUrl + 'login', body).pipe(
+    console.log(`base url: ${environment.API_BASE_URL}`);
+    return this.http.post(this.apiUsers + 'login', body).pipe(
       catchError(async (error) => {
         console.log(error.message);
         return error;
@@ -213,7 +224,7 @@ export class AuthService {
   // post
   Proceedregister(inputdata: any) {
     return this.http
-      .post(this.apiUrl, inputdata, {
+      .post(this.apiUsers, inputdata, {
         headers: {
           'Content-Type': 'application/json',
         },
@@ -227,7 +238,7 @@ export class AuthService {
       );
   }
   UpdateUser(id: any, inputdata: any) {
-    return this.http.post(this.apiUrl + '/' + id, inputdata);
+    return this.http.post(this.apiUsers + '/' + id, inputdata);
   }
 
   // get formularios

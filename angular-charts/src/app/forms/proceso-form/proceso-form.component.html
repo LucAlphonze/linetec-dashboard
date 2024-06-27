@@ -5,18 +5,23 @@
       <mat-form-field>
         <mat-label>Elegir un proceso</mat-label>
         <mat-select>
-          <mat-option
-            *ngFor="let proceso of listProceso"
-            [value]="proceso._id"
-            (click)="
-              [
-                setProceso(proceso._id, proceso.nombre),
-                StreamProcesoSelected(proceso._id)
-              ]
-            "
-          >
-            <p>{{ proceso.nombre }}</p>
-          </mat-option>
+          <div class="flex flex-col p-5" *ngFor="let proceso of listProceso">
+            <mat-option
+              [value]="proceso._id"
+              (click)="
+                [
+                  setProceso(proceso._id, proceso.nombre),
+                  StreamProcesoSelected(proceso._id)
+                ]
+              "
+            >
+              <p>{{ proceso.nombre }}</p>
+            </mat-option>
+            <mat-divider></mat-divider>
+            <p>
+              {{ proceso.descripcion }}
+            </p>
+          </div>
         </mat-select>
       </mat-form-field>
     </div>
@@ -33,6 +38,7 @@
         class="example-form"
         [formGroup]="procesoForm"
         (ngSubmit)="crearProceso()"
+        (submit)="procesoForm.reset()"
       >
         <div class="grid grid-cols-3 grid-rows-3">
           <div class="col-span-3">

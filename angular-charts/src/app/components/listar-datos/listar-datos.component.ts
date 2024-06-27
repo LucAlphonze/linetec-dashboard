@@ -12,6 +12,7 @@ import { SpinnerService } from 'src/app/service/spinner.service';
 import { FormBuilder, FormControl } from '@angular/forms';
 import { MatMenu, MatMenuTrigger } from '@angular/material/menu';
 import { ChartGeneratorService } from 'src/app/service/chart-generator.service';
+import { environment } from 'src/environments/environment';
 // import zoomPlugin from 'chartjs-plugin-zoom';
 Chart.register(...registerables);
 Chart.defaults.font.family = 'DIN-PRO';
@@ -178,6 +179,7 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    console.log(`base url listar datos: ${environment.API_BASE_URL}`);
     this.getVariables();
     this.authService.getUser();
 
