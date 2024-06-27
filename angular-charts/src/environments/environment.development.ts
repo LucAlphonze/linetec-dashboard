@@ -1,5 +1,5 @@
 var loc = location.toString().split(`/`);
-var BASE_URL = `http://${loc[2]}`;
+var BASE_URL = `http://localhost`;
 export const environment = {
   production: true,
   // OLD VARIABLES:
