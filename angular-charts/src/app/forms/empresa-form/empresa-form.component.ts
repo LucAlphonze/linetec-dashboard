@@ -4,6 +4,8 @@ import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
 import { AuthService } from 'src/app/service/auth.service';
 import { environment } from 'src/environments/environment';
+import { VariableModalComponent } from '../variable-form/variable.modal.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-empresa-form',
@@ -14,7 +16,8 @@ export class EmpresaFormComponent implements OnInit {
   constructor(
     private builder: FormBuilder,
     private toastr: ToastrService,
-    private service: AuthService
+    private service: AuthService,
+    public dialog: MatDialog
   ) {}
   listLocalidades: any;
   listEmpresas: any;
@@ -125,5 +128,14 @@ export class EmpresaFormComponent implements OnInit {
         console.log('empresa get plantas', res);
         this.service.streamPlantas_EmpresaSelected(res);
       });
+  }
+
+  openDialog(variable_id: string): void {
+    const dialogRef = this.dialog.open(VariableModalComponent, {
+      data: {
+        variable_id: variable_id,
+        titulo: 'esta empresa',
+      },
+    });
   }
 }

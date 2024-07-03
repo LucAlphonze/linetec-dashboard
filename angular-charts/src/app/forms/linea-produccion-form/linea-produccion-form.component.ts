@@ -4,6 +4,8 @@ import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
 import { AuthService } from 'src/app/service/auth.service';
 import { environment } from 'src/environments/environment';
+import { VariableModalComponent } from '../variable-form/variable.modal.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-linea-produccion-form',
@@ -14,7 +16,8 @@ export class LineaProduccionFormComponent implements OnInit {
   constructor(
     private builder: FormBuilder,
     private toastr: ToastrService,
-    private service: AuthService
+    private service: AuthService,
+    public dialog: MatDialog
   ) {}
   listPlantas: any;
   listLineas: any;
@@ -129,5 +132,13 @@ export class LineaProduccionFormComponent implements OnInit {
         console.log('linea get maquinas', res);
         this.service.streamMaquinas_LineaSelected(res);
       });
+  }
+  openDialog(variable_id: string): void {
+    const dialogRef = this.dialog.open(VariableModalComponent, {
+      data: {
+        variable_id: variable_id,
+        titulo: 'esta linea de produccion',
+      },
+    });
   }
 }

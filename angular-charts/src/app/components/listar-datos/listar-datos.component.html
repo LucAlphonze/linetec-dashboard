@@ -9,33 +9,27 @@
         >
           <div>
             <h2 class="subtitulo">Desde</h2>
-            <div class="d-input">
-              <mat-datepicker-toggle [for]="startpicker">
-                <mat-icon
-                  svgIcon="calendario"
-                  class="calendario"
-                  matDatepickerToggleIcon
-                ></mat-icon>
-              </mat-datepicker-toggle>
+            <div class="c-input px-2">
               <input
                 [matDatepicker]="startpicker"
                 formControlName="start"
                 class="input-field"
                 type="date"
               />
-            </div>
-            <mat-datepicker #startpicker></mat-datepicker>
-          </div>
-          <div>
-            <h2 class="subtitulo">Hasta</h2>
-            <div class="d-input">
-              <mat-datepicker-toggle [for]="endpicker">
+              <mat-datepicker-toggle [for]="startpicker">
                 <mat-icon
                   svgIcon="calendario"
                   class="calendario"
                   matDatepickerToggleIcon
+                  iconPositionEnd
                 ></mat-icon>
               </mat-datepicker-toggle>
+              <mat-datepicker #startpicker></mat-datepicker>
+            </div>
+          </div>
+          <div>
+            <h2 class="subtitulo">Hasta</h2>
+            <div class="c-input px-3">
               <input
                 formControlName="end"
                 [matDatepicker]="endpicker"
@@ -43,19 +37,16 @@
                 type="date"
                 (dateChange)="[setInicio_final(), getValuesByInterval()]"
               />
+              <mat-datepicker-toggle [for]="endpicker">
+                <mat-icon
+                  svgIcon="calendario"
+                  class="calendario"
+                  matDatepickerToggleIcon
+                  iconPositionEnd
+                ></mat-icon>
+              </mat-datepicker-toggle>
+              <mat-datepicker #endpicker></mat-datepicker>
             </div>
-            <mat-datepicker #endpicker></mat-datepicker>
-          </div>
-          <div class="col-span-2 row-start-2">
-            <!-- <button mat-button (click)="range.reset()">Reset</button> -->
-            <!-- <button
-              mat-raised-button
-              (click)="getFiltrados()"
-              class="boton_wide"
-              [disabled]="!range.value.start || !range.value.end"
-            >
-              Aplicar
-            </button> -->
           </div>
         </div>
       </mat-menu>
@@ -134,7 +125,8 @@
         [selectValue]="selectValue"
         [selectTime]="selectTime"
         [indice]="i"
-      ></app-toolbar>
+      >
+      </app-toolbar>
       <mat-card-content>
         <canvas id="{{ chart.titulo }}"></canvas>
         <ngx-spinner

@@ -12,12 +12,26 @@
           <mat-list role="list" *ngFor="let variable of listaVariables">
             <mat-list-item role="listitem">
               {{ variable.nombre }}
+
+              <div matListItemMeta>
+                <mat-icon
+                  matTooltip="
+
+                Proceso: {{ variable.id_proceso.descripcion }}
+                Maquina: {{ variable.id_maquina.nombre }}
+                Trigger: {{ variable.id_trigger.nombre }}
+                
+                "
+                >
+                  info_outlined
+                </mat-icon>
+              </div>
               <button
                 matListItemMeta
                 mat-icon-button
                 (click)="openDialog(variable._id)"
               >
-                <mat-icon class="mat-24" color="warn">delete</mat-icon>
+                <mat-icon class="delete_icon">delete</mat-icon>
               </button>
             </mat-list-item>
           </mat-list>

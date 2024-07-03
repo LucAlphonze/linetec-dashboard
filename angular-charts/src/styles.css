@@ -57,3 +57,9 @@ mat-form-field {
   color: black !important;
   background-image: url(assets/Vector.png);
 }
+.delete_icon {
+  color: #c82d3b;
+}
+.delete_icon_disabled {
+  color: gray;
+}

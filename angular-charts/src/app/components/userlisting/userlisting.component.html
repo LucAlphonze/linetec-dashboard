@@ -88,6 +88,25 @@
           </mat-cell>
         </ng-container>
 
+        <!-- action Column -->
+        <ng-container matColumnDef="action">
+          <mat-header-cell mat-sort-header *matHeaderCellDef
+            >Rol</mat-header-cell
+          >
+          <mat-cell *matCellDef="let element">
+            <button
+              mat-icon-button
+              [disabled]="!editable"
+              (click)="openDialog(element._id)"
+            >
+              <mat-icon
+                [ngClass]="editable ? 'delete_icon' : 'delete_icon_disabled'"
+                >delete</mat-icon
+              >
+            </button>
+          </mat-cell>
+        </ng-container>
+
         <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
         <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
       </mat-table>

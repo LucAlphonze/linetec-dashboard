@@ -402,15 +402,15 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
       this.chartList = [
         {
           titulo: data[0] ? data[0].nombre : 'myChart1',
-          id: data[0]._id,
+          id: data[0],
         },
         {
           titulo: data[1] ? data[1].nombre : 'myChart2',
-          id: data[1]._id,
+          id: data[1],
         },
         {
           titulo: data[2] ? data[2].nombre : 'myChart3',
-          id: data[2]._id,
+          id: data[2],
         },
       ];
       setTimeout(() => {

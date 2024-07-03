@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
 import { AuthService } from 'src/app/service/auth.service';
 import { environment } from 'src/environments/environment';
+import { VariableModalComponent } from '../variable-form/variable.modal.component';
 
 @Component({
   selector: 'app-maquina-form',
@@ -14,7 +16,8 @@ export class MaquinaFormComponent implements OnInit {
   constructor(
     private builder: FormBuilder,
     private toastr: ToastrService,
-    private service: AuthService
+    private service: AuthService,
+    public dialog: MatDialog
   ) {}
   listLineas: any;
   listTipoMaquina: any;
@@ -136,5 +139,13 @@ export class MaquinaFormComponent implements OnInit {
 
   StreamMaquinaSelected(maquina_id: string) {
     this.service.streamMaquinaSelected(maquina_id);
+  }
+  openDialog(variable_id: string): void {
+    const dialogRef = this.dialog.open(VariableModalComponent, {
+      data: {
+        variable_id: variable_id,
+        titulo: 'esta maquina',
+      },
+    });
   }
 }

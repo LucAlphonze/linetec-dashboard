@@ -5,13 +5,21 @@
       <mat-form-field>
         <mat-label>Elegir una planta</mat-label>
         <mat-select>
-          <mat-option
-            *ngFor="let planta of listPlantas"
-            [value]="planta._id"
-            (click)="[setPlanta(planta._id, planta.nombre)]"
-          >
-            <p>{{ planta.nombre }}</p>
-          </mat-option>
+          <div *ngFor="let planta of listPlantas">
+            <mat-option
+              [value]="planta._id"
+              (click)="[setPlanta(planta._id, planta.nombre)]"
+            >
+              <p>{{ planta.nombre }}</p>
+            </mat-option>
+            <mat-divider></mat-divider>
+            <button
+              mat-icon-button
+              (click)="[$event.stopPropagation(), openDialog(planta._id)]"
+            >
+              <mat-icon class="delete_icon">delete</mat-icon>
+            </button>
+          </div>
         </mat-select>
       </mat-form-field>
     </div>

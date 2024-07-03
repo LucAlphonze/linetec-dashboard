@@ -48,6 +48,9 @@ export class AuthService {
   private plantasSource = new BehaviorSubject('');
   private lineaSource = new BehaviorSubject('');
   private maquinaSource = new BehaviorSubject('');
+  private tipoMaquinaSource = new BehaviorSubject('');
+  private procesoSource = new BehaviorSubject('');
+  private userSource = new BehaviorSubject('');
   private fullnameSource = new BehaviorSubject('');
 
   //observables que recogen la opcion seleccionada
@@ -73,6 +76,9 @@ export class AuthService {
   listPlantas = this.plantasSource.asObservable();
   listLineas = this.lineaSource.asObservable();
   listMaquinas = this.maquinaSource.asObservable();
+  listTipoMaquina = this.tipoMaquinaSource.asObservable();
+  listProceso = this.procesoSource.asObservable();
+  listUser = this.userSource.asObservable();
 
   // guardamos la opcion seleccionada para que sea accesible a los componentes
   paisSelected = this.paisSelectedSource.asObservable();
@@ -330,6 +336,14 @@ export class AuthService {
     console.log('change message: ', Maquinas);
     this.maquinaSource.next(Maquinas);
   }
+  streamProcesos(Procesos: string) {
+    console.log('change message: ', Procesos);
+    this.procesoSource.next(Procesos);
+  }
+  streamTipoMaquinas(tipoMaquina: string) {
+    console.log('change message: ', tipoMaquina);
+    this.tipoMaquinaSource.next(tipoMaquina);
+  }
   streamTipoSelected(TipoMaquina: string) {
     console.log('tipo maquina selected: ', TipoMaquina);
     this.tipoMaquinaSelectedSource.next(TipoMaquina);
@@ -345,5 +359,9 @@ export class AuthService {
   streamTriggerSelected(trigger: string) {
     console.log('Trigger selected: ', trigger);
     this.triggerSelectedSource.next(trigger);
+  }
+  streamUsers(user: any) {
+    console.log('change message: ', user);
+    this.userSource.next(user);
   }
 }

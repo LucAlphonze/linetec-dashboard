@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
+import { Subscription } from 'rxjs';
 import { AuthService } from 'src/app/service/auth.service';
 import { environment } from 'src/environments/environment';
+import { VariableModalComponent } from '../variable-form/variable.modal.component';
 
 @Component({
   selector: 'app-proceso-form',
@@ -13,15 +16,20 @@ export class ProcesoFormComponent implements OnInit {
   constructor(
     private _formBuilder: FormBuilder,
     private toastr: ToastrService,
-    private service: AuthService
+    private service: AuthService,
+    public dialog: MatDialog
   ) {}
 
   apiProceso = environment.API_URL_PROCESO;
   procesoForm!: FormGroup;
   listProceso: any;
+  subscription!: Subscription;
 
   ngOnInit(): void {
     this.GetAllProcesos();
+    this.subscription = this.service.listProceso.subscribe(
+      (message) => (this.listProceso = message)
+    );
     this.procesoForm = this._formBuilder.group({
       nombre: this._formBuilder.control('', Validators.required),
       descripcion: this._formBuilder.control('', Validators.required),
@@ -86,5 +94,13 @@ export class ProcesoFormComponent implements OnInit {
 
   StreamProcesoSelected(proceso_id: string) {
     this.service.streamProcesoSelected(proceso_id);
+  }
+  openDialog(variable_id: string): void {
+    const dialogRef = this.dialog.open(VariableModalComponent, {
+      data: {
+        variable_id: variable_id,
+        titulo: 'este proceso',
+      },
+    });
   }
 }

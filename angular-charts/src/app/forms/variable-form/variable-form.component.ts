@@ -121,7 +121,10 @@ export class VariableFormComponent implements OnInit {
 
   openDialog(variable_id: string): void {
     const dialogRef = this.dialog.open(VariableModalComponent, {
-      data: variable_id,
+      data: {
+        variable_id: variable_id,
+        titulo: 'esta variable',
+      },
     });
   }
 }
