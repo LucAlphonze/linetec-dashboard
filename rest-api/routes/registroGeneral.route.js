@@ -1,40 +1,40 @@
-/* 
-  Ruta: /api/registroGeneral
-*/
+// /*
+//   Ruta: /api/registroGeneral
+// */
 
-const { Router } = require("express");
+// const { Router } = require("express");
 
-// const { check } = require("express-validator");
-// const { validarCampos } = require("../middlewares/validar-campos");
+// // const { check } = require("express-validator");
+// // const { validarCampos } = require("../middlewares/validar-campos");
 
-const {
-  obtenerTodos,
-  obtenerRegistrosGeneral,
-  crearRegistroGeneral,
-  getTodos,
-  filtrarRegistrosGenerales,
-  crearRegistroGeneralArray,
-  filtrarRegistrosGenerales2,
-  getAllInRange,
-} = require("../controllers/registroGeneral.controller");
-const { verifyToken } = require("../controllers/auth.controller");
+// const {
+//   obtenerTodos,
+//   obtenerRegistrosGeneral,
+//   crearRegistroGeneral,
+//   getTodos,
+//   filtrarRegistrosGenerales,
+//   crearRegistroGeneralArray,
+//   filtrarRegistrosGenerales2,
+//   getAllInRange,
+// } = require("../controllers/registroGeneral.controller");
+// const { verifyToken } = require("../controllers/auth.controller");
 
-const router = Router();
-router.get("/all/:variable", obtenerTodos);
-router.get("/all/:idVariable/:startdate/:enddate/", verifyToken, getAllInRange);
-router.get("/", verifyToken, getTodos);
-router.get(
-  "/filter/:idVariable/:startdate/:enddate/:operacion",
-  verifyToken,
-  filtrarRegistrosGenerales
-);
-router.get(
-  "/granularidad/:startdate/:enddate/:granularidad",
-  verifyToken,
-  filtrarRegistrosGenerales2
-);
-router.get("/:idVariable", obtenerRegistrosGeneral);
-router.post("/", verifyToken, crearRegistroGeneral);
-router.post("/array", verifyToken, crearRegistroGeneralArray);
+// const router = Router();
+// router.get("/all/:variable", obtenerTodos);
+// router.get("/all/:idVariable/:startdate/:enddate/", verifyToken, getAllInRange);
+// router.get("/", verifyToken, getTodos);
+// router.get(
+//   "/filter/:idVariable/:startdate/:enddate/:operacion",
+//   verifyToken,
+//   filtrarRegistrosGenerales
+// );
+// router.get(
+//   "/granularidad/:startdate/:enddate/:granularidad",
+//   verifyToken,
+//   filtrarRegistrosGenerales2
+// );
+// router.get("/:idVariable", obtenerRegistrosGeneral);
+// router.post("/", verifyToken, crearRegistroGeneral);
+// router.post("/array", verifyToken, crearRegistroGeneralArray);
 
-module.exports = router;
+// module.exports = router;

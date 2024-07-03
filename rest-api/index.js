@@ -45,7 +45,6 @@ app.use("/api/tipo-maquina", require("./routes/tipo-maquina.route"));
 app.use("/api/maquinas", require("./routes/maquina.route"));
 app.use("/api/proceso", require("./routes/proceso.route"));
 app.use("/api/linea-produccion", require("./routes/linea-produccion.route"));
-app.use("/api/registro-general", require("./routes/registroGeneral.route"));
 app.use(
   "/api/registro-general-ts",
   require("./routes/registroGeneralTS.route")
@@ -66,5 +65,6 @@ app.use(
   "/api/alertas-personalizadas-var",
   require("./routes/alertaPersonalizadaVar.route")
 );
+// app.use("/api/registro-general", require("./routes/registroGeneral.route")); no se usa mas esta ruta
 app.use(express.static(path.join(__dirname, "public")));
 module.exports = app;

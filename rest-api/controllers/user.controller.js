@@ -108,6 +108,22 @@ const login = async (req, res) => {
       res.status(500).send(`Login Error: ${error.message}`);
     });
 };
+const borrarUsuario = async (req, res) => {
+  const usuarioId = req.params.usuarioId;
+  try {
+    const usuario = await User.deleteOne({ _id: usuarioId });
+
+    res.status(204).json({
+      ok: true,
+      datos: usuario,
+    });
+  } catch (err) {
+    res.status(500).json({
+      ok: false,
+      error: err,
+    });
+  }
+};
 
 module.exports = {
   obtenerUsers,
@@ -115,4 +131,5 @@ module.exports = {
   crearUser,
   updateUser,
   login,
+  borrarUsuario,
 };
