@@ -2541,7 +2541,6 @@ class ToolbarComponent {
     }];
   }
   ngOnInit() {
-    console.log('toolbar value: ', this.value);
     this.range = this.builder.group({
       start: new _angular_forms__WEBPACK_IMPORTED_MODULE_5__.FormControl(null),
       end: new _angular_forms__WEBPACK_IMPORTED_MODULE_5__.FormControl(null),
