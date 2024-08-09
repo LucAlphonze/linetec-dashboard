@@ -1,7 +1,28 @@
 /* You can add global styles to this file, and also import other style files */
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
+@font-face {
+  font-family: "DIN";
+  src: url(assets/fonts/otf/D-DIN-PRO-400-Regular.otf) format("truetype");
+}
+@font-face {
+  font-family: "DIN Alternate Bold";
+  font-style: normal;
+  font-weight: normal;
+  src: url(assets/fonts/din-alternate-cufonfonts/DINAlternate-Bold.ttf)
+    format("truetype");
+}
+
+@font-face {
+  font-family: "D-DIN-PRO";
+  src: url(assets/fonts/otf/D-DIN-PRO-500-Medium.otf) format("truetype");
+}
+@font-face {
+  font-family: "DIN-PRO";
+  src: url(assets/fonts/FontsFree-Net-DINPro-1.ttf) format("truetype");
+}
 
 html,
 body {
@@ -10,4 +31,35 @@ body {
 body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+.carta {
+  max-width: 600px;
+  margin: auto;
+  width: 100%;
+  padding: 10px;
+}
+mat-form-field {
+  width: 100%;
+}
+.titulo {
+  color: var(--Azul, #231e46);
+  text-align: center;
+  font-family: "DIN Alternate Bold";
+  font-size: 26px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+}
+.yourclass.toast-success {
+  background-color: rgba(82, 180, 143, 0.4);
+  border: 2px solid #52b48f;
+  font-family: "D-DIN-PRO" !important;
+  color: black !important;
+  background-image: url(assets/Vector.png);
+}
+.delete_icon {
+  color: #c82d3b;
+}
+.delete_icon_disabled {
+  color: gray;
 }

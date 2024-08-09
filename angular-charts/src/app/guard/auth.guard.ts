@@ -1,9 +1,17 @@
 import { inject } from '@angular/core';
-import { CanActivateFn, Router } from '@angular/router';
+import {
+  ActivatedRouteSnapshot,
+  CanActivateFn,
+  Router,
+  RouterStateSnapshot,
+} from '@angular/router';
 import { AuthService } from '../service/auth.service';
 import { ToastrService } from 'ngx-toastr';
 
-export const authGuard: CanActivateFn = (route, state) => {
+export const authGuard: CanActivateFn = (
+  route: ActivatedRouteSnapshot,
+  state: RouterStateSnapshot
+) => {
   const router = inject(Router);
   const service = inject(AuthService);
   const toastr = inject(ToastrService);
@@ -11,7 +19,8 @@ export const authGuard: CanActivateFn = (route, state) => {
   if (service.IsLoggedIn()) {
     if (route.url.length > 0) {
       let menu = route.url[0].path;
-      if (menu == 'user' || 'home' || 'home2' || 'home3') {
+      console.log('authService', menu);
+      if (menu == 'user' || 'admin') {
         if (service.getUserRole() == 'admin') {
           return true;
         } else {

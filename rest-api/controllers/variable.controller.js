@@ -7,8 +7,9 @@ const obtenerVariables = async (req, res) => {
   try {
     const variables = await Variable.find()
       .populate("id_maquina", "nombre modelo")
-      .populate("id_proceso", "descripcion")
-      .populate("id_trigger", "nombre descripcion");
+      .populate("id_proceso", "nombre descripcion")
+      .populate("id_trigger", "nombre descripcion")
+      .sort({ time_stamp: 1 });
     res.send(variables);
   } catch (error) {
     res.status(500).json({
@@ -24,9 +25,23 @@ const obtenerVariableById = async (req, res) => {
       _id: id,
     })
       .populate("id_maquina", "nombre modelo")
-      .populate("id_proceso", "descripcion")
+      .populate("id_proceso", "nombre descripcion")
       .populate("id_trigger", "nombre descripcion");
     res.send(variables);
+  } catch (error) {
+    res.status(500).json({
+      ok: false,
+      error,
+    });
+  }
+};
+const obtenerVariableByNombre = async (req, res) => {
+  let nombre = req.params.nombre;
+  try {
+    const variable = await Variable.find({
+      nombre: nombre,
+    }).populate("id_trigger", "nombre descripcion");
+    res.send(variable);
   } catch (error) {
     res.status(500).json({
       ok: false,
@@ -100,9 +115,39 @@ const borrarVariable = async (req, res) => {
     });
   }
 };
+
+const editarVariable = async (req, res) => {
+  const variableId = req.params.variableId;
+  const body = req.body;
+  try {
+    const existeVariable = await Variable.find({
+      _id: variableId,
+    });
+    if (existeVariable.length > 0) {
+      const variable = await Variable.findByIdAndUpdate(variableId, body);
+      res.status(204).json({
+        ok: true,
+        datos: variable,
+      });
+    } else {
+      res.status(404).json({
+        ok: false,
+        datos: `La variable con el id: ${variableId} no existe`,
+      });
+    }
+  } catch (err) {
+    res.status(500).json({
+      ok: false,
+      error: err,
+    });
+  }
+};
+
 module.exports = {
   obtenerVariables,
   crearVariable,
   obtenerVariableById,
   borrarVariable,
+  editarVariable,
+  obtenerVariableByNombre,
 };

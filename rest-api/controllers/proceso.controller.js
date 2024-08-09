@@ -74,9 +74,38 @@ const borrarProceso = async (req, res) => {
     });
   }
 };
+const editarProceso = async (req, res) => {
+  const procesoId = req.params.procesoId;
+  const body = req.body;
+  try {
+    const existeProceso = await Proceso.find({
+      _id: procesoId,
+    });
+    if (existeProceso.length > 0) {
+      const proceso = await Proceso.findByIdAndUpdate(procesoId, body, {
+        new: true,
+      });
+      res.status(204).json({
+        ok: true,
+        datos: proceso,
+      });
+    } else {
+      res.status(404).json({
+        ok: false,
+        datos: `El proceso con el id: ${procesoId} no existe`,
+      });
+    }
+  } catch (err) {
+    res.status(500).json({
+      ok: false,
+      error: err,
+    });
+  }
+};
 
 module.exports = {
   obtenerProcesos,
   crearProceso,
   borrarProceso,
+  editarProceso,
 };

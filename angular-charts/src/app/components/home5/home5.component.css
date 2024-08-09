@@ -1,3 +1,60 @@
-.mat-step-header {
-  pointer-events: none !important;
+.fondo {
+  background-color: #fafafa;
+  margin: 10vh auto;
+  display: flex;
+  justify-content: center;
+  padding-top: 10vh;
+}
+.mdc-linear-progress__bar-inner {
+  border-color: var(--mdc-linear-progress-active-indicator-color);
+}
+.mat-mdc-progress-bar {
+  --mdc-linear-progress-active-indicator-color: #52b48f;
+  --mdc-linear-progress-track-color: rgba(133, 130, 130, 0.25);
+  --mdc-linear-progress-active-indicator-height: 8px;
+  --mdc-linear-progress-track-height: 6px;
+  --mdc-linear-progress-track-shape: 0;
+  border-radius: 8px;
+}
+.mat-mdc-tab-group,
+.mat-mdc-tab-nav-bar {
+  --mdc-tab-indicator-active-indicator-color: #ffffff;
+  --mat-tab-header-active-hover-label-text-color: #52b48f;
+  --mat-tab-header-active-focus-indicator-color: #ffffff;
+}
+
+.mat-mdc-card-header {
+  display: grid;
+}
+.mat-mdc-card-content {
+  height: 100%;
+  max-height: 100%;
+}
+.mat-mdc-card {
+  max-width: 60vw;
+}
+.d-input {
+  width: fit-content;
+}
+
+::ng-deep .mat-mdc-tab-header {
+  display: none !important;
+}
+
+.mat-mdc-raised-button:not(:disabled) {
+  background-color: #c82d3b;
+  color: #fff;
+}
+.boton {
+  width: 40%;
+  height: 46px;
+  border-radius: 8px;
+  text-align: center;
+  font-family: "D-DIN-PRO";
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
 }

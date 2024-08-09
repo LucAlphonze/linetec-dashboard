@@ -26,8 +26,8 @@ const UserSchema = Schema({
     ref: "EmpresaPlanta",
   },
   isActive: {
-    type: Boolean,
-    default: false,
+    type: String,
+    default: "inactive",
   },
 });
 

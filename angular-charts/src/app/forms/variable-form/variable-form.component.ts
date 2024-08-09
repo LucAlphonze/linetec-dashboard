@@ -3,7 +3,10 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
 import { AuthService } from 'src/app/service/auth.service';
+import { HttpService } from 'src/app/service/http.service';
 import { environment } from 'src/environments/environment';
+import { VariableModalComponent } from './variable.modal.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-variable-form',
@@ -14,7 +17,9 @@ export class VariableFormComponent implements OnInit {
   constructor(
     private _formBuilder: FormBuilder,
     private toastr: ToastrService,
-    private service: AuthService
+    private service: AuthService,
+    private httpService: HttpService,
+    public dialog: MatDialog
   ) {}
 
   apiVariables = environment.API_URL_VARIABLES;
@@ -38,6 +43,7 @@ export class VariableFormComponent implements OnInit {
     this.GetAllTriggers();
     this.variableForm = this._formBuilder.group({
       nombre: this._formBuilder.control('', Validators.required),
+      descripcion: this._formBuilder.control(''),
       trigger_valor: this._formBuilder.control(''),
     });
     this.subscription = this.service.maquinaSelected.subscribe(
@@ -48,6 +54,9 @@ export class VariableFormComponent implements OnInit {
     );
     this.subscription = this.service.triggerSelected.subscribe(
       (message) => (this.id_trigger = message)
+    );
+    this.subscription = this.httpService.listaVariables.subscribe(
+      (message) => (this.listaVariables = message)
     );
   }
 
@@ -85,6 +94,7 @@ export class VariableFormComponent implements OnInit {
         id_trigger: this.id_trigger,
         nombre: this.variableForm.value.nombre,
         trigger_valor: this.variableForm.value.trigger_valor,
+        time_stamp: new Date(),
       };
       this.service.postForm(this.apiVariables, body).subscribe({
         next: (res: any) => {
@@ -92,7 +102,11 @@ export class VariableFormComponent implements OnInit {
           if (res.status == 500) {
             this.toastr.warning(res.error.error);
           } else {
-            this.toastr.success('Variable registrada correctamente');
+            this.toastr.success('Variable registrada correctamente', '', {
+              toastClass: 'yourclass ngx-toastr',
+              positionClass: 'toast-bottom-center',
+            });
+            this.GetAllVariables();
           }
         },
         error: (error: any) => {
@@ -105,21 +119,11 @@ export class VariableFormComponent implements OnInit {
     }
   }
 
-  borrarVariable(id: string) {
-    console.log(this.apiVariables + id);
-    this.service.deleteForm(this.apiVariables, id).subscribe({
-      next: (res: any) => {
-        console.log('respuesta: ', res);
-        if (res.status == 500) {
-          this.toastr.warning(res.error.error);
-        } else {
-          this.toastr.success('Variable borrada correctamente');
-          this.GetAllVariables();
-        }
-      },
-      error: (error: any) => {
-        this.toastr.error(error);
-        console.log(error);
+  openDialog(variable_id: string): void {
+    const dialogRef = this.dialog.open(VariableModalComponent, {
+      data: {
+        variable_id: variable_id,
+        titulo: 'esta variable',
       },
     });
   }

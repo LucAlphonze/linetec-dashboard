@@ -1018,3 +1018,78 @@
 1690302916: New client connected from 192.168.0.6:37472 as mqttjs_13cce161 (p2, c1, k60, u'linetec').
 1690304339: mosquitto version 2.0.15 terminating
 1690304339: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1716905529: mosquitto version 2.0.18 starting
+1716905529: Config loaded from /mosquitto/config/mosquitto.conf.
+1716905529: Warning: File /mosquitto/config/users has world readable permissions. Future versions will refuse to load this file.
+To fix this, use `chmod 0700 /mosquitto/config/users`.
+1716905529: Opening ipv4 listen socket on port 1883.
+1716905529: Opening ipv6 listen socket on port 1883.
+1716905529: Opening websockets listen socket on port 9001.
+1716905529: mosquitto version 2.0.18 running
+1716905530: New connection from 172.18.0.5:56744 on port 1883.
+1716905530: New client connected from 172.18.0.5:56744 as mqttjs_3c257e3c (p2, c1, k60, u'linetec').
+1716905531: Client mqttjs_3c257e3c closed its connection.
+1716905543: New connection from 172.18.0.5:56768 on port 1883.
+1716905543: New client connected from 172.18.0.5:56768 as mqttjs_c233731e (p2, c1, k60, u'linetec').
+1716905543: Client mqttjs_c233731e closed its connection.
+1716905551: New connection from 172.18.0.5:56786 on port 1883.
+1716905551: New client connected from 172.18.0.5:56786 as mqttjs_7b0c9e9e (p2, c1, k60, u'linetec').
+1716906670: mosquitto version 2.0.18 terminating
+1716906670: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1716906674: mosquitto version 2.0.18 starting
+1716906674: Config loaded from /mosquitto/config/mosquitto.conf.
+1716906674: Warning: File /mosquitto/config/users has world readable permissions. Future versions will refuse to load this file.
+To fix this, use `chmod 0700 /mosquitto/config/users`.
+1716906674: Opening ipv4 listen socket on port 1883.
+1716906674: Opening ipv6 listen socket on port 1883.
+1716906674: Opening websockets listen socket on port 9001.
+1716906674: mosquitto version 2.0.18 running
+1716906675: New connection from 172.18.0.5:56804 on port 1883.
+1716906675: New client connected from 172.18.0.5:56804 as mqttjs_7b0c9e9e (p2, c1, k60, u'linetec').
+1716906676: Client mqttjs_7b0c9e9e closed its connection.
+1716906684: New connection from 172.18.0.5:56808 on port 1883.
+1716906684: New client connected from 172.18.0.5:56808 as mqttjs_839775b0 (p2, c1, k60, u'linetec').
+1716906685: Client mqttjs_839775b0 closed its connection.
+1716906694: New connection from 172.18.0.5:56812 on port 1883.
+1716906694: New client connected from 172.18.0.5:56812 as mqttjs_b35c56d0 (p2, c1, k60, u'linetec').
+1716906694: Client mqttjs_b35c56d0 closed its connection.
+1716906704: New connection from 172.18.0.5:56832 on port 1883.
+1716906704: New client connected from 172.18.0.5:56832 as mqttjs_1ac6d170 (p2, c1, k60, u'linetec').
+1716906705: Client mqttjs_1ac6d170 closed its connection.
+1716906714: New connection from 172.18.0.5:56868 on port 1883.
+1716906714: New client connected from 172.18.0.5:56868 as mqttjs_9c8616a2 (p2, c1, k60, u'linetec').
+1716906716: Client mqttjs_9c8616a2 closed its connection.
+1716906726: New connection from 172.18.0.5:56872 on port 1883.
+1716906726: New client connected from 172.18.0.5:56872 as mqttjs_c040411c (p2, c1, k60, u'linetec').
+1716906727: Client mqttjs_c040411c closed its connection.
+1716906737: New connection from 172.18.0.5:56876 on port 1883.
+1716906737: New client connected from 172.18.0.5:56876 as mqttjs_a4e90a55 (p2, c1, k60, u'linetec').
+1716906737: Client mqttjs_a4e90a55 closed its connection.
+1716906747: New connection from 172.18.0.5:56880 on port 1883.
+1716906747: New client connected from 172.18.0.5:56880 as mqttjs_15d55449 (p2, c1, k60, u'linetec').
+1716906748: Client mqttjs_15d55449 closed its connection.
+1716906757: New connection from 172.18.0.5:56884 on port 1883.
+1716906757: New client connected from 172.18.0.5:56884 as mqttjs_30c59e07 (p2, c1, k60, u'linetec').
+1716906760: Client mqttjs_30c59e07 closed its connection.
+1716906769: New connection from 172.18.0.5:56888 on port 1883.
+1716906769: New client connected from 172.18.0.5:56888 as mqttjs_d5c20be6 (p2, c1, k60, u'linetec').
+1716906769: Client mqttjs_d5c20be6 closed its connection.
+1716906779: New connection from 172.18.0.5:56904 on port 1883.
+1716906779: New client connected from 172.18.0.5:56904 as mqttjs_17d4450a (p2, c1, k60, u'linetec').
+1716907564: New connection from 172.18.0.1:51290 on port 1883.
+1716907564: New client connected from 172.18.0.1:51290 as postman-mqtt-client-1716907564651 (p2, c1, k60, u'linetec').
+1716907758: Client mqttjs_17d4450a closed its connection.
+1716907767: New connection from 172.18.0.5:57112 on port 1883.
+1716907767: New client connected from 172.18.0.5:57112 as mqttjs_2349bc1d (p2, c1, k60, u'linetec').
+1716907771: Client postman-mqtt-client-1716907564651 closed its connection.
+1716907779: New connection from 172.18.0.1:51322 on port 1883.
+1716907779: New client connected from 172.18.0.1:51322 as postman-mqtt-client-1716907564651 (p2, c1, k60, u'linetec').
+1716908475: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1716910276: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1716912077: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1716913878: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1716915679: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1716917480: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1716919153: Client postman-mqtt-client-1716907564651 closed its connection.
+1716919164: mosquitto version 2.0.18 terminating
+1716919164: Saving in-memory database to /mosquitto/data//mosquitto.db.

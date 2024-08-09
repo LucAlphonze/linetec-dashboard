@@ -4,6 +4,8 @@ import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
 import { AuthService } from 'src/app/service/auth.service';
 import { environment } from 'src/environments/environment';
+import { VariableModalComponent } from '../variable-form/variable.modal.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-empresa-form',
@@ -14,7 +16,8 @@ export class EmpresaFormComponent implements OnInit {
   constructor(
     private builder: FormBuilder,
     private toastr: ToastrService,
-    private service: AuthService
+    private service: AuthService,
+    public dialog: MatDialog
   ) {}
   listLocalidades: any;
   listEmpresas: any;
@@ -22,35 +25,29 @@ export class EmpresaFormComponent implements OnInit {
   apiEmpresas = environment.API_URL_EMPRESAS;
   apiPlantas = environment.API_URL_PLANTA;
   isOptional = true;
-  message!: string;
+  id_localidad!: string;
+  id_empresa!: string;
   empresaForm!: FormGroup;
   subscription!: Subscription;
 
   ngOnInit(): void {
-    this.GetAllLocalidades();
     this.empresaForm = this.builder.group({
       razon_social: this.builder.control('', Validators.required),
       nombre_fantasia: this.builder.control('', Validators.required),
       calle: this.builder.control('', Validators.required),
       altura: this.builder.control('', Validators.required),
-      piso: this.builder.control('', Validators.required),
-      deptartamento: this.builder.control('', Validators.required),
       rubro: this.builder.control('', Validators.required),
+      piso: this.builder.control(''),
+      deptartamento: this.builder.control(''),
     });
-    this.subscription = this.service.currentMessage.subscribe(
-      (message) => (this.message = message)
+    this.subscription = this.service.localidadSelected.subscribe(
+      (message) => (this.id_localidad = message)
     );
     this.subscription = this.service.listEmpresas.subscribe(
       (message) => (this.listEmpresas = message)
     );
   }
 
-  GetAllLocalidades() {
-    this.service.getForm(this.apiLocalidad).subscribe((res: any) => {
-      console.log(res);
-      this.listLocalidades = res['datos'];
-    });
-  }
   GetAllEmpresas() {
     this.service.getForm(this.apiEmpresas).subscribe((res: any) => {
       console.log(res);
@@ -62,7 +59,7 @@ export class EmpresaFormComponent implements OnInit {
     if (this.empresaForm.valid) {
       console.log(this.empresaForm.value);
       let body = {
-        id_localidad: this.message,
+        id_localidad: this.id_localidad,
         razon_social: this.empresaForm.value.razon_social,
         nombre_fantasia: this.empresaForm.value.nombre_fantasia,
         calle: this.empresaForm.value.calle,
@@ -77,7 +74,16 @@ export class EmpresaFormComponent implements OnInit {
           if (res.status == 500) {
             this.toastr.warning(res.error.error);
           } else {
-            this.toastr.success('Empresa registrada corectamente');
+            this.toastr.success('Empresa registrada corectamente', '', {
+              toastClass: 'yourclass ngx-toastr',
+              positionClass: 'toast-bottom-center',
+            });
+            this.service
+              .getForm(this.apiEmpresas + 'localidad/' + this.id_localidad)
+              .subscribe((res: any) => {
+                console.log('empresas res after crear: ', res);
+                this.listEmpresas = res;
+              });
           }
         },
         error: (error: any) => {
@@ -107,17 +113,29 @@ export class EmpresaFormComponent implements OnInit {
       },
     });
   }
-  setEmpresa(id: any, nombre: any) {
-    console.log('set empresa', id, 'nombre', nombre);
+  setEmpresa(id: any) {
+    console.log('set empresa', id);
+    this.id_empresa = id;
     this.service.changeMessage(id);
+    this.service.empresaSelectedSource.next(id);
+    this.GetPlantasByEmpresas();
   }
 
-  GetPlantasByEmpresas(empresa_id: string) {
+  GetPlantasByEmpresas() {
     this.service
-      .getForm(this.apiPlantas + this.message)
+      .getForm(this.apiPlantas + this.id_empresa)
       .subscribe((res: any) => {
-        console.log('empresa get plantas', res, empresa_id);
-        this.service.streamPlantas_EmpresaSelected(res, empresa_id);
+        console.log('empresa get plantas', res);
+        this.service.streamPlantas_EmpresaSelected(res);
       });
+  }
+
+  openDialog(variable_id: string): void {
+    const dialogRef = this.dialog.open(VariableModalComponent, {
+      data: {
+        variable_id: variable_id,
+        titulo: 'esta empresa',
+      },
+    });
   }
 }

@@ -1,0 +1,20 @@
+.mat-mdc-raised-button:not(:disabled) {
+  background-color: #52b48f;
+  color: #fff;
+}
+.boton {
+  width: 100%;
+  height: 46px;
+  border-radius: 8px;
+  text-align: center;
+  font-family: "D-DIN-PRO";
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+}
+.icono {
+  color: #658bfd;
+}

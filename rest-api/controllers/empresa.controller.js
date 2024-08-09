@@ -61,24 +61,14 @@ const empresaPorLocalidad = async (req, res) => {
 
 const crearEmpresa = async (req, res) => {
   try {
-    const existeLocalidad = await Localidad.findOne({
-      _id: req.body.id_localidad,
+    const existeEmpresa = await Empresa.findOne({
+      razon_social: { $regex: new RegExp(req.body.razon_social, "i") },
+      id_localidad: req.body.id_localidad,
     });
-    if (existeLocalidad) {
-      const existeEmpresa = await Empresa.findOne({
-        razon_social: { $regex: new RegExp(req.body.razon_social, "i") },
-        id_localidad: req.body.id_localidad,
-      });
-      if (existeEmpresa) {
-        return res.status(500).json({
-          ok: false,
-          error: "La empresa ingresada ya está registrada",
-        });
-      }
-    } else {
+    if (existeEmpresa) {
       return res.status(500).json({
-        of: false,
-        error: "La localidad no existe",
+        ok: false,
+        error: "La empresa ingresada ya está registrada",
       });
     }
     const empresa = new Empresa(req.body);
@@ -126,11 +116,39 @@ const borrarEmpresa = async (req, res) => {
     });
   }
 };
-
+const editarEmpresa = async (req, res) => {
+  const empresaId = req.params.empresaId;
+  const body = req.body;
+  try {
+    const existeEmpresa = await Empresa.find({
+      _id: empresaId,
+    });
+    if (existeEmpresa.length > 0) {
+      const empresa = await Empresa.findByIdAndUpdate(empresaId, body, {
+        new: true,
+      });
+      res.status(204).json({
+        ok: true,
+        datos: empresa,
+      });
+    } else {
+      res.status(404).json({
+        ok: false,
+        datos: `La empresa con el id: ${empresaId} no existe`,
+      });
+    }
+  } catch (err) {
+    res.status(500).json({
+      ok: false,
+      error: err,
+    });
+  }
+};
 module.exports = {
   obtenerEmpresas,
   obtenerEmpresa,
   empresaPorLocalidad,
   crearEmpresa,
   borrarEmpresa,
+  editarEmpresa,
 };

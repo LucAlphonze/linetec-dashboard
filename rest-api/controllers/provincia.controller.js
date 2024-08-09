@@ -20,8 +20,8 @@ const obtenerProvincias = async (req, res) => {
 
 const provinciasPorPais = async (req, res) => {
   try {
-    var medidas = req.params.idPais;
-    const ppp = await Provincia.find({ id_pais: medidas }).populate(
+    var pais = req.params.idPais;
+    const ppp = await Provincia.find({ id_pais: pais }).populate(
       "id_pais",
       "nombre"
     );
@@ -105,9 +105,39 @@ const borrarProvincia = async (req, res) => {
   }
 };
 
+const editarProvincia = async (req, res) => {
+  const provinciaId = req.params.provinciaId;
+  const body = req.body;
+  try {
+    const existeProvincia = await Provincia.find({
+      _id: provinciaId,
+    });
+    if (existeProvincia.length > 0) {
+      const provincia = await Provincia.findByIdAndUpdate(provinciaId, body, {
+        new: true,
+      });
+      res.status(204).json({
+        ok: true,
+        datos: provincia,
+      });
+    } else {
+      res.status(404).json({
+        ok: false,
+        datos: `La provincia con el id: ${provinciaId} no existe`,
+      });
+    }
+  } catch (err) {
+    res.status(500).json({
+      ok: false,
+      error: err,
+    });
+  }
+};
+
 module.exports = {
   obtenerProvincias,
   provinciasPorPais,
   crearProvincia,
   borrarProvincia,
+  editarProvincia,
 };

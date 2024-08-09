@@ -1,0 +1,69 @@
+<mat-card class="carta_tabla">
+  <div>
+    <app-toolbar
+      [value]="tabla"
+      [selectTime]="selectTime"
+      [indice]="i"
+      [tabla]="table"
+    ></app-toolbar>
+  </div>
+
+  <mat-card-content>
+    <mat-table matSort [dataSource]="dataSource">
+      <!-- Position Column -->
+      <ng-container matColumnDef="exceed_value">
+        <mat-header-cell mat-sort-header *matHeaderCellDef>
+          Valor Excedido
+        </mat-header-cell>
+        <mat-cell *matCellDef="let element">
+          {{ element.valor_lectura.toFixed(2) }}
+        </mat-cell>
+      </ng-container>
+
+      <!-- Name Column -->
+      <ng-container matColumnDef="tiempo_inicio">
+        <mat-header-cell mat-sort-header *matHeaderCellDef>
+          Tiempo de inicio
+        </mat-header-cell>
+        <mat-cell *matCellDef="let element">
+          {{ element.time_stamp }}
+        </mat-cell>
+      </ng-container>
+      <!-- Name Column -->
+      <ng-container matColumnDef="tiempo_fin">
+        <mat-header-cell mat-sort-header *matHeaderCellDef
+          >Tiempo de fin</mat-header-cell
+        >
+        <mat-cell *matCellDef="let element">
+          {{ element.cTime_stamp }}
+        </mat-cell>
+      </ng-container>
+
+      <!-- Name Column -->
+      <ng-container matColumnDef="diferencia">
+        <mat-header-cell mat-sort-header *matHeaderCellDef>
+          Diferencia en tiempo
+        </mat-header-cell>
+        <mat-cell *matCellDef="let element">{{ element.time }}</mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+    </mat-table>
+    <mat-paginator
+      [pageSizeOptions]="[5, 10, 20]"
+      showFirstLastButtons
+      aria-label="Select page of periodic elements"
+    >
+    </mat-paginator>
+    <ngx-spinner
+      bdColor="rgba(51,51,51,0.8)"
+      size="medium"
+      color="#fff"
+      type="ball-spin-clockwise"
+      [fullScreen]="false"
+      name="tabla"
+    >
+    </ngx-spinner>
+  </mat-card-content>
+</mat-card>

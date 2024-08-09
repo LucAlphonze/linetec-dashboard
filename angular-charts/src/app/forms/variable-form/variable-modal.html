@@ -1,0 +1,14 @@
+<mat-dialog-content>
+  <p>¿Estás seguro que deseás borrar {{data.titulo}}?</p>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-raised-button (click)="onNoClick()">Cancelar</button>
+  <button
+    mat-raised-button
+    color="warn"
+    (click)="switchDelete(data.variable_id)"
+    cdkFocusInitial
+  >
+    Confirmar
+  </button>
+</mat-dialog-actions>

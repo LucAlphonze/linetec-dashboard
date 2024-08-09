@@ -8,6 +8,7 @@ const {
   obtenerPaises,
   crearPais,
   borrarPais,
+  editarPais,
 } = require("../controllers/pais.controller");
 const { verifyToken } = require("../controllers/auth.controller");
 
@@ -17,5 +18,6 @@ router.get("/", verifyToken, obtenerPaises);
 
 router.post("/", verifyToken, crearPais);
 router.delete("/delete/:paisId", verifyToken, borrarPais);
+router.patch("/edit/:paisId", verifyToken, editarPais);
 
 module.exports = router;

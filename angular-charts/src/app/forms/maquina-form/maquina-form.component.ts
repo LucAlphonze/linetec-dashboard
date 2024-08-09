@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
 import { AuthService } from 'src/app/service/auth.service';
 import { environment } from 'src/environments/environment';
+import { VariableModalComponent } from '../variable-form/variable.modal.component';
 
 @Component({
   selector: 'app-maquina-form',
@@ -14,7 +16,8 @@ export class MaquinaFormComponent implements OnInit {
   constructor(
     private builder: FormBuilder,
     private toastr: ToastrService,
-    private service: AuthService
+    private service: AuthService,
+    public dialog: MatDialog
   ) {}
   listLineas: any;
   listTipoMaquina: any;
@@ -90,7 +93,16 @@ export class MaquinaFormComponent implements OnInit {
           if (res.status == 500) {
             this.toastr.warning(res.error.error);
           } else {
-            this.toastr.success('Maquina registrada corectamente');
+            this.toastr.success('Maquina registrada corectamente', '', {
+              toastClass: 'yourclass ngx-toastr',
+              positionClass: 'toast-bottom-center',
+            });
+            this.service
+              .getForm(this.apiMaquina + this.id_linea_produccion)
+              .subscribe((res: any) => {
+                console.log('res maquina: ', res);
+                this.listMaquinas = res;
+              });
           }
         },
         error: (error: any) => {
@@ -127,5 +139,13 @@ export class MaquinaFormComponent implements OnInit {
 
   StreamMaquinaSelected(maquina_id: string) {
     this.service.streamMaquinaSelected(maquina_id);
+  }
+  openDialog(variable_id: string): void {
+    const dialogRef = this.dialog.open(VariableModalComponent, {
+      data: {
+        variable_id: variable_id,
+        titulo: 'esta maquina',
+      },
+    });
   }
 }

@@ -1,0 +1,14 @@
+<div class="carta flex flex-col p-3">
+  <mat-form-field appearance="outline">
+    <mat-label>Departamentos/Partidos/Comunas </mat-label>
+    <mat-select [disabled]="!id_provincia">
+      <mat-option
+        *ngFor="let departamento of listDepartamentos"
+        [value]="departamento.nombre"
+        (click)="[setDepartamento(departamento.nombre)]"
+      >
+        <p>{{ departamento.nombre }}</p>
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>

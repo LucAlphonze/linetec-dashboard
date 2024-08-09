@@ -1,0 +1,41 @@
+.profile {
+  color: var(--Azul, #231e46);
+  font-family: "D-DIN-PRO";
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 500;
+}
+
+[data-letters]:before {
+  content: attr(data-letters);
+  display: inline-block;
+  width: 59px;
+  height: 59px;
+  line-height: 2.5em;
+  text-align: center;
+  border-radius: 50%;
+  background: #eaeaea;
+  vertical-align: middle;
+  margin-right: 0.5em;
+}
+.fullName {
+  margin-top: 1em;
+  color: var(--Azul, #231e46);
+  font-family: "DIN";
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  margin-right: 1em;
+}
+.perfil {
+  display: flex;
+}
+.lintec_logo {
+  width: 56px;
+  height: 56px;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}

@@ -1,20 +1,20 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import {
-  Subscription,
-  catchError,
-  delay,
-  Observable,
-  BehaviorSubject,
-  Subject,
-  of,
-} from 'rxjs';
+import { Inject, Injectable } from '@angular/core';
+import { Subscription, catchError, delay, BehaviorSubject, of } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogOverviewExampleDialog } from '../dialog.component';
+import { LoginModalComponent } from '../login-modal/login-modal.component';
 import { ToastrService } from 'ngx-toastr';
+import { ListarDatosModal } from '../components/listar-datos/listar-daatos-modal/listar-datos-modal.component';
+import {
+  DOCUMENT,
+  Location,
+  LocationStrategy,
+  PlatformLocation,
+} from '@angular/common';
 
 @Injectable({
   providedIn: 'root',
@@ -25,9 +25,13 @@ export class AuthService {
     private jwtHelper: JwtHelperService,
     private router: Router,
     public dialog: MatDialog,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    @Inject(DOCUMENT) private document: Document,
+    private location: Location,
+    private locationStrategy: LocationStrategy,
+    private plaformLocation: PlatformLocation
   ) {}
-  apiUrl = environment.API_URL_USERS;
+  apiUsers = environment.API_URL_USERS;
   apiRole = environment.API_URL_ROLES;
   authToken: any;
   user: any;
@@ -38,37 +42,48 @@ export class AuthService {
   private messageSource = new BehaviorSubject('default message');
   //observables que recogen la respuesta de la llamada a la api
   private provinciasSource = new BehaviorSubject('');
+  private departamentosSource = new BehaviorSubject('');
   private localidadesSource = new BehaviorSubject('');
   private empresasSource = new BehaviorSubject('');
   private plantasSource = new BehaviorSubject('');
   private lineaSource = new BehaviorSubject('');
   private maquinaSource = new BehaviorSubject('');
+  private tipoMaquinaSource = new BehaviorSubject('');
+  private procesoSource = new BehaviorSubject('');
+  private userSource = new BehaviorSubject('');
+  private fullnameSource = new BehaviorSubject('');
 
   //observables que recogen la opcion seleccionada
-  private paisSelectedSource = new BehaviorSubject('');
-  private provinciaSelectedSource = new BehaviorSubject('');
-  private localidadSelectedSource = new BehaviorSubject('');
-  private empresaSelectedSource = new BehaviorSubject('');
-  private plantaSelectedSource = new BehaviorSubject('');
-  private lineaSelectedSource = new BehaviorSubject('');
-  private tipoMaquinaSelectedSource = new BehaviorSubject('');
-  private maquinaSelectedSource = new BehaviorSubject('');
-  private procesoSelectedSource = new BehaviorSubject('');
-  private triggerSelectedSource = new BehaviorSubject('');
+  paisSelectedSource = new BehaviorSubject('');
+  provinciaSelectedSource = new BehaviorSubject('');
+  departamentoSelectedSource = new BehaviorSubject('');
+  localidadSelectedSource = new BehaviorSubject('');
+  empresaSelectedSource = new BehaviorSubject('');
+  plantaSelectedSource = new BehaviorSubject('');
+  lineaSelectedSource = new BehaviorSubject('');
+  tipoMaquinaSelectedSource = new BehaviorSubject('');
+  maquinaSelectedSource = new BehaviorSubject('');
+  procesoSelectedSource = new BehaviorSubject('');
+  triggerSelectedSource = new BehaviorSubject('');
 
   currentMessage = this.messageSource.asObservable();
 
   // guardamos la respuesta en listas que son accesibles desde los componentes
   listProvincias = this.provinciasSource.asObservable();
+  listDepartamentos = this.departamentosSource.asObservable();
   listLocalidades = this.localidadesSource.asObservable();
   listEmpresas = this.empresasSource.asObservable();
   listPlantas = this.plantasSource.asObservable();
   listLineas = this.lineaSource.asObservable();
   listMaquinas = this.maquinaSource.asObservable();
+  listTipoMaquina = this.tipoMaquinaSource.asObservable();
+  listProceso = this.procesoSource.asObservable();
+  listUser = this.userSource.asObservable();
 
   // guardamos la opcion seleccionada para que sea accesible a los componentes
   paisSelected = this.paisSelectedSource.asObservable();
   provinciaSelected = this.provinciaSelectedSource.asObservable();
+  departamentoSelected = this.departamentoSelectedSource.asObservable();
   localidadSelected = this.localidadSelectedSource.asObservable();
   empresaSelected = this.empresaSelectedSource.asObservable();
   plantaSelected = this.plantaSelectedSource.asObservable();
@@ -77,6 +92,7 @@ export class AuthService {
   maquinaSelected = this.maquinaSelectedSource.asObservable();
   procesoSelected = this.procesoSelectedSource.asObservable();
   triggerSelected = this.triggerSelectedSource.asObservable();
+  fullname = this.fullnameSource.asObservable();
 
   openDialog(): void {
     const dialogRef = this.dialog.open(DialogOverviewExampleDialog, {
@@ -89,11 +105,34 @@ export class AuthService {
       console.log('The dialog was closed');
     });
   }
+  openDialog2(): void {
+    const dialogRef = this.dialog.open(LoginModalComponent, {
+      enterAnimationDuration: '500ms',
+      exitAnimationDuration: '500ms',
+      width: '571px',
+      height: '292px',
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      console.log('The dialog was closed');
+    });
+  }
+  openDialog3(): void {
+    const dialogRef = this.dialog.open(ListarDatosModal, {
+      enterAnimationDuration: '500ms',
+      exitAnimationDuration: '500ms',
+      width: '571px',
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      console.log('The dialog was closed');
+    });
+  }
 
   // get
 
   GetAll() {
-    return this.http.get(this.apiUrl);
+    return this.http.get(this.apiUsers);
   }
 
   //
@@ -103,11 +142,12 @@ export class AuthService {
   }
 
   GetById(id: any) {
-    return this.http.get(this.apiUrl + '/' + id);
+    return this.http.get(this.apiUsers + '/' + id);
   }
 
   LogIn(body: any) {
-    return this.http.post(this.apiUrl + 'login', body).pipe(
+    console.log(`base url: ${environment.API_BASE_URL}`);
+    return this.http.post(this.apiUsers + 'login', body).pipe(
       catchError(async (error) => {
         console.log(error.message);
         return error;
@@ -121,13 +161,14 @@ export class AuthService {
       new Date().valueOf();
     sessionStorage.setItem('token', token);
     sessionStorage.setItem('rtoken', rtoken);
-    sessionStorage.setItem('username', user.name);
+    sessionStorage.setItem('username', user.username);
+    sessionStorage.setItem('fullname', user.name);
     sessionStorage.setItem('userrole', user.role.name);
     this.authToken = token;
     this.user = user;
     // this.expirationCounter(this.timeout);
     if (sessionStorage.getItem('userrole') == 'admin') {
-      this.router.navigate(['home5']);
+      this.router.navigate(['admin']);
     } else {
       this.router.navigate(['']);
     }
@@ -176,10 +217,20 @@ export class AuthService {
       ? sessionStorage.getItem('userrole')?.toString()
       : '';
   }
+
+  getUser() {
+    try {
+      var fullname = sessionStorage.getItem('fullname')!.toString();
+      this.fullnameSource.next(fullname);
+    } catch (error) {
+      console.log('getUser error: ', error);
+    }
+  }
+
   // post
   Proceedregister(inputdata: any) {
     return this.http
-      .post(this.apiUrl, inputdata, {
+      .post(this.apiUsers, inputdata, {
         headers: {
           'Content-Type': 'application/json',
         },
@@ -193,7 +244,7 @@ export class AuthService {
       );
   }
   UpdateUser(id: any, inputdata: any) {
-    return this.http.post(this.apiUrl + '/' + id, inputdata);
+    return this.http.post(this.apiUsers + '/' + id, inputdata);
   }
 
   // get formularios
@@ -254,44 +305,44 @@ export class AuthService {
     console.log('change message: ', message);
     this.messageSource.next(message);
   }
-  streamProvincias_PaisSelected(provincias: string, paisSelected: string) {
-    console.log('change message: ', provincias, paisSelected);
+  streamProvincias_PaisSelected(provincias: string) {
+    console.log('change message: ', provincias);
     this.provinciasSource.next(provincias);
-    this.paisSelectedSource.next(paisSelected);
   }
 
-  streamLocalides_ProvinciaSelected(
-    localidades: string,
-    provinciaSelected: string
-  ) {
+  streamDepartamentos_ProvinciaSelected(departamentos: string) {
+    console.log('change message: ', departamentos);
+    this.departamentosSource.next(departamentos);
+  }
+  streamLocalidades_DepartamentoSelected(localidades: string) {
     console.log('change message: ', localidades);
     this.localidadesSource.next(localidades);
-    this.provinciaSelectedSource.next(provinciaSelected);
   }
 
-  streamEmpresas_LocalidadSelected(
-    empresas: string,
-    localidadSelected: string
-  ) {
+  streamEmpresas_LocalidadSelected(empresas: string) {
     console.log('change message: ', empresas);
     this.empresasSource.next(empresas);
-    this.localidadSelectedSource.next(localidadSelected);
   }
-  streamPlantas_EmpresaSelected(plantas: string, empresaSelected: string) {
+  streamPlantas_EmpresaSelected(plantas: string) {
     console.log('change message: ', plantas);
     this.plantasSource.next(plantas);
-    this.empresaSelectedSource.next(empresaSelected);
   }
 
-  streamLinea_PlantaSelected(linea: string, plantaSelected: string) {
+  streamLinea_PlantaSelected(linea: string) {
     console.log('change message: ', linea);
     this.lineaSource.next(linea);
-    this.plantaSelectedSource.next(plantaSelected);
   }
-  streamMaquinas_LineaSelected(Maquinas: string, LineaSelected: string) {
+  streamMaquinas_LineaSelected(Maquinas: string) {
     console.log('change message: ', Maquinas);
     this.maquinaSource.next(Maquinas);
-    this.lineaSelectedSource.next(LineaSelected);
+  }
+  streamProcesos(Procesos: string) {
+    console.log('change message: ', Procesos);
+    this.procesoSource.next(Procesos);
+  }
+  streamTipoMaquinas(tipoMaquina: string) {
+    console.log('change message: ', tipoMaquina);
+    this.tipoMaquinaSource.next(tipoMaquina);
   }
   streamTipoSelected(TipoMaquina: string) {
     console.log('tipo maquina selected: ', TipoMaquina);
@@ -308,5 +359,9 @@ export class AuthService {
   streamTriggerSelected(trigger: string) {
     console.log('Trigger selected: ', trigger);
     this.triggerSelectedSource.next(trigger);
+  }
+  streamUsers(user: any) {
+    console.log('change message: ', user);
+    this.userSource.next(user);
   }
 }

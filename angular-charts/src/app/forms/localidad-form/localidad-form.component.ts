@@ -23,30 +23,28 @@ export class LocalidadFormComponent implements OnInit {
   apiEmpresas = environment.API_URL_EMPRESAS;
   isOptional = true;
   id_provincia!: string;
-  message!: string;
+  id_localidad!: string;
+  id_departamento!: string;
   localidadForm!: FormGroup;
   subscription!: Subscription;
   subscription2!: Subscription;
 
   ngOnInit(): void {
-    this.GetAllProvincias();
     this.localidadForm = this.builder.group({
       nombre: this.builder.control('', Validators.required),
-      id_provincia: this.builder.control('', Validators.required),
     });
-    this.subscription = this.service.currentMessage.subscribe(
-      (message) => (this.message = message)
+    this.subscription = this.service.localidadSelected.subscribe(
+      (message) => (this.id_localidad = message)
+    );
+    this.subscription = this.service.provinciaSelected.subscribe(
+      (message) => (this.id_provincia = message)
+    );
+    this.subscription = this.service.departamentoSelected.subscribe(
+      (message) => (this.id_departamento = message)
     );
     this.subscription2 = this.service.listLocalidades.subscribe(
       (message) => (this.listLocalidades = message)
     );
-  }
-
-  GetAllProvincias() {
-    this.service.getForm(this.apiProvincias).subscribe((res: any) => {
-      console.log(res);
-      this.listProvincias = res['datos'];
-    });
   }
   //no esta en uso
   GetAllLocalidades() {
@@ -61,7 +59,7 @@ export class LocalidadFormComponent implements OnInit {
       console.log(this.localidadForm.value);
       let body = {
         nombre: this.localidadForm.value.nombre,
-        id_provincia: this.message,
+        id_provincia: this.id_provincia,
       };
       this.service.postForm(this.apiLocalidad, body).subscribe({
         next: (res: any) => {
@@ -70,6 +68,11 @@ export class LocalidadFormComponent implements OnInit {
             this.toastr.warning(res.error.error);
           } else {
             this.toastr.success('Localidad registrada correctamente');
+            this.service
+              .getForm(this.apiLocalidad + this.id_provincia)
+              .subscribe((res: any) => {
+                this.listLocalidades = res;
+              });
           }
         },
         error: (error: any) => {
@@ -100,17 +103,20 @@ export class LocalidadFormComponent implements OnInit {
     });
   }
 
-  setLocalidad(id: any, nombre: any) {
-    console.log('set localidad', id, 'nombre', nombre);
+  setLocalidad(id: any) {
+    console.log('set localidad', id);
     this.service.changeMessage(id);
+    this.service.localidadSelectedSource.next(id);
+
+    this.GetEmpresasByLocalidad();
   }
 
-  GetEmpresasByLocalidad(empresa_id: string) {
+  GetEmpresasByLocalidad() {
     this.service
-      .getForm(this.apiEmpresas + 'localidad/' + this.message)
+      .getForm(this.apiEmpresas + 'localidad/' + this.id_localidad)
       .subscribe((res: any) => {
         console.log('Localidad-form get empresas', res);
-        this.service.streamEmpresas_LocalidadSelected(res, empresa_id);
+        this.service.streamEmpresas_LocalidadSelected(res);
       });
   }
 }

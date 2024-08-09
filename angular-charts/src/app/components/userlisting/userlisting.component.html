@@ -1,59 +1,129 @@
-<div class="mat-elevation-z8">
-  <table mat-table matSort [dataSource]="dataSource">
-    <!-- Position Column -->
-    <ng-container matColumnDef="username">
-      <th mat-header-cell mat-sort-header *matHeaderCellDef>User name</th>
-      <td mat-cell *matCellDef="let element">{{ element.username }}</td>
-    </ng-container>
+<mat-card class="fondo">
+  <mat-card-header class="">
+    <div class="grid grid-cols-2 header">
+      <h2 class="titulo justify-self-start">Listado de usuarios</h2>
 
-    <!-- Name Column -->
-    <ng-container matColumnDef="name">
-      <th mat-header-cell mat-sort-header *matHeaderCellDef>Name</th>
-      <td mat-cell *matCellDef="let element">{{ element.name }}</td>
-    </ng-container>
+      <a
+        (click)="editableToggle()"
+        mat-raised-button
+        class="boton justify-self-end"
+      >
+        <mat-icon id="icon"> edit_note </mat-icon>
+        {{ editable ? "Cancelar" : "Editar Listado" }}
+      </a>
+    </div>
+  </mat-card-header>
 
-    <!-- Weight Column -->
-    <ng-container matColumnDef="email">
-      <th mat-header-cell mat-sort-header *matHeaderCellDef>email</th>
-      <td mat-cell *matCellDef="let element">{{ element.email }}</td>
-    </ng-container>
+  <mat-card-content>
+    <div class="card">
+      <mat-table matSort [dataSource]="dataSource" class="mb-3">
+        <!-- Name Column -->
+        <ng-container matColumnDef="name">
+          <mat-header-cell mat-sort-header *matHeaderCellDef
+            >Nombre</mat-header-cell
+          >
+          <mat-cell *matCellDef="let element">{{ element.name }}</mat-cell>
+        </ng-container>
 
-    <ng-container matColumnDef="role">
-      <th mat-header-cell mat-sort-header *matHeaderCellDef>Role</th>
-      <td mat-cell *matCellDef="let element">
-        {{ element.role.name === "" ? "Unassigned" : element.role.name }}
-      </td>
-    </ng-container>
+        <!-- username Column -->
+        <ng-container matColumnDef="username">
+          <mat-header-cell mat-sort-header *matHeaderCellDef
+            >Nombre de usuario</mat-header-cell
+          >
+          <mat-cell *matCellDef="let element">{{ element.username }}</mat-cell>
+        </ng-container>
 
-    <!-- Symbol Column -->
-    <ng-container matColumnDef="status">
-      <th mat-header-cell mat-sort-header *matHeaderCellDef>Status</th>
-      <td mat-cell *matCellDef="let element">
-        {{ element.isActive ? "Active" : "Inactive" }}
-      </td>
-    </ng-container>
+        <!-- email Column -->
+        <ng-container matColumnDef="email">
+          <mat-header-cell mat-sort-header *matHeaderCellDef
+            >Email</mat-header-cell
+          >
+          <mat-cell *matCellDef="let element">{{ element.email }}</mat-cell>
+        </ng-container>
 
-    <ng-container matColumnDef="action">
-      <th mat-header-cell *matHeaderCellDef>Action</th>
-      <td mat-cell *matCellDef="let element">
+        <!-- Status Column -->
+        <ng-container matColumnDef="status">
+          <mat-header-cell mat-sort-header *matHeaderCellDef
+            >Estado</mat-header-cell
+          >
+          <mat-cell *matCellDef="let element">
+            <mat-select
+              [ngClass]="editable ? '' : 'select'"
+              [style]="
+                element.isActive === 'active'
+                  ? 'color:#52b48f'
+                  : 'color: #c82d3b'
+              "
+              [disabled]="!editable"
+              [(value)]="element.isActive"
+            >
+              <mat-option style="color: #c82d3b" value="inactive"
+                >Inactivo</mat-option
+              >
+              <mat-option style="color: #52b48f" value="active"
+                >Activo</mat-option
+              >
+            </mat-select>
+          </mat-cell>
+        </ng-container>
+
+        <!-- role Column -->
+        <ng-container matColumnDef="role">
+          <mat-header-cell mat-sort-header *matHeaderCellDef
+            >Rol</mat-header-cell
+          >
+          <mat-cell *matCellDef="let element">
+            <mat-select
+              [ngClass]="editable ? '' : 'select'"
+              [disabled]="!editable"
+              [(value)]="element.role._id"
+            >
+              <mat-option value="64f1f60e918724a5f931d909">
+                Usuario
+              </mat-option>
+              <mat-option value="64d3cdd575d7a2df083079bd">
+                Administrador
+              </mat-option>
+            </mat-select>
+          </mat-cell>
+        </ng-container>
+
+        <!-- action Column -->
+        <ng-container matColumnDef="action">
+          <mat-header-cell mat-sort-header *matHeaderCellDef
+            >Rol</mat-header-cell
+          >
+          <mat-cell *matCellDef="let element">
+            <button
+              mat-icon-button
+              [disabled]="!editable"
+              (click)="openDialog(element._id)"
+            >
+              <mat-icon
+                [ngClass]="editable ? 'delete_icon' : 'delete_icon_disabled'"
+                >delete</mat-icon
+              >
+            </button>
+          </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+      </mat-table>
+      <div class="grid grid-cols-1">
         <a
-          (click)="UpdateUser(element.username)"
-          class="m-3"
+          (click)="guardarCambios(dataSource._data._value)"
+          class="boton justify-self-end"
           mat-raised-button
-          color="primary"
-          >Update</a
+          >Guardar Cambios</a
         >
-      </td>
-    </ng-container>
-
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-  </table>
-
-  <mat-paginator
-    [pageSizeOptions]="[5, 10, 20]"
-    showFirstLastButtons
-    aria-label="Select page of periodic elements"
-  >
-  </mat-paginator>
-</div>
+      </div>
+      <mat-paginator
+        [pageSizeOptions]="[5, 10, 20]"
+        showFirstLastButtons
+        aria-label="Select page of periodic elements"
+      >
+      </mat-paginator>
+    </div>
+  </mat-card-content>
+</mat-card>

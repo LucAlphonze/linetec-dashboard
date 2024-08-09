@@ -5,6 +5,9 @@ const VariableSchema = Schema({
     type: String,
     required: true,
   },
+  descripcion: {
+    type: String,
+  },
   id_maquina: {
     type: Schema.Types.ObjectId,
     ref: "Maquina",
@@ -22,6 +25,9 @@ const VariableSchema = Schema({
   },
   trigger_valor: {
     type: String,
+  },
+  time_stamp: {
+    type: Date,
   },
 });
 

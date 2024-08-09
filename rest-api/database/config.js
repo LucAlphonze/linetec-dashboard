@@ -1,5 +1,4 @@
 require("dotenv").config({ path: "./.env" });
-
 const mongoose = require("mongoose");
 
 const dbConnection = async () => {
@@ -11,7 +10,6 @@ const dbConnection = async () => {
   );
   var adminConn = `mongodb://${process.env.MONGO_INITDB_ROOT_USERNAME}:${process.env.MONGO_INITDB_ROOT_PASSWORD}@mongo:27017/mqtt?authMechanism=DEFAULT&authSource=admin`;
 
-  // var db = `mongodb://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@mongo:27017/mqtt?authMechanism=DEFAULT&authSource=mqtt`;
   try {
     // await mongoose.connect(db);
     await mongoose.connect(adminConn);

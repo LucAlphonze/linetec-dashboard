@@ -1,87 +1,93 @@
 <mat-card>
-  <mat-card-header>
-    <h2>Formulario Maquina</h2>
-  </mat-card-header>
+  <mat-card-header><h2 class="titulo">Elegir una máquina</h2> </mat-card-header>
   <mat-card-content>
-    <div class="flex flex-col">
-      <mat-accordion>
-        <mat-expansion-panel>
-          <mat-expansion-panel-header hideToggle>
-            <mat-panel-title>Formulario de maquinas</mat-panel-title>
-          </mat-expansion-panel-header>
-          <form
-            class="example-form"
-            [formGroup]="maquinaForm"
-            (ngSubmit)="createMaquina()"
-            (submit)="maquinaForm.reset()"
-          >
-            <mat-form-field class="">
-              <mat-label>Nombre</mat-label>
-              <input matInput formControlName="nombre" />
-            </mat-form-field>
-            <mat-form-field class="">
-              <mat-label>Marca</mat-label>
-              <input matInput formControlName="marca" />
-            </mat-form-field>
-            <mat-form-field class="">
-              <mat-label>Modelo</mat-label>
-              <input matInput formControlName="modelo" />
-            </mat-form-field>
-            <mat-form-field class="">
-              <mat-label>Detalle</mat-label>
-              <input matInput formControlName="detalle" />
-            </mat-form-field>
-
-            <div class="m-1">
-              <button class="m-3" mat-raised-button color="primary">
-                submit
-              </button>
-            </div>
-          </form>
-        </mat-expansion-panel>
-      </mat-accordion>
-    </div>
-
     <div class="flex flex-col p-3">
       <mat-form-field>
         <mat-label>Elegir una maquina</mat-label>
         <mat-select>
-          <mat-option
-            *ngFor="let maquina of listMaquinas"
-            [value]="maquina._id"
-            (click)="
-              [
-                setMaquina(maquina._id, maquina.nombre),
-                StreamMaquinaSelected(maquina._id)
-              ]
-            "
-          >
-            <p>{{ maquina.nombre }}</p>
-          </mat-option>
+          <div class="flex flex-col p-5" *ngFor="let maquina of listMaquinas">
+            <mat-option
+              [value]="maquina._id"
+              (click)="
+                [
+                  setMaquina(maquina._id, maquina.nombre),
+                  StreamMaquinaSelected(maquina._id)
+                ]
+              "
+            >
+              <p>{{ maquina.nombre }}</p>
+            </mat-option>
+            <mat-divider></mat-divider>
+            <p>
+              {{ maquina.detalle }}
+            </p>
+            <button
+              mat-icon-button
+              (click)="[$event.stopPropagation(), openDialog(maquina._id)]"
+            >
+              <mat-icon class="delete_icon">delete</mat-icon>
+            </button>
+          </div>
         </mat-select>
       </mat-form-field>
     </div>
-    <button mat-button matStepperNext type="button">Siguiente</button>
   </mat-card-content>
 </mat-card>
 
-<!-- <mat-accordion>
-  <mat-expansion-panel (click)="GetAllMaquinas()" hideToggle>
-    <mat-expansion-panel-header>
-      <mat-panel-title> Lista de tipos de maquina </mat-panel-title>
-    </mat-expansion-panel-header>
-    <mat-list role="list" *ngFor="let maquina of listMaquinas">
-      <mat-list-item role="listitem">
-        {{ maquina.nombre }}
-        <a
-          (click)="borrarMaquina(maquina._id)"
-          class="m-3"
-          mat-raised-button
-          color="warn"
-        >
-          eliminar
-        </a>
-      </mat-list-item>
-    </mat-list>
-  </mat-expansion-panel>
-</mat-accordion> -->
+<mat-card>
+  <mat-card-header
+    ><h2 class="titulo">Ingresar una nueva máquina</h2>
+  </mat-card-header>
+  <mat-card-content>
+    <div class="flex flex-col">
+      <form
+        class="example-form"
+        [formGroup]="maquinaForm"
+        (ngSubmit)="createMaquina()"
+        (submit)="maquinaForm.reset()"
+      >
+        <div class="grid grid-cols-3 grid-rows-5">
+          <div class="col-span-3">
+            <mat-form-field class="">
+              <mat-label>Nombre</mat-label>
+              <input matInput formControlName="nombre" />
+            </mat-form-field>
+          </div>
+          <div class="col-span-3">
+            <mat-form-field class="">
+              <mat-label>Marca</mat-label>
+              <input matInput formControlName="marca" />
+            </mat-form-field>
+          </div>
+          <div class="col-span-3">
+            <mat-form-field class="">
+              <mat-label>Modelo</mat-label>
+              <input matInput formControlName="modelo" />
+            </mat-form-field>
+          </div>
+          <div class="col-span-3">
+            <mat-form-field class="">
+              <mat-label>Detalle</mat-label>
+              <input matInput formControlName="detalle" />
+            </mat-form-field>
+          </div>
+
+          <div class="col-span-3 justify-self-end">
+            <button
+              class="boton"
+              mat-raised-button
+              [disabled]="
+                !maquinaForm.value.nombre ||
+                !maquinaForm.value.marca ||
+                !maquinaForm.value.modelo ||
+                !maquinaForm.value.detalle
+              "
+            >
+              Registrar
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </mat-card-content>
+</mat-card>

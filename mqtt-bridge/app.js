@@ -5,6 +5,7 @@ const axios = require("axios");
 var token;
 var rtoken;
 var decoded;
+var listVariables;
 var usuario = {
   username: "Admin",
   password: "Admin123$",
@@ -17,6 +18,7 @@ const servClient = mqtt.connect(`mqtt://mosquitto:1883`, {
   username: process.env.MQTT_USER,
   password: process.env.MQTT_PASSWORD,
 });
+
 servClient.on("connect", function () {
   servClient.subscribe("rgeneral", async function (err) {
     console.log("servClient conectado");
@@ -28,190 +30,122 @@ servClient.on("connect", function () {
       .then((response) => {
         token = response.data.token;
         rtoken = response.data.rtoken;
-        console.log("logeo exitoso: ", token, "refresh token: ", rtoken);
+        console.log("logeo exitoso: "); //, token, "refresh token: ", rtoken);
 
         decoded = parseJwt(token);
-        console.log("token decoded", decoded.exp);
+        //console.log("token decoded", decoded.exp);
+      });
+    await axios
+      .get("http://rest-api:3001/api/variables", {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then(async (response) => {
+        //console.log(response.status);
+        listVariables = response.data;
       });
   });
 });
 
-servClient.on("message", function (topic, message) {
-  axios
-    .get("http://rest-api:3001/api/variables", {
-      headers: { Authorization: `Bearer ${token}` },
-    })
-    .then(async (response) => {
-      console.log(response.status);
-      var listVariables = response.data;
-      var messageJSON = JSON.parse(message.toString());
-      /*
-          armar algo primero: usar el nombre de la variable para hacer un get
-          y sacar el ultimo registro con ese id, luego realizar todas las operaciones
-          correspondientes para decidir si se guarda o no
-
-          si el tipo de trigger es cambio de valor, guardar el ultimo valor que llega en
-          trigger valor y comparar el nuevo valor con ese, si el valor es diferente se actualiza
-          trigger valor y se procede a hacer el insert.
-
-          si el tipo de trigger es tiempo chequea si el ultimo valor es al menos ese x_tiempo
-          mas viejo que el nuevo valor que acaba de llegar (compara el timestamp nuevo con 
-          el timestamp en la db + x_tiempo)
-            */
-      for (let i = 0; i < messageJSON.length; i++) {
-        for (let j = 0; j < listVariables.length; j++) {
-          if (messageJSON[i].n != listVariables[j].nombre) {
-            console.log(
-              messageJSON[i].n,
-              "mensaje posisicion: ",
-              i,
-              listVariables[j].nombre,
-              "list variable posicion: ",
-              j
-            );
-          } else if (messageJSON[i].n == listVariables[j].nombre) {
-            var ts = "";
-            let timeNow = new Date();
-            if (messageJSON[i].ts) {
-              ts = dateSlicer(messageJSON[i]?.ts);
-            }
-            var pruebaJson = {
-              id_variable: listVariables[j]?._id,
-              valor_lectura: messageJSON[i].v,
-              modo: messageJSON[i]?.m,
-              time_stamp: ts,
-              fecha_lectura: new Date(),
-            };
-            if (timeNow.getTime() > decoded.exp - 120000) {
-              console.log("refrescando el token...");
-              await axios
-                .post("http://rest-api:3001/api/refresh", { token: rtoken })
-                .then((response) => {
-                  token = response.data.accessToken;
-                  rtoken = response.data.refreshToken;
-                  decoded = parseJwt(token);
-
-                  console.log(
-                    "token refrescado exitosamente: ",
-                    token,
-                    "refresh token: ",
-                    rtoken
-                  );
-                });
-            }
-            await axios
-              .post(`http://rest-api:3001/api/registro-general`, pruebaJson, {
-                headers: {
-                  Authorization: `Bearer ${token}`,
-                  "content-type": "application/json",
-                },
-              })
-              .then((res) => {
-                console.log(`statusCode: ${res.status}`);
-                console.log(res.data);
-              })
-              .catch((error) => {
-                /*
-                hay que revisar esta parte y ver que pasa cuando mandamos un mensaje y justo el token se expira
-                actualmente el token tiene 10m de duracion
-                  */
-                console.log("error post: ", error.response.data);
-              });
-          }
-          if (j == listVariables.length) {
-            j = 0;
-          }
-        }
+servClient.on("message", async function (topic, message) {
+  try {
+    var lVariables = listVariables;
+    var messageJSON = JSON.parse(message.toString());
+    var fechaActual = new Date();
+    var messageJSONRestApi = [];
+    const api_url = "http://rest-api:3001/api/registro-general-ts/";
+    for (let i = 0; i < messageJSON.length; i++) {
+      if (!verificarFormatoJSON(messageJSON[i])) {
+        console.log("ERROR: Formato JSON INCORRECTO");
+        console.log(
+          "Hora: ",
+          fechaActual.toLocaleTimeString("es-AR", {
+            timeZone: "America/Argentina/Buenos_Aires",
+          }),
+          " Mensaje: ",
+          JSON.stringify(messageJSON[i], null, 2)
+        );
+        continue;
       }
-    })
-    .catch(async (error) => {
-      if (error.response) {
-        console.log("error data: ", error.response.data);
-        console.log(error.response.status);
-        if (error.response.status == 403) {
-          console.log("refrescando el token...");
-          await axios
-            .post("http://rest-api:3001/api/refresh", { token: rtoken })
-            .then((response) => {
-              token = response.data.accessToken;
-              rtoken = response.data.refreshToken;
-              decoded = parseJwt(token);
-              console.log(
-                "token refrescado exitosamente: ",
-                token,
-                "refresh token: ",
-                rtoken
-              );
-            });
-          await axios
-            .get("http://rest-api:3001/api/variables", {
-              headers: { Authorization: `Bearer ${token}` },
-            })
-            .then(async (response) => {
-              console.log(response.status);
-              var listVariables = response.data;
-              var messageJSON = JSON.parse(message.toString());
-              for (let i = 0; i < messageJSON.length; i++) {
-                for (let j = 0; j < listVariables.length; j++) {
-                  if (messageJSON[i].n != listVariables[j].nombre) {
+
+      if (!esFechaHoraValida(messageJSON[i].fl)) {
+        console.log("ERROR: Fomato fecha:hora INCORRECTO");
+        continue;
+      }
+
+      //messageJSON.fl = dateSlicer(messageJSON.fl);
+      messageJSONRestApi.push(messageJSON[i]);
+      console.log(messageJSONRestApi);
+
+      if (i === messageJSON.length - 1) {
+        await axios
+          .post(api_url, messageJSONRestApi, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "content-type": "application/json",
+            },
+          })
+          .then((res) => {
+            console.log(`statusCode: ${res.status}`);
+            console.log(res.data);
+          })
+          .catch(async (error) => {
+            if (error.response) {
+              console.log("error data: ", error.response.data);
+              //console.log(error.response.status);
+              if (error.response.status == 403) {
+                console.log("refrescando token...");
+                await axios
+                  .post("http://rest-api:3001/api/refresh", { token: rtoken })
+                  .then((response) => {
+                    token = response.data.accessToken;
+                    rtoken = response.data.refreshToken;
+                    decoded = parseJwt(token);
                     console.log(
-                      messageJSON[i].n,
-                      "mensaje posisicion: ",
-                      i,
-                      listVariables[j].nombre,
-                      "list variable posicion: ",
-                      j
+                      "token refrescado exitosamente: ",
+                      token,
+                      "refresh Token:",
+                      rtoken
                     );
-                  } else if (messageJSON[i].n == listVariables[j].nombre) {
-                    var ts = "";
-                    if (messageJSON[i].ts) {
-                      ts = dateSlicer(messageJSON[i]?.ts);
-                    }
-                    var pruebaJson = {
-                      id_variable: listVariables[j]?._id,
-                      valor_lectura: messageJSON[i].v,
-                      modo: messageJSON[i]?.m,
-                      time_stamp: ts,
-                      fecha_lectura: new Date(),
-                    };
-                    await axios
-                      .post(
-                        `http://rest-api:3001/api/registro-general`,
-                        pruebaJson,
-                        {
-                          headers: {
-                            Authorization: `Bearer ${token}`,
-                            "content-type": "application/json",
-                          },
-                        }
-                      )
-                      .then((res) => {
-                        console.log(`statusCode: ${res.status}`);
-                        console.log(res.data);
-                      })
-                      .catch((error) => {
-                        console.log("error post: ", error.response.data);
-                      });
-                  }
-                  if (j == listVariables.length) {
-                    j = 0;
-                  }
-                }
+                  });
+                await axios
+                  .post(api_url, messageJSONRestApi, {
+                    headers: {
+                      Authorization: `Bearer ${token}`,
+                      "content-type": "application/json",
+                    },
+                  })
+                  .then((res) => {
+                    //console.log(`statusCode: ${res.status}`);
+                    console.log(res.data);
+                  })
+                  .catch((error) => {
+                    console.log("error post: ", error.response.data);
+                  });
               }
-            });
-          return error;
-        }
-        return error;
-      } else if (error.request) {
-        console.log("Error request: ", error.request);
-        return error;
-      } else {
-        console.log("else error: ", error.message);
-        return "error del servidor";
+            }
+            return console.log("error post: ", error.response.data);
+          });
       }
-    });
+    }
+  } catch (error) {
+    if (error.response) {
+      console.log(
+        "error data: ",
+        error.response.data,
+        "status code: ",
+        error.response.status
+      );
+      return console.log(error);
+    } else if (error.request) {
+      console.log("Error request: ", error.request);
+      return console.log(error);
+    } else {
+      console.log("else error: ", error);
+      return console.log("error del servidor: ", error);
+    }
+  }
 
-  console.log("string message: ", message.toString());
+  return console.log("string message: ", message.toString());
 });
 
 servClient.on("error", function (error) {
@@ -219,18 +153,269 @@ servClient.on("error", function (error) {
   throw new Error(error.message);
 });
 
-function dateSlicer(text) {
-  var formatedDate =
-    text.slice(0, 4) +
-    "-" +
-    text.slice(4, 6) +
-    "-" +
-    text.slice(6, 8) +
-    ":" +
-    text.slice(9, 11) +
-    ":" +
-    text.slice(11, 13) +
-    ":" +
-    text.slice(13, 15);
-  return formatedDate;
+function esFechaHoraValida(cadena) {
+  // Extraer las partes de la cadena: año, mes, día, hora, minuto y segundo
+  var año = parseInt(cadena.substr(0, 4));
+  var mes = parseInt(cadena.substr(4, 2));
+  var dia = parseInt(cadena.substr(6, 2));
+  var hora = parseInt(cadena.substr(9, 2));
+  var minuto = parseInt(cadena.substr(11, 2));
+  var segundo = parseInt(cadena.substr(13, 2));
+
+  // Verificar si las partes son números válidos
+  if (
+    isNaN(año) ||
+    isNaN(mes) ||
+    isNaN(dia) ||
+    isNaN(hora) ||
+    isNaN(minuto) ||
+    isNaN(segundo)
+  ) {
+    return false;
+  }
+
+  // Crear un objeto Date con las partes
+  var fecha = new Date(año, mes - 1, dia, hora, minuto, segundo);
+
+  console.log(fecha);
+
+  if (isNaN(fecha.getTime())) {
+    return false;
+  }
+
+  if (
+    fecha.getFullYear() === año &&
+    fecha.getMonth() === mes - 1 &&
+    fecha.getDate() === dia &&
+    fecha.getHours() === hora &&
+    fecha.getMinutes() === minuto &&
+    fecha.getSeconds() === segundo
+  ) {
+    return true;
+  }
+  return false;
 }
+
+function verificarFormatoJSON(objeto) {
+  try {
+    // Verificar si el objeto tiene la propiedad "fl" y "metaData"
+    if (!objeto.hasOwnProperty("fl") || !objeto.hasOwnProperty("metaData")) {
+      return false;
+    }
+
+    // Verificar si "fl" es una cadena y "metaData" es un array
+    if (typeof objeto.fl !== "string" || !Array.isArray(objeto.metaData)) {
+      return false;
+    }
+
+    // Verificar la longitud del valor de la propiedad "fl"
+    if (objeto.fl.length !== "20240313:152403".length) {
+      return false; // La longitud del valor de "fl" debe ser de 15 caracteres
+    }
+
+    // Verificar el formato de cada objeto dentro de "metaData"
+    for (var i = 0; i < objeto.metaData.length; i++) {
+      var item = objeto.metaData[i];
+      // Verificar si cada objeto tiene las propiedades "v" y "n" y si sus valores son del tipo esperado
+      if (
+        !item.hasOwnProperty("v") ||
+        !item.hasOwnProperty("n") ||
+        typeof item.v !== "number" ||
+        typeof item.n !== "string"
+      ) {
+        return false;
+      }
+    }
+    // Si se pasan todas las verificaciones, el objeto tiene el formato esperado
+    return true;
+  } catch (error) {
+    console.error("La variable no contiene una cadena JSON válida.");
+  }
+  return false;
+}
+
+// [
+//   {
+//     fl: "20210315:171858",
+//     metaData: [
+//       {
+//         v: 0.6296,
+//         n: "TagliTagliaf",
+//       },
+//       {
+//         v: 1.6412,
+//         n: "Pressioneestrusione",
+//       },
+//       {
+//         v: 0.6296,
+//         n: "Temperaturaestrusione",
+//       },
+//       {
+//         v: 0.6296,
+//         n: "Vuoto",
+//       },
+//       {
+//         v: 0.6412,
+//         n: "Correntemotoreestrusore",
+//       },
+//       {
+//         v: 0.6412,
+//         n: "Velocitamotoreestrusore",
+//       },
+//       {
+//         v: 0.6412,
+//         n: "Potenzamotoreestrusore",
+//       },
+//     ],
+//     ts: "20210315:171858",
+//   },
+// ];
+
+// [
+//   {
+//     _id: '657a051796126234e81623cb',
+//     nombre: 'TagliTagliaf',
+//     trigger_valor: '',
+//     __v: 0,
+//     time_stamp: '2023-12-01T03:00:00.000Z'
+//   },
+//   {
+//     _id: '6544fde05c4420c935a5aa65',
+//     nombre: 'Pressioneestrusione',
+//     trigger_valor: '',
+//     __v: 0,
+//     time_stamp: '2023-12-02T03:00:00.000Z'
+//   },
+//   {
+//     _id: '6544fdff5c4420c935a5aa6f',
+//     nombre: 'Temperaturaestrusione',
+//     trigger_valor: '',
+//     __v: 0,
+//     time_stamp: '2023-12-03T03:00:00.000Z'
+//   },
+//   {
+//     _id: '6544fe155c4420c935a5aa79',
+//     nombre: 'Vuoto',
+//     trigger_valor: '',
+//     __v: 0,
+//     time_stamp: '2023-12-04T03:00:00.000Z'
+//   },
+//   {
+//     _id: '6544fe375c4420c935a5aa83',
+//     nombre: 'Correntemotoreestrusore',
+//     trigger_valor: '',
+//     __v: 0,
+//     time_stamp: '2023-12-05T03:00:00.000Z'
+//   },
+//   {
+//     _id: '6544fe505c4420c935a5aa8d',
+//     nombre: 'Velocitamotoreestrusore',
+
+//     trigger_valor: '',
+//     __v: 0,
+//     time_stamp: '2023-12-06T03:00:00.000Z'
+//   },
+//   {
+//     _id: '6544fe6b5c4420c935a5aa97',
+//     nombre: 'Potenzamotoreestrusore',
+
+//     trigger_valor: '',
+//     __v: 0,
+//     time_stamp: '2023-12-07T03:00:00.000Z'
+//   },
+//   {
+//     _id: '6544fe805c4420c935a5aaa1',
+//     nombre: 'Correntemotoreaspo',
+
+//     trigger_valor: '',
+//     __v: 0,
+//     time_stamp: '2023-12-08T03:00:00.000Z'
+//   },
+//   {
+//     _id: '6544fe9d5c4420c935a5aaab',
+//     nombre: 'Correntemotoredegasatore',
+
+//     trigger_valor: '',
+//     __v: 0,
+//     time_stamp: '2023-12-09T03:00:00.000Z'
+//   },
+//   {
+//     _id: '6544feb15c4420c935a5aab5',
+//     nombre: 'Velocitamotoredegasatore',
+
+//     trigger_valor: '',
+//     __v: 0,
+//     time_stamp: '2023-12-10T03:00:00.000Z'
+//   },
+//   {
+//     _id: '6544fece5c4420c935a5aabf',
+//     nombre: 'Potenzamotoredegasatore',
+
+//     trigger_valor: '',
+//     __v: 0,
+//     time_stamp: '2023-12-11T03:00:00.000Z'
+//   },
+//   {
+//     _id: '6544fee85c4420c935a5aac9',
+//     nombre: 'Codicemateriale',
+
+//     trigger_valor: '',
+//     __v: 0,
+//     time_stamp: '2023-12-12T03:00:00.000Z'
+//   }
+// ]
+
+// [{
+//   "fl": "20240326:101137",
+//   "metaData": [
+//     {
+//       "v": 16,
+//       "n": "TagliTagliaf"
+//     },
+//     {
+//       "v": 23,
+//       "n": "Pressioneestrusione"
+//     },
+//     {
+//       "v": 19,
+//       "n": "Temperaturaestrusione"
+//     },
+//     {
+//       "v": 30,
+//       "n": "Vuoto"
+//     },
+//     {
+//       "v": 27,
+//       "n":"Correntemotoreestrusore"
+//     },
+//     {
+//       "v": 18,
+//       "n": "Velocitamotoreestrusore"
+//     },
+//     {
+//       "v": 22,
+//       "n": "Potenzamotoreestrusore"
+//     },
+//     {
+//       "v": 24,
+//       "n": "Correntemotoreaspo"
+//     },
+//     {
+//       "v": 27,
+//       "n": "Correntemotoredegasatore"
+//     },
+//     {
+//       "v": 10,
+//       "n": "Velocitamotoredegasatore"
+//     },
+//     {
+//       "v": 15,
+//       "n":"Potenzamotoredegasatore"
+//     },
+//     {
+//       "v": 13,
+//       "n": "Codicemateriale"
+//     }
+//   ],
+//   "ts": "20240326:101137"
+// }]

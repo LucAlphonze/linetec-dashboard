@@ -1,80 +1,82 @@
 <mat-card>
-  <mat-card-header>
-    <h2>Formulario Linea de produccion</h2>
+  <mat-card-header
+    ><h2 class="titulo">Elegir una línea de producción</h2>
   </mat-card-header>
   <mat-card-content>
-    <div class="flex flex-col">
-      <mat-accordion>
-        <mat-expansion-panel hideToggle>
-          <mat-expansion-panel-header>
-            <mat-panel-title>
-              Formulario de Linea de produccion
-            </mat-panel-title>
-          </mat-expansion-panel-header>
-          <form
-            class="example-form"
-            [formGroup]="lineaForm"
-            (ngSubmit)="createLinea()"
-          >
+    <div>
+      <mat-form-field>
+        <mat-label>Elegir una Linea</mat-label>
+        <mat-select>
+          <div class="flex flex-col p-5" *ngFor="let linea of listLineas">
+            <mat-option
+              [value]="linea._id"
+              (click)="[setLinea(linea._id, linea.nombre)]"
+            >
+              <p>{{ linea.nombre }}</p>
+            </mat-option>
+            <mat-divider></mat-divider>
+            <p>
+              {{ linea.descripcion }}
+            </p>
+            <button
+              mat-icon-button
+              (click)="[$event.stopPropagation(), openDialog(linea._id)]"
+            >
+              <mat-icon class="delete_icon">delete</mat-icon>
+            </button>
+          </div>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </mat-card-content>
+</mat-card>
+
+<mat-card>
+  <mat-card-header
+    ><h2 class="titulo">Ingresar nueva línea</h2>
+  </mat-card-header>
+  <mat-card-content>
+    <div>
+      <form
+        class="example-form"
+        [formGroup]="lineaForm"
+        (ngSubmit)="createLinea()"
+      >
+        <div class="grid grid-cols-3 grid-rows-4">
+          <div class="col-span-3">
             <mat-form-field class="">
               <mat-label>nombre</mat-label>
               <input matInput formControlName="nombre" />
             </mat-form-field>
+          </div>
+          <div class="col-span-3">
             <mat-form-field class="">
               <mat-label>descripcion</mat-label>
               <input matInput formControlName="descripcion" />
             </mat-form-field>
+          </div>
+          <div class="col-span-3">
             <mat-form-field class="">
               <mat-label>identificador</mat-label>
               <input matInput formControlName="identificador" />
             </mat-form-field>
-            <div class="m-1">
-              <button class="m-3" mat-raised-button color="primary">
-                submit
-              </button>
-            </div>
-          </form>
-        </mat-expansion-panel>
-      </mat-accordion>
-    </div>
+          </div>
 
-    <div class="flex flex-col p-3">
-      <mat-form-field>
-        <mat-label>Elegir una Linea</mat-label>
-        <mat-select>
-          <mat-option
-            *ngFor="let linea of listLineas"
-            [value]="linea._id"
-            (click)="
-              [setLinea(linea._id, linea.nombre), GetMaquinaByLinea(linea._id)]
-            "
-          >
-            <p>{{ linea.nombre }}</p>
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
+          <div class="col-span-3 justify-self-end">
+            <button
+              class="boton"
+              mat-raised-button
+              [disabled]="
+                !lineaForm.value.nombre ||
+                !lineaForm.value.descripcion ||
+                !lineaForm.value.identificador
+              "
+            >
+              Registrar
+            </button>
+          </div>
+        </div>
+      </form>
     </div>
-    <button mat-button matStepperNext type="button">Siguiente</button>
   </mat-card-content>
 </mat-card>
-
-<!-- <mat-accordion>
-  <mat-expansion-panel (click)="GetAllLineas()" hideToggle>
-    <mat-expansion-panel-header>
-      <mat-panel-title> Lista de Lineas de produccion </mat-panel-title>
-    </mat-expansion-panel-header>
-    <mat-list role="list" *ngFor="let linea of listLineas">
-      <mat-list-item role="listitem">
-        {{ linea.descripcion }}
-        <a
-          (click)="borrarLineaProduccion(linea._id)"
-          class="m-3"
-          mat-raised-button
-          color="warn"
-        >
-          eliminar
-        </a>
-      </mat-list-item>
-    </mat-list>
-  </mat-expansion-panel>
-</mat-accordion> -->

@@ -14,6 +14,15 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MatChipsModule } from '@angular/material/chips';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
 @NgModule({
   exports: [
@@ -32,6 +41,15 @@ import { MatChipsModule } from '@angular/material/chips';
     MatIconModule,
     MatListModule,
     MatChipsModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatSidenavModule,
+    MatFormFieldModule,
+    MatProgressSpinnerModule,
+    MatMenuModule,
+    MatProgressBarModule,
+    MatTabsModule,
+    MatButtonToggleModule,
   ],
 })
 export class MaterialModule {}

@@ -4,6 +4,8 @@ import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
 import { AuthService } from 'src/app/service/auth.service';
 import { environment } from 'src/environments/environment';
+import { VariableModalComponent } from '../variable-form/variable.modal.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-linea-produccion-form',
@@ -14,12 +16,13 @@ export class LineaProduccionFormComponent implements OnInit {
   constructor(
     private builder: FormBuilder,
     private toastr: ToastrService,
-    private service: AuthService
+    private service: AuthService,
+    public dialog: MatDialog
   ) {}
   listPlantas: any;
   listLineas: any;
-  message: any;
   id_empresa_planta!: string;
+  id_linea!: string;
   apiPlanta = environment.API_URL_PLANTA;
   apiLinea = environment.API_URL_LINEA_PRODUCCION;
   apiMaquina = environment.API_URL_MAQUINA;
@@ -34,9 +37,7 @@ export class LineaProduccionFormComponent implements OnInit {
       descripcion: this.builder.control('', Validators.required),
       identificador: this.builder.control('', Validators.required),
     });
-    this.subscription = this.service.currentMessage.subscribe(
-      (message) => (this.message = message)
-    );
+
     this.subscription = this.service.listLineas.subscribe(
       (message) => (this.listLineas = message)
     );
@@ -73,7 +74,19 @@ export class LineaProduccionFormComponent implements OnInit {
           if (res.status == 500) {
             this.toastr.warning(res.error.error);
           } else {
-            this.toastr.success('Linea de produccion registrada corectamente');
+            this.toastr.success(
+              'Linea de produccion registrada corectamente',
+              '',
+              {
+                toastClass: 'yourclass ngx-toastr',
+                positionClass: 'toast-bottom-center',
+              }
+            );
+            this.service
+              .getForm(this.apiLinea + this.id_empresa_planta)
+              .subscribe((res: any) => {
+                this.listLineas = res;
+              });
           }
         },
         error: (error: any) => {
@@ -107,14 +120,25 @@ export class LineaProduccionFormComponent implements OnInit {
   setLinea(id: any, nombre: any) {
     console.log('set linea', id, 'nombre', nombre);
     this.service.changeMessage(id);
+    this.id_linea = id;
+    this.service.lineaSelectedSource.next(id);
+    this.GetMaquinaByLinea();
   }
 
-  GetMaquinaByLinea(linea_id: string) {
+  GetMaquinaByLinea() {
     this.service
-      .getForm(this.apiMaquina + this.message)
+      .getForm(this.apiMaquina + this.id_linea)
       .subscribe((res: any) => {
-        console.log('linea get maquinas', res, linea_id);
-        this.service.streamMaquinas_LineaSelected(res, linea_id);
+        console.log('linea get maquinas', res);
+        this.service.streamMaquinas_LineaSelected(res);
       });
+  }
+  openDialog(variable_id: string): void {
+    const dialogRef = this.dialog.open(VariableModalComponent, {
+      data: {
+        variable_id: variable_id,
+        titulo: 'esta linea de produccion',
+      },
+    });
   }
 }

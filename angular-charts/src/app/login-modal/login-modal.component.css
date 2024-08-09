@@ -1,0 +1,45 @@
+.boton {
+  width: 465px;
+  height: 50px;
+  border-radius: 8px;
+  color: #fff;
+  text-align: center;
+  font-family: "D-DIN-PRO";
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  background-color: #c82d3b;
+  margin-left: auto;
+  margin-right: auto;
+}
+.titulo {
+  color: #333;
+  text-align: center;
+  font-family: "DIN Alternate Bold";
+  font-size: 26px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+}
+p {
+  color: #333;
+  text-align: center;
+  font-family: "D-DIN-PRO";
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+}
+
+.icono {
+  margin-top: 20px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 25%;
+}
+.card {
+  flex-shrink: 0;
+  border-radius: 16px;
+  background: #fff;
+}

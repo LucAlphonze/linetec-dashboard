@@ -4,6 +4,8 @@ import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
 import { AuthService } from 'src/app/service/auth.service';
 import { environment } from 'src/environments/environment';
+import { VariableModalComponent } from '../variable-form/variable.modal.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-empresa-planta-form',
@@ -14,15 +16,15 @@ export class EmpresaPlantaFormComponent implements OnInit {
   constructor(
     private builder: FormBuilder,
     private toastr: ToastrService,
-    private service: AuthService
+    private service: AuthService,
+    public dialog: MatDialog
   ) {}
   listEmpresas: any;
   listLocalidades: any;
   listPlantas: any;
   id_empresa!: string;
   id_localidad!: string;
-  message!: string;
-
+  id_planta!: string;
   apiLocalidad = environment.API_URL_LOCALIDADES;
   apiEmpresas = environment.API_URL_EMPRESAS;
   apiPlanta = environment.API_URL_PLANTA;
@@ -32,16 +34,12 @@ export class EmpresaPlantaFormComponent implements OnInit {
   subscription!: Subscription;
 
   ngOnInit(): void {
-    this.GetAllLocalidades();
     this.GetAllEmpresas();
     this.plantaForm = this.builder.group({
       nombre: this.builder.control('', Validators.required),
       calle: this.builder.control('', Validators.required),
       altura: this.builder.control('', Validators.required),
     });
-    this.subscription = this.service.currentMessage.subscribe(
-      (message) => (this.message = message)
-    );
     this.subscription = this.service.listPlantas.subscribe(
       (message) => (this.listPlantas = message)
     );
@@ -51,13 +49,6 @@ export class EmpresaPlantaFormComponent implements OnInit {
     this.subscription = this.service.localidadSelected.subscribe(
       (message) => (this.id_localidad = message)
     );
-  }
-
-  GetAllLocalidades() {
-    this.service.getForm(this.apiLocalidad).subscribe((res: any) => {
-      console.log(res);
-      this.listLocalidades = res['datos'];
-    });
   }
 
   GetAllEmpresas() {
@@ -89,7 +80,15 @@ export class EmpresaPlantaFormComponent implements OnInit {
           if (res.status == 500) {
             this.toastr.warning(res.error.error.message);
           } else {
-            this.toastr.success('Planta registrada corectamente');
+            this.toastr.success('Planta registrada corectamente', '', {
+              toastClass: 'yourclass ngx-toastr',
+              positionClass: 'toast-bottom-center',
+            });
+            this.service
+              .getForm(this.apiPlanta + this.id_empresa)
+              .subscribe((res: any) => {
+                this.listPlantas = res;
+              });
           }
         },
         error: (error: any) => {
@@ -122,12 +121,25 @@ export class EmpresaPlantaFormComponent implements OnInit {
   setPlanta(id: any, nombre: any) {
     console.log('set planta', id, 'nombre', nombre);
     this.service.changeMessage(id);
+    this.id_planta = id;
+    this.service.plantaSelectedSource.next(id);
+    this.GetLineaByPlanta();
   }
 
-  GetLineaByPlanta(planta_id: string) {
-    this.service.getForm(this.apiLinea + this.message).subscribe((res: any) => {
-      console.log('planta get lineas', res, planta_id);
-      this.service.streamLinea_PlantaSelected(res, planta_id);
+  GetLineaByPlanta() {
+    this.service
+      .getForm(this.apiLinea + this.id_planta)
+      .subscribe((res: any) => {
+        console.log('planta get lineas', res);
+        this.service.streamLinea_PlantaSelected(res);
+      });
+  }
+  openDialog(variable_id: string): void {
+    const dialogRef = this.dialog.open(VariableModalComponent, {
+      data: {
+        variable_id: variable_id,
+        titulo: 'esta planta',
+      },
     });
   }
 }

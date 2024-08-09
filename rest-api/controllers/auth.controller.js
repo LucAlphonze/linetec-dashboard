@@ -5,14 +5,14 @@ let refreshTokens = [];
 
 function genTokens(User) {
   // token expiracion 12h- refreshtoken expiracion 13h
-  var token = jwt.sign(User, process.env.SECRET, { expiresIn: "5m" });
-  var rToken = jwt.sign(User, process.env.RTSECRET, { expiresIn: "10m" });
+  var token = jwt.sign(User, process.env.SECRET, { expiresIn: "12h" });
+  var rToken = jwt.sign(User, process.env.RTSECRET, { expiresIn: "13h" });
   refreshTokens.push(rToken);
   return { accessToken: token, refreshToken: rToken };
 }
 
 function verifyToken(req, res, next) {
-  console.log("verify token handler: ", req.body);
+  // console.log("verify token handler: ", req.body);
   const authHeader = req.headers["authorization"];
   const token = authHeader && authHeader.split(" ")[1];
   if (token == null) return res.sendStatus(401);
@@ -41,10 +41,11 @@ const handleRefreshTokens = (req, res) => {
       return res.sendStatus(403);
     }
   });
-  const accessToken = jwt.sign(User, process.env.SECRET, { expiresIn: "5m" });
+  const accessToken = jwt.sign(User, process.env.SECRET, { expiresIn: "12h" });
   const refreshToken = jwt.sign(User, process.env.RTSECRET, {
-    expiresIn: "10m",
+    expiresIn: "13h",
   });
+  refreshTokens.push(refreshToken);
   res.json({ accessToken: accessToken, refreshToken: refreshToken });
 };
 
