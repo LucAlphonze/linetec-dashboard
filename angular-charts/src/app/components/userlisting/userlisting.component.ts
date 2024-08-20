@@ -8,6 +8,12 @@ import { environment } from 'src/environments/environment';
 import { VariableModalComponent } from 'src/app/forms/variable-form/variable.modal.component';
 import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
+import { FormBuilder, FormControl, Validators } from '@angular/forms';
+import {
+  checkNumber,
+  checkSpecial,
+  checkUpperCase,
+} from 'src/app/service/validator';
 
 @Component({
   selector: 'app-userlisting',
@@ -18,16 +24,32 @@ export class UserlistingComponent implements OnInit {
   constructor(
     private service: AuthService,
     private toastr: ToastrService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private builder: FormBuilder
   ) {}
   ngOnInit(): void {
     this.LoadUser();
+
+    this.userForm = this.builder.group({
+      password: [
+        '',
+        [
+          Validators.minLength(8),
+          checkUpperCase(),
+          checkNumber(),
+          checkSpecial(),
+        ],
+      ],
+    });
   }
-  userList: any;
+  userForm: any;
+
+  pass: string = 'password';
+  show = false;
+  userList: any = [];
   dataSource: any;
   editable: boolean = false;
   userUrl = environment.API_URL_USERS;
-  ulist: any = [];
   subscription!: Subscription;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -37,6 +59,10 @@ export class UserlistingComponent implements OnInit {
     });
     this.subscription = this.service.listUser.subscribe((message) => {
       this.userList = message;
+      this.userList.forEach((element: any) => {
+        element.show = false;
+        element.pass = 'password';
+      });
       console.log('userlist: ', this.userList);
       this.dataSource = new MatTableDataSource(this.userList);
       this.dataSource.paginator = this.paginator;
@@ -51,6 +77,7 @@ export class UserlistingComponent implements OnInit {
     'name',
     'email',
     'role',
+    'password',
     'status',
     'action',
   ];
@@ -61,7 +88,6 @@ export class UserlistingComponent implements OnInit {
 
   guardarCambios(data: any) {
     var ulist: any = [];
-    console.log('user List: ', this.ulist);
     this.service.GetAll().subscribe((res) => {
       ulist = res;
       for (let i = 0; i < ulist.length; i++) {
@@ -75,7 +101,8 @@ export class UserlistingComponent implements OnInit {
         );
         if (
           ulist[i].isActive != data[i].isActive ||
-          ulist[i].role._id != data[i].role._id
+          ulist[i].role._id != data[i].role._id ||
+          ulist[i].password != data[i].password
         ) {
           console.log(data[i]);
           this.service
@@ -102,5 +129,22 @@ export class UserlistingComponent implements OnInit {
         titulo: 'este usuario',
       },
     });
+  }
+  showPass(element: any): void {
+    if (element.pass === 'password') {
+      element.show = true;
+      element.pass = '';
+    } else {
+      element.show = false;
+      element.pass = 'password';
+    }
+  }
+  get password() {
+    if (this.editable == true) {
+      this.userForm.get('password').enable();
+    } else {
+      this.userForm.get('password').disable();
+    }
+    return this.userForm.get('password');
   }
 }

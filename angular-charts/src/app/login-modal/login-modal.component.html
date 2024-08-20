@@ -27,11 +27,20 @@
       </clipPath>
     </defs>
   </svg>
-  <h1 mat-dialog-title class="titulo">Credenciales inválidas</h1>
-  <div mat-dialog-content>
-    <p>Usuario o contraseña incorrecta</p>
+  <div *ngIf="data.isLogin === 'pass'" class="flex flex-col card">
+    <h1 mat-dialog-title class="titulo">Notificar administrador</h1>
+    <div mat-dialog-content>
+      <p>Solicitar nueva contraseña de acceso al administrador</p>
+    </div>
+    <button mat-button class="boton" (click)="cerrar()">Aceptar</button>
   </div>
-  <button mat-button class="boton" (click)="cerrar()">
-    Intentar nuevamente
-  </button>
+  <div *ngIf="data.isLogin === 'login'" class="flex flex-col card">
+    <h1 mat-dialog-title class="titulo">Credenciales inválidas</h1>
+    <div mat-dialog-content>
+      <p>Usuario o contraseña incorrecta</p>
+    </div>
+    <button mat-button class="boton" (click)="cerrar()">
+      Intentar nuevamente
+    </button>
+  </div>
 </div>

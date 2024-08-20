@@ -574,7 +574,7 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
             (x) => x.id_trigger.nombre === 'sin-filtro'
           );
           if (hasSinFiltro) {
-            this.authService.openDialog3();
+            this.authService.openDialogListarDatos();
           }
           for (let i = 0; i < sortedList.length; i++) {
             chart.data.datasets[i].data = sortedList[i]?.info

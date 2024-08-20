@@ -46,9 +46,13 @@
                 !loginForm.value.username || !loginForm.value.password
               "
               id="boton2"
+              class="mb-5"
             >
               Ingresar
             </button>
+            <a class="link p-3" (click)="openForgotPass()">
+              Olvidé mi contraseña
+            </a>
             <a mat-raised-button (click)="mostrarRegistro()" id="boton">
               Registrar Usuario
             </a>
@@ -213,7 +217,7 @@
                     : 'requisitos'
                 "
               >
-                Al menos 1 número
+                Al menos un número
               </p>
             </div>
           </div>

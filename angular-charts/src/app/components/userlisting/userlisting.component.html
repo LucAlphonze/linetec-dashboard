@@ -41,32 +41,6 @@
           <mat-cell *matCellDef="let element">{{ element.email }}</mat-cell>
         </ng-container>
 
-        <!-- Status Column -->
-        <ng-container matColumnDef="status">
-          <mat-header-cell mat-sort-header *matHeaderCellDef
-            >Estado</mat-header-cell
-          >
-          <mat-cell *matCellDef="let element">
-            <mat-select
-              [ngClass]="editable ? '' : 'select'"
-              [style]="
-                element.isActive === 'active'
-                  ? 'color:#52b48f'
-                  : 'color: #c82d3b'
-              "
-              [disabled]="!editable"
-              [(value)]="element.isActive"
-            >
-              <mat-option style="color: #c82d3b" value="inactive"
-                >Inactivo</mat-option
-              >
-              <mat-option style="color: #52b48f" value="active"
-                >Activo</mat-option
-              >
-            </mat-select>
-          </mat-cell>
-        </ng-container>
-
         <!-- role Column -->
         <ng-container matColumnDef="role">
           <mat-header-cell mat-sort-header *matHeaderCellDef
@@ -88,10 +62,86 @@
           </mat-cell>
         </ng-container>
 
-        <!-- action Column -->
+        <!-- Password Column -->
+        <ng-container matColumnDef="password">
+          <mat-header-cell mat-sort-header *matHeaderCellDef
+            >Contraseña
+            <svg
+              *ngIf="editable"
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 16 16"
+              fill="none"
+              class="ml-2"
+              matTooltip="
+            - Al menos una mayúscula 
+            - 8 caracteres mínimo
+            - Al menos un caracter especial
+            - Al menos un número
+            "
+            >
+              <path
+                [ngClass]="
+                !password.value || password.errors?.hasNumber || password.errors?.hasSp ||  password.errors?.['minlength'] || password.errors?.hasUpper
+                  ? ''
+                  : 'iconFill'
+              "
+                d="M10.8653 5.52533L11.8013 6.47533L7.93933 10.28C7.68133 10.538 7.342 10.6667 7.00133 10.6667C6.66067 10.6667 6.318 10.5367 6.05733 10.2767L4.20267 8.47933L5.13133 7.52133L6.99333 9.326L10.8653 5.52533ZM16 8C16 12.4113 12.4113 16 8 16C3.58867 16 0 12.4113 0 8C0 3.58867 3.58867 0 8 0C12.4113 0 16 3.58867 16 8ZM14.6667 8C14.6667 4.324 11.676 1.33333 8 1.33333C4.324 1.33333 1.33333 4.324 1.33333 8C1.33333 11.676 4.324 14.6667 8 14.6667C11.676 14.6667 14.6667 11.676 14.6667 8Z"
+                fill="#B1B2B4"
+              />
+            </svg>
+          </mat-header-cell>
+          <mat-cell *matCellDef="let element">
+            <div class="contenedor flex">
+              <form action="" [formGroup]="userForm">
+                <mat-form-field class="input-user">
+                  <input
+                    matInput
+                    [(ngModel)]="element.password"
+                    [type]="element.pass"
+                    formControlName="password"
+                  />
+                </mat-form-field>
+                <a
+                  style="cursor: pointer"
+                  (click)="showPass(element)"
+                  class="p-2"
+                  matSuffix
+                >
+                  <mat-icon>{{
+                    element.show ? "visibility" : "visibility_off"
+                  }}</mat-icon>
+                </a>
+              </form>
+            </div>
+          </mat-cell>
+        </ng-container>
+
+        <!-- Status Column -->
+        <ng-container matColumnDef="status">
+          <mat-header-cell mat-sort-header *matHeaderCellDef
+            >Estado</mat-header-cell
+          >
+          <mat-cell *matCellDef="let element">
+            <mat-select
+              class="{{ element.isActive }}"
+              [ngClass]="editable ? '' : 'select'"
+              [disabled]="!editable"
+              [(value)]="element.isActive"
+            >
+              <mat-option value="inactive" class="inactive"
+                >Inactivo</mat-option
+              >
+              <mat-option value="active" class="active">Activo</mat-option>
+            </mat-select>
+          </mat-cell>
+        </ng-container>
+
+        <!-- Action Column -->
         <ng-container matColumnDef="action">
           <mat-header-cell mat-sort-header *matHeaderCellDef
-            >Rol</mat-header-cell
+            >Accion</mat-header-cell
           >
           <mat-cell *matCellDef="let element">
             <button
@@ -113,8 +163,10 @@
       <div class="grid grid-cols-1">
         <a
           (click)="guardarCambios(dataSource._data._value)"
-          class="boton justify-self-end"
+          class="justify-self-end"
           mat-raised-button
+          [disabled]="password.errors"
+          [ngClass]="password.errors ? 'boton_disabled' : 'boton'"
           >Guardar Cambios</a
         >
       </div>

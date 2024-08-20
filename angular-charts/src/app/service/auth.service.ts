@@ -105,19 +105,20 @@ export class AuthService {
       console.log('The dialog was closed');
     });
   }
-  openDialog2(): void {
+  openDialogLogin(value: string): void {
     const dialogRef = this.dialog.open(LoginModalComponent, {
       enterAnimationDuration: '500ms',
       exitAnimationDuration: '500ms',
       width: '571px',
       height: '292px',
+      data: { isLogin: value },
     });
 
     dialogRef.afterClosed().subscribe((result) => {
       console.log('The dialog was closed');
     });
   }
-  openDialog3(): void {
+  openDialogListarDatos(): void {
     const dialogRef = this.dialog.open(ListarDatosModal, {
       enterAnimationDuration: '500ms',
       exitAnimationDuration: '500ms',

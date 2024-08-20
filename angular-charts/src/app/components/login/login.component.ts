@@ -93,11 +93,11 @@ export class LoginComponent implements OnInit {
           }
           break;
         case 403:
-          this.service.openDialog2();
+          this.service.openDialogLogin('login');
           break;
 
         default:
-          this.service.openDialog2();
+          this.service.openDialogLogin('login');
           break;
       }
     });
@@ -154,5 +154,8 @@ export class LoginComponent implements OnInit {
       this.pass = 'password';
       this.show = false;
     }
+  }
+  openForgotPass() {
+    this.service.openDialogLogin('pass');
   }
 }
