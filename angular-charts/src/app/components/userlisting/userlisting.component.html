@@ -2,35 +2,26 @@
   <mat-card-header class="">
     <div class="grid grid-cols-2 header">
       <h2 class="titulo justify-self-start">Listado de usuarios</h2>
-
-      <a
-        (click)="editableToggle()"
-        mat-raised-button
-        class="boton justify-self-end"
-      >
-        <mat-icon id="icon"> edit_note </mat-icon>
-        {{ editable ? "Cancelar" : "Editar Listado" }}
-      </a>
     </div>
   </mat-card-header>
 
   <mat-card-content>
     <div class="card">
       <mat-table matSort [dataSource]="dataSource" class="mb-3">
-        <!-- Name Column -->
-        <ng-container matColumnDef="name">
-          <mat-header-cell mat-sort-header *matHeaderCellDef
-            >Nombre</mat-header-cell
-          >
-          <mat-cell *matCellDef="let element">{{ element.name }}</mat-cell>
-        </ng-container>
-
         <!-- username Column -->
         <ng-container matColumnDef="username">
           <mat-header-cell mat-sort-header *matHeaderCellDef
             >Nombre de usuario</mat-header-cell
           >
           <mat-cell *matCellDef="let element">{{ element.username }}</mat-cell>
+        </ng-container>
+
+        <!-- Name Column -->
+        <ng-container matColumnDef="name">
+          <mat-header-cell mat-sort-header *matHeaderCellDef
+            >Nombre</mat-header-cell
+          >
+          <mat-cell *matCellDef="let element">{{ element.name }}</mat-cell>
         </ng-container>
 
         <!-- email Column -->
@@ -66,54 +57,52 @@
         <ng-container matColumnDef="password">
           <mat-header-cell mat-sort-header *matHeaderCellDef
             >Contraseña
-            <svg
-              *ngIf="editable"
-              xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              viewBox="0 0 16 16"
-              fill="none"
-              class="ml-2"
-              matTooltip="
-            - Al menos una mayúscula 
-            - 8 caracteres mínimo
-            - Al menos un caracter especial
-            - Al menos un número
-            "
-            >
-              <path
-                [ngClass]="
-                !password.value || password.errors?.hasNumber || password.errors?.hasSp ||  password.errors?.['minlength'] || password.errors?.hasUpper
-                  ? ''
-                  : 'iconFill'
-              "
-                d="M10.8653 5.52533L11.8013 6.47533L7.93933 10.28C7.68133 10.538 7.342 10.6667 7.00133 10.6667C6.66067 10.6667 6.318 10.5367 6.05733 10.2767L4.20267 8.47933L5.13133 7.52133L6.99333 9.326L10.8653 5.52533ZM16 8C16 12.4113 12.4113 16 8 16C3.58867 16 0 12.4113 0 8C0 3.58867 3.58867 0 8 0C12.4113 0 16 3.58867 16 8ZM14.6667 8C14.6667 4.324 11.676 1.33333 8 1.33333C4.324 1.33333 1.33333 4.324 1.33333 8C1.33333 11.676 4.324 14.6667 8 14.6667C11.676 14.6667 14.6667 11.676 14.6667 8Z"
-                fill="#B1B2B4"
-              />
-            </svg>
           </mat-header-cell>
-          <mat-cell *matCellDef="let element">
-            <div class="contenedor flex">
-              <form action="" [formGroup]="userForm">
-                <mat-form-field class="input-user">
-                  <input
-                    matInput
-                    [(ngModel)]="element.password"
-                    [type]="element.pass"
-                    formControlName="password"
-                  />
-                </mat-form-field>
-                <a
-                  style="cursor: pointer"
-                  (click)="showPass(element)"
-                  class="p-2"
-                  matSuffix
-                >
-                  <mat-icon>{{
-                    element.show ? "visibility" : "visibility_off"
-                  }}</mat-icon>
-                </a>
-              </form>
+          <mat-cell *matCellDef="let element; let i = index">
+            <div class="contenedor flex" [formGroup]="userForm">
+              <mat-form-field class="input-user">
+                <input
+                  matInput
+                  [type]="element.pass"
+                  [formControlName]="element.name"
+                  [value]="element.password"
+                />
+              </mat-form-field>
+              <a
+                style="cursor: pointer"
+                (click)="showPass(element)"
+                class="p-2 mt-3"
+                matSuffix
+              >
+                <mat-icon>{{
+                  element.show ? "visibility" : "visibility_off"
+                }}</mat-icon>
+              </a>
+              <svg
+                *ngIf="editable"
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 16 16"
+                fill="none"
+                class="mt-6"
+                matTooltip="
+        - Al menos una mayúscula 
+        - 8 caracteres mínimo
+        - Al menos un caracter especial
+        - Al menos un número
+        "
+              >
+                <path
+                  [ngClass]="
+                !userForm.get(element.name)!.value || userForm.get(element.name)?.errors?.['hasNumber'] || userForm.get(element.name)?.errors?.['hasSp'] ||  userForm.get(element.name)?.errors?.['minlength'] || userForm.get(element.name)?.errors?.['hasUpper']
+                ? ''
+                : 'iconFill'
+                "
+                  d="M10.8653 5.52533L11.8013 6.47533L7.93933 10.28C7.68133 10.538 7.342 10.6667 7.00133 10.6667C6.66067 10.6667 6.318 10.5367 6.05733 10.2767L4.20267 8.47933L5.13133 7.52133L6.99333 9.326L10.8653 5.52533ZM16 8C16 12.4113 12.4113 16 8 16C3.58867 16 0 12.4113 0 8C0 3.58867 3.58867 0 8 0C12.4113 0 16 3.58867 16 8ZM14.6667 8C14.6667 4.324 11.676 1.33333 8 1.33333C4.324 1.33333 1.33333 4.324 1.33333 8C1.33333 11.676 4.324 14.6667 8 14.6667C11.676 14.6667 14.6667 11.676 14.6667 8Z"
+                  fill="#B1B2B4"
+                />
+              </svg>
             </div>
           </mat-cell>
         </ng-container>
@@ -160,13 +149,21 @@
         <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
         <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
       </mat-table>
-      <div class="grid grid-cols-1">
+      <div class="flex justify-end">
+        <a
+          (click)="editableToggle()"
+          mat-raised-button
+          class="boton justify-self-end mx-8"
+        >
+          <mat-icon id="icon"> edit_note </mat-icon>
+          {{ editable ? "Cancelar" : "Editar Listado" }}
+        </a>
         <a
           (click)="guardarCambios(dataSource._data._value)"
           class="justify-self-end"
           mat-raised-button
-          [disabled]="password.errors"
-          [ngClass]="password.errors ? 'boton_disabled' : 'boton'"
+          [disabled]="password.status === 'INVALID'"
+          [ngClass]="password.status === 'INVALID' ? 'boton_disabled' : 'boton'"
           >Guardar Cambios</a
         >
       </div>

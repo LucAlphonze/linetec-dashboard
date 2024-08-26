@@ -8,7 +8,12 @@ import { environment } from 'src/environments/environment';
 import { VariableModalComponent } from 'src/app/forms/variable-form/variable.modal.component';
 import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
-import { FormBuilder, FormControl, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import {
   checkNumber,
   checkSpecial,
@@ -27,23 +32,10 @@ export class UserlistingComponent implements OnInit {
     public dialog: MatDialog,
     private builder: FormBuilder
   ) {}
+
   ngOnInit(): void {
     this.LoadUser();
-
-    this.userForm = this.builder.group({
-      password: [
-        '',
-        [
-          Validators.minLength(8),
-          checkUpperCase(),
-          checkNumber(),
-          checkSpecial(),
-        ],
-      ],
-    });
   }
-  userForm: any;
-
   pass: string = 'password';
   show = false;
   userList: any = [];
@@ -51,19 +43,25 @@ export class UserlistingComponent implements OnInit {
   editable: boolean = false;
   userUrl = environment.API_URL_USERS;
   subscription!: Subscription;
+  userForm!: FormGroup;
+  fields: any = [];
+
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
+
   LoadUser() {
     this.service.GetAll().subscribe((res) => {
       this.service.streamUsers(res);
     });
-    this.subscription = this.service.listUser.subscribe((message) => {
-      this.userList = message;
-      this.userList.forEach((element: any) => {
+    this.subscription = this.service.listUser.subscribe((message: any) => {
+      Array.from(message).forEach((element: any) => {
         element.show = false;
         element.pass = 'password';
       });
+
+      this.userList = message;
       console.log('userlist: ', this.userList);
+      this.buildForm();
       this.dataSource = new MatTableDataSource(this.userList);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
@@ -88,17 +86,13 @@ export class UserlistingComponent implements OnInit {
 
   guardarCambios(data: any) {
     var ulist: any = [];
+
     this.service.GetAll().subscribe((res) => {
       ulist = res;
       for (let i = 0; i < ulist.length; i++) {
-        console.log(
-          'user List: ',
-          ulist[i].isActive,
-          'updated data: ',
-          data[i].isActive,
-          'i es : ',
-          i
-        );
+        console.log(data[i]);
+        console.log(this.userForm.controls[ulist[i].name].value);
+        data[i].password = this.userForm.controls[ulist[i].name].value;
         if (
           ulist[i].isActive != data[i].isActive ||
           ulist[i].role._id != data[i].role._id ||
@@ -140,11 +134,40 @@ export class UserlistingComponent implements OnInit {
     }
   }
   get password() {
-    if (this.editable == true) {
-      this.userForm.get('password').enable();
+    if (this.editable === true) {
+      this.userForm.enable();
     } else {
-      this.userForm.get('password').disable();
+      this.userForm.disable();
     }
-    return this.userForm.get('password');
+
+    return this.userForm;
+  }
+
+  getFormControlsFields() {
+    const formGroupFields: any = {};
+    for (const user of this.userList) {
+      formGroupFields[user.name] = new FormControl(user.password, [
+        Validators.required,
+        Validators.minLength(8),
+        checkUpperCase(),
+        checkNumber(),
+        checkSpecial(),
+      ]);
+      this.fields.push(user);
+    }
+    return formGroupFields;
+  }
+  buildForm() {
+    const formGroupFields = this.getFormControlsFields();
+    (this.userForm = new FormGroup(formGroupFields)),
+      [
+        Validators.required,
+        Validators.minLength(8),
+        checkUpperCase(),
+        checkNumber(),
+        checkSpecial(),
+      ];
+    console.log('form group fields', formGroupFields);
+    console.log('userform', this.userForm.controls);
   }
 }
