@@ -59,9 +59,9 @@
     *ngIf="!tabla"
     class="col-span-1 row-start-1"
     matTooltip="
-  Proceso: {{ value.id.id_proceso.descripcion }}
-  Maquina: {{ value.id.id_maquina.nombre }}
-  Trigger: {{ value.id.id_trigger.nombre }}
+  Proceso: {{ value.id ? value.id.id_proceso.descripcion : 'no hay proceso' }} 
+  Maquina: {{ value.id ? value.id.id_maquina.nombre : 'no hay maquina' }}
+  Trigger: {{ value.id ? value.id.id_trigger.nombre : 'no hay trigger' }}
   
 "
   >

@@ -1,6 +1,8 @@
 require("dotenv").config({ path: "./.env" });
 const mqtt = require("mqtt");
 const axios = require("axios");
+// Importa el módulo 'fs' para escribir el resultado en un archivo
+const fs = require("fs");
 
 var token;
 var rtoken;
@@ -234,188 +236,79 @@ function verificarFormatoJSON(objeto) {
   return false;
 }
 
-// [
-//   {
-//     fl: "20210315:171858",
-//     metaData: [
-//       {
-//         v: 0.6296,
-//         n: "TagliTagliaf",
-//       },
-//       {
-//         v: 1.6412,
-//         n: "Pressioneestrusione",
-//       },
-//       {
-//         v: 0.6296,
-//         n: "Temperaturaestrusione",
-//       },
-//       {
-//         v: 0.6296,
-//         n: "Vuoto",
-//       },
-//       {
-//         v: 0.6412,
-//         n: "Correntemotoreestrusore",
-//       },
-//       {
-//         v: 0.6412,
-//         n: "Velocitamotoreestrusore",
-//       },
-//       {
-//         v: 0.6412,
-//         n: "Potenzamotoreestrusore",
-//       },
-//     ],
-//     ts: "20210315:171858",
-//   },
-// ];
+function generateDateList(startDate, endDate) {
+  const dateList = [];
+  let currentDate = new Date(startDate);
 
-// [
-//   {
-//     _id: '657a051796126234e81623cb',
-//     nombre: 'TagliTagliaf',
-//     trigger_valor: '',
-//     __v: 0,
-//     time_stamp: '2023-12-01T03:00:00.000Z'
-//   },
-//   {
-//     _id: '6544fde05c4420c935a5aa65',
-//     nombre: 'Pressioneestrusione',
-//     trigger_valor: '',
-//     __v: 0,
-//     time_stamp: '2023-12-02T03:00:00.000Z'
-//   },
-//   {
-//     _id: '6544fdff5c4420c935a5aa6f',
-//     nombre: 'Temperaturaestrusione',
-//     trigger_valor: '',
-//     __v: 0,
-//     time_stamp: '2023-12-03T03:00:00.000Z'
-//   },
-//   {
-//     _id: '6544fe155c4420c935a5aa79',
-//     nombre: 'Vuoto',
-//     trigger_valor: '',
-//     __v: 0,
-//     time_stamp: '2023-12-04T03:00:00.000Z'
-//   },
-//   {
-//     _id: '6544fe375c4420c935a5aa83',
-//     nombre: 'Correntemotoreestrusore',
-//     trigger_valor: '',
-//     __v: 0,
-//     time_stamp: '2023-12-05T03:00:00.000Z'
-//   },
-//   {
-//     _id: '6544fe505c4420c935a5aa8d',
-//     nombre: 'Velocitamotoreestrusore',
+  while (currentDate <= endDate) {
+    const formattedDate = formatDate(currentDate.toISOString());
+    const regGeneral = {
+      fl: formattedDate,
+      metaData: [
+        {
+          v: generateRandomNumber(),
+          n: "Corrente motore aspo",
+        },
+        {
+          v: generateRandomNumber(),
+          n: "Corrente motore degasatore",
+        },
+        {
+          v: generateRandomNumber(),
+          n: "Velocita motore degasatore",
+        },
+        {
+          v: generateRandomNumber(),
+          n: "Potenza motore degasatore",
+        },
+        {
+          v: generateRandomNumber(),
+          n: "Codice materiale",
+        },
+        {
+          v: generateRandomNumber(),
+          n: "Potenzamotore estrusore",
+        },
+      ],
+    };
+    dateList.push(regGeneral);
+    currentDate.setMinutes(currentDate.getMinutes() + 1);
+  }
 
-//     trigger_valor: '',
-//     __v: 0,
-//     time_stamp: '2023-12-06T03:00:00.000Z'
-//   },
-//   {
-//     _id: '6544fe6b5c4420c935a5aa97',
-//     nombre: 'Potenzamotoreestrusore',
+  return dateList;
+}
 
-//     trigger_valor: '',
-//     __v: 0,
-//     time_stamp: '2023-12-07T03:00:00.000Z'
-//   },
-//   {
-//     _id: '6544fe805c4420c935a5aaa1',
-//     nombre: 'Correntemotoreaspo',
+// Define las fechas de inicio y fin
+const startDate = new Date("2024-08-03T00:00:00Z"); // Fecha de inicio
+const endDate = new Date("2024-08-07T23:59:59Z"); // Fecha de fin
 
-//     trigger_valor: '',
-//     __v: 0,
-//     time_stamp: '2023-12-08T03:00:00.000Z'
-//   },
-//   {
-//     _id: '6544fe9d5c4420c935a5aaab',
-//     nombre: 'Correntemotoredegasatore',
+// Genera la lista de fechas incrementando por segundo
+const dateList = generateDateList(startDate, endDate);
 
-//     trigger_valor: '',
-//     __v: 0,
-//     time_stamp: '2023-12-09T03:00:00.000Z'
-//   },
-//   {
-//     _id: '6544feb15c4420c935a5aab5',
-//     nombre: 'Velocitamotoredegasatore',
+// Convierte la lista a formato JSON
+const jsonResult = JSON.stringify(dateList, null, 2);
 
-//     trigger_valor: '',
-//     __v: 0,
-//     time_stamp: '2023-12-10T03:00:00.000Z'
-//   },
-//   {
-//     _id: '6544fece5c4420c935a5aabf',
-//     nombre: 'Potenzamotoredegasatore',
+// Escribe el resultado en un archivo llamado 'dates.json'
+fs.writeFileSync("dates.json", jsonResult);
 
-//     trigger_valor: '',
-//     __v: 0,
-//     time_stamp: '2023-12-11T03:00:00.000Z'
-//   },
-//   {
-//     _id: '6544fee85c4420c935a5aac9',
-//     nombre: 'Codicemateriale',
+console.log("Lista de fechas generada y guardada en dates.json");
 
-//     trigger_valor: '',
-//     __v: 0,
-//     time_stamp: '2023-12-12T03:00:00.000Z'
-//   }
-// ]
+function formatDate(dateString) {
+  const date = new Date(dateString);
 
-// [{
-//   "fl": "20240326:101137",
-//   "metaData": [
-//     {
-//       "v": 16,
-//       "n": "TagliTagliaf"
-//     },
-//     {
-//       "v": 23,
-//       "n": "Pressioneestrusione"
-//     },
-//     {
-//       "v": 19,
-//       "n": "Temperaturaestrusione"
-//     },
-//     {
-//       "v": 30,
-//       "n": "Vuoto"
-//     },
-//     {
-//       "v": 27,
-//       "n":"Correntemotoreestrusore"
-//     },
-//     {
-//       "v": 18,
-//       "n": "Velocitamotoreestrusore"
-//     },
-//     {
-//       "v": 22,
-//       "n": "Potenzamotoreestrusore"
-//     },
-//     {
-//       "v": 24,
-//       "n": "Correntemotoreaspo"
-//     },
-//     {
-//       "v": 27,
-//       "n": "Correntemotoredegasatore"
-//     },
-//     {
-//       "v": 10,
-//       "n": "Velocitamotoredegasatore"
-//     },
-//     {
-//       "v": 15,
-//       "n":"Potenzamotoredegasatore"
-//     },
-//     {
-//       "v": 13,
-//       "n": "Codicemateriale"
-//     }
-//   ],
-//   "ts": "20240326:101137"
-// }]
+  const year = date.getUTCFullYear();
+  const month = (date.getUTCMonth() + 1).toString().padStart(2, "0");
+  const day = date.getUTCDate().toString().padStart(2, "0");
+
+  const hours = date.getUTCHours().toString().padStart(2, "0");
+  const minutes = date.getUTCMinutes().toString().padStart(2, "0");
+  const seconds = date.getUTCSeconds().toString().padStart(2, "0");
+
+  return `${year}${month}${day}:${hours}${minutes}${seconds}`;
+}
+
+function generateRandomNumber() {
+  // Genera un número aleatorio entre 1 y 100 (ambos inclusive)
+  const randomNumber = Math.floor(Math.random() * 100) + 1;
+  return randomNumber;
+}

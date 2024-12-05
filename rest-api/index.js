@@ -1,7 +1,6 @@
 require("dotenv").config();
 var logger = require("morgan");
 const path = require("path");
-const { create } = require("express-handlebars");
 const express = require("express");
 const cors = require("cors");
 const { dbConnection } = require("./database/config");
@@ -9,25 +8,11 @@ const { dbConnection } = require("./database/config");
 // servidor de express
 const app = express();
 
-app.set("views", path.join(__dirname, "views"));
-
-app.engine(
-  ".hbs",
-  create({
-    layoutsDir: path.join(app.get("views"), "layouts"),
-    partialsDir: path.join(app.get("views"), "partials"),
-    defaultLayout: "main",
-    extname: ".hbs",
-  }).engine
-);
-app.set("view engine", ".hbs");
-
 // middleware
 app.use(logger("dev"));
 app.use(cors({ origin: "*" }));
 app.use(express.json({ limit: "20mb" }));
 app.use(express.urlencoded({ extended: false, limit: "20mb" }));
-
 // conexion base de datos
 
 dbConnection();
