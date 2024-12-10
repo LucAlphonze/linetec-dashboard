@@ -26,4 +26,5 @@ export const environment = {
   API_URL_ARGENTINA_PROVINCIAS: `https://apis.datos.gob.ar/georef/api/provincias?orden=nombre&campos=basico&max=30`,
   API_URL_ARGENTINA_DEPARTAMENTOS: `https://apis.datos.gob.ar/georef/api/departamentos?provincia=`,
   API_URL_ARGENTINA_LOCALIDADES: `https://apis.datos.gob.ar/georef/api/localidades?provincia=`,
+  API_URL_CHARTS: `${BASE_URL}:3001/api/charts/`,
 };

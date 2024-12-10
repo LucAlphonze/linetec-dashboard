@@ -41,6 +41,7 @@ import {
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DepartamentosComponent } from './forms/departamentos/departamentos.component';
 import { ToolbarComponent } from './components/toolbar/toolbar.component';
+import { ListarDatosComponentOld } from './components/listar-datos/listar-datos-old.component';
 
 export function tokenGetter() {
   return localStorage.getItem('token');
@@ -81,6 +82,7 @@ const MY_DATE_FORMAT = {
     LoginModalComponent,
     DepartamentosComponent,
     ToolbarComponent,
+    ListarDatosComponentOld,
   ],
   imports: [
     BrowserModule,
