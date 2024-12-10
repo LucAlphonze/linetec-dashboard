@@ -50,6 +50,8 @@ app.use(
   "/api/alertas-personalizadas-var",
   require("./routes/alertaPersonalizadaVar.route")
 );
+app.use("/api/charts", require("./routes/chart.route"));
+
 // app.use("/api/registro-general", require("./routes/registroGeneral.route")); no se usa mas esta ruta
 app.use(express.static(path.join(__dirname, "public")));
 module.exports = app;

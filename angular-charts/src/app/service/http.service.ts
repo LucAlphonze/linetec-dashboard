@@ -115,7 +115,11 @@ export class HttpService {
     );
   }
   httpGet(url: string) {
-    return this.http.get(url);
+    return this.http.get(url, {
+      headers: {
+        Authorization: 'Bearer ' + sessionStorage.getItem('token')?.toString(),
+      },
+    });
   }
   httpPost(url: string, body: any) {
     return this.http

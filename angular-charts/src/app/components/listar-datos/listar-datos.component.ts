@@ -30,9 +30,6 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
   todayDate: Date = new Date();
   sixMonthAgoDate!: Date;
   dato!: Dato;
-  sensor_1: string = 'sensor 1';
-  sensor_2: string = 'sensor 2';
-  pulsador: string = 'Pulsador';
   id: any = 0;
   chart: any;
   chart3: any;
@@ -49,6 +46,7 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
   i: any = null;
   tabla: any = 'tabla';
   isOpen = false;
+  chartUrl: string = environment.API_URL_CHARTS;
   selectValue: any = [
     {
       option: 'Media',
@@ -658,5 +656,89 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
   setValue(value: any) {
     this.selectedValue = value;
     this.changeCurrentValues(this.chart, this.selectedValue, this.listDatos);
+  }
+
+  getChartsOnStartUp() {
+    this._httpService.httpGet(this.chartUrl).subscribe((data: any) => {
+      this.chartList = data['datos'];
+      if (this.chartList.length > 0) {
+        console.log('si hay datos: ', data);
+        for (let i = 0; i < this.chartList.length; i++) {
+          setTimeout(() => {
+            this.renderChartOnStartUp(this.chartList[i]);
+          }, 500);
+        }
+      } else {
+        console.log('no hay datos: ', data);
+      }
+    });
+  }
+  renderChartOnStartUp(chart: any) {
+    let datosRenderChart: any[] = [];
+    const createdChart = new Chart(chart.nombre, {
+      type: chart.tipo,
+      data: {
+        labels: [],
+        datasets: [],
+      },
+      options: {
+        aspectRatio: 1,
+        maintainAspectRatio: false,
+        animation: false,
+        parsing: false,
+        plugins: {
+          decimation: this.decimation,
+        },
+        scales: {
+          y: {
+            type: 'linear',
+          },
+          x: {
+            type: 'time',
+            ticks: {
+              source: 'auto',
+              maxRotation: 0,
+              autoSkip: true,
+            },
+          },
+        },
+      },
+    });
+
+    this._httpService.stream_ChartData_Info(createdChart);
+    for (let i = 0; i < chart.variables.length; i++) {
+      const dsColor = this.utils.namedColor(i);
+      this._httpService
+        .getValores(chart.variables[i]._id)
+        .subscribe((message) => {
+          // console.log(
+          //   'render chart datos',
+          //   message,
+          //   'variable:',
+          //   chart.variables[i].nombre
+          // );
+          datosRenderChart = message['datos'];
+          const newDataset = {
+            label: chart.variables[i].nombre,
+            data: datosRenderChart
+              .map(
+                (x) =>
+                  (this.dato = {
+                    y: parseFloat(x.max.toFixed(2)),
+                    x: new Date(x._id).getTime() + 10800000,
+                  })
+              )
+              .filter((x) => {
+                return x.x > new Date('2023-04-30').getTime();
+              }),
+            backgroundColor: this.utils.transparentize(dsColor, 0.5),
+            borderColor: dsColor,
+          };
+          createdChart.data.datasets.push(newDataset);
+
+          createdChart.update();
+        });
+    }
+    // console.log('created Chart: ', createdChart);
   }
 }

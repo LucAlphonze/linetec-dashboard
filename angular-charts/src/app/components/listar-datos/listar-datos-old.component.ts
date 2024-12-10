@@ -15,23 +15,19 @@ import { ToastrService } from 'ngx-toastr';
 Chart.register(...registerables);
 
 @Component({
-  selector: 'app-listar-datos',
+  selector: 'app-listar-datos-old',
   templateUrl: './listar-datos-old.component.html',
   styleUrls: ['./listar-datos.component.css'],
 })
 export class ListarDatosComponentOld implements OnInit {
   listDatos: any[] = [];
   listDatos2: RegistroFiltrado[] = [];
-  listDatos3: any[] = [];
   listVariables: any[] = [];
   listCheckbox: any[] = [];
   chartList: any[] = [];
   todayDate: Date = new Date();
   sixMonthAgoDate!: Date;
   dato!: Dato;
-  sensor_1: string = 'sensor 1';
-  sensor_2: string = 'sensor 2';
-  pulsador: string = 'Pulsador';
   chart: any;
   chart3: any;
   title: string = 'Prueba angular';
@@ -223,8 +219,6 @@ export class ListarDatosComponentOld implements OnInit {
         this.chart3.data.labels = this.listDatos2.map((x) => x._id);
         this.chart3.data.datasets[0].data = this.listDatos2.map((x) => x.avg);
         this.chart3.update();
-
-        //bar chart
       }
     );
     this.expirationCheck();
@@ -261,18 +255,6 @@ export class ListarDatosComponentOld implements OnInit {
         );
       }
     );
-    // this.subscription = this._httpService.listaDatos3.subscribe((message) => {
-    //   this.listDatos3 = message;
-
-    //   this.chart.data.datasets[2].data = this.listDatos3.map(
-    //     (x) =>
-    //       (this.dato = {
-    //         y: parseFloat(x.max.toFixed(2)),
-    //         x: new Date(x._id).getTime() + 10800000,
-    //       })
-    //   );
-    //   this.chart.update();
-    // });
     this.subscription2 = this._httpService.listChartInfo.subscribe(
       (message) => {
         this.poblarChartArray(message);
@@ -309,24 +291,6 @@ export class ListarDatosComponentOld implements OnInit {
         this.chart.update();
         console.log('datos: ', this.chart.data.datasets[0].data);
       });
-    // this._httpService
-    //   .getValores(this.listVariables[4]._id)
-    //   .subscribe((data) => {
-    //     this.listDatos3 = data['datos'];
-    //     this.chart.data.datasets[2].data = this.listDatos3
-    //       .map(
-    //         (x) =>
-    //           (this.dato = {
-    //             y: parseFloat(x.max.toFixed(2)),
-    //             x: new Date(x._id).getTime() + 10800000,
-    //           })
-    //       )
-    //       .filter((x) => {
-    //         return x.x > new Date('2023-04-30').getTime();
-    //       });
-    //     this.chart.update();
-    //     console.log('datos: ', this.chart.data.datasets[2].data);
-    //   });
   }
 
   makeCheckboxArray(value: any) {
@@ -573,6 +537,7 @@ export class ListarDatosComponentOld implements OnInit {
     }
     // console.log('created Chart: ', createdChart);
   }
+
   getChartsOnStartUp() {
     this._httpService.httpGet(this.chartUrl).subscribe((data: any) => {
       this.chartList = data['datos'];
