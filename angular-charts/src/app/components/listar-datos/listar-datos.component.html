@@ -99,7 +99,9 @@
           </button>
         </mat-menu>
       </mat-card-header>
-      <mat-card-content *ngIf="chart.data.datasets.length != 0">
+      <mat-card-content
+        [ngStyle]="{ display: chart.data.datasets.length != 0 ? '' : 'none' }"
+      >
         <canvas id="myChart"></canvas>
         <ngx-spinner
           bdColor="rgba(51,51,51,0.8)"
@@ -112,7 +114,9 @@
         </ngx-spinner>
       </mat-card-content>
       <mat-card-content #elseBlock>
-        <div>
+        <div
+          [ngStyle]="{ display: chart.data.datasets.length != 0 ? 'none' : '' }"
+        >
           <h1>No hay datos</h1>
         </div>
       </mat-card-content>
@@ -132,8 +136,9 @@
         [indice]="i"
       >
       </app-toolbar>
+
       <mat-card-content>
-        <canvas id="{{ chart.titulo }}"></canvas>
+        <canvas id="{{ chart.nombre }}"></canvas>
         <ngx-spinner
           bdColor="rgba(51,51,51,0.8)"
           size="medium"

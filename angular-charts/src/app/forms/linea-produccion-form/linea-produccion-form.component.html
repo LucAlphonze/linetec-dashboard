@@ -41,6 +41,7 @@
         class="example-form"
         [formGroup]="lineaForm"
         (ngSubmit)="createLinea()"
+        (submit)="lineaForm.reset()"
       >
         <div class="grid grid-cols-3 grid-rows-4">
           <div class="col-span-3">

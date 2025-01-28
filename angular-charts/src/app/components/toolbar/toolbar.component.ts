@@ -1,9 +1,11 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormControl } from '@angular/forms';
 import { Subscription, catchError } from 'rxjs';
+import { AuthService } from 'src/app/service/auth.service';
 import { ChartGeneratorService } from 'src/app/service/chart-generator.service';
 import { HttpService } from 'src/app/service/http.service';
 import { SpinnerService } from 'src/app/service/spinner.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-toolbar',
@@ -18,6 +20,8 @@ export class ToolbarComponent implements OnInit {
   rangeSub!: any;
   listVariables: any;
   valor: any;
+  chartUrl: string = environment.API_URL_CHARTS;
+  isAdminUser: boolean = false;
   selectTime2: any = [
     {
       option: '1h',
@@ -73,10 +77,12 @@ export class ToolbarComponent implements OnInit {
     private _httpService: HttpService,
     private spinnerService: SpinnerService,
     private builder: FormBuilder,
-    private chartService: ChartGeneratorService
+    private chartService: ChartGeneratorService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
+    this.getUserRole();
     this.range = this.builder.group({
       start: new FormControl<Date | null>(null),
       end: new FormControl<Date | null>(null),
@@ -84,7 +90,7 @@ export class ToolbarComponent implements OnInit {
     });
 
     this.interval = this.builder.group({
-      medida: new FormControl<String | null>('min'),
+      medida: new FormControl<String | null>('max'),
       threshold: new FormControl<number>(25),
     });
     if (this.tabla) {
@@ -263,5 +269,16 @@ export class ToolbarComponent implements OnInit {
   setThreshold() {
     console.log('threshold', this.interval.value.threshold);
     this.tabla.threshold = this.interval.value.threshold;
+  }
+  getUserRole() {
+    const userRole = this.authService.getUserRole();
+    if (userRole === 'admin') {
+      this.isAdminUser = true;
+    } else {
+      this.isAdminUser = false;
+    }
+  }
+  removeCharts(chart: any) {
+    this.chartService.removerCharts(this.chartUrl, chart.nombre, chart._id);
   }
 }

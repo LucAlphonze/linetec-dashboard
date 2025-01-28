@@ -261,37 +261,38 @@ export class ListarDatosComponentOld implements OnInit {
       }
     );
   }
-  getRegistros() {
-    this._httpService
-      .getValores(this.listVariables[1]._id)
-      .subscribe((data) => {
-        this.listDatos = data['datos'];
-        this.chart.data.datasets[0].data = this.listDatos
-          .map(
-            (x) =>
-              (this.dato = {
-                y: parseFloat(x.max.toFixed(2)),
-                x: new Date(x._id).getTime() + 10800000,
-              })
-          )
-          .filter((x) => {
-            return x.x > new Date('2023-04-30').getTime();
-          });
-        this.chart.data.datasets[1].data = this.listDatos
-          .map(
-            (x) =>
-              (this.dato = {
-                y: parseFloat(x.min.toFixed(2)),
-                x: new Date(x._id).getTime() + 10800000,
-              })
-          )
-          .filter((x) => {
-            return x.x > new Date('2023-04-30').getTime();
-          });
-        this.chart.update();
-        console.log('datos: ', this.chart.data.datasets[0].data);
-      });
-  }
+
+  // getRegistros() {
+  //   this._httpService
+  //     .getValores(this.listVariables[1]._id)
+  //     .subscribe((data) => {
+  //       this.listDatos = data['datos'];
+  //       this.chart.data.datasets[0].data = this.listDatos
+  //         .map(
+  //           (x) =>
+  //             (this.dato = {
+  //               y: parseFloat(x.max.toFixed(2)),
+  //               x: new Date(x._id).getTime() + 10800000,
+  //             })
+  //         )
+  //         .filter((x) => {
+  //           return x.x > new Date('2023-04-30').getTime();
+  //         });
+  //       this.chart.data.datasets[1].data = this.listDatos
+  //         .map(
+  //           (x) =>
+  //             (this.dato = {
+  //               y: parseFloat(x.min.toFixed(2)),
+  //               x: new Date(x._id).getTime() + 10800000,
+  //             })
+  //         )
+  //         .filter((x) => {
+  //           return x.x > new Date('2023-04-30').getTime();
+  //         });
+  //       this.chart.update();
+  //       console.log('datos: ', this.chart.data.datasets[0].data);
+  //     });
+  // }
 
   makeCheckboxArray(value: any) {
     let newValue = JSON.parse(value.source._value);
@@ -311,7 +312,7 @@ export class ListarDatosComponentOld implements OnInit {
       this._httpService.stream_Variables(data);
       this.listVariables = data;
       console.log(this.listVariables);
-      this.getRegistros();
+      // this.getRegistros();
       this.chart.data.datasets[0].label = 'Pressione estrusione max';
       this.chart.data.datasets[1].label = 'Pressione estrusione min';
       this.chart.data.datasets[2].label = 'Corrente motore estrusore max';
@@ -322,7 +323,7 @@ export class ListarDatosComponentOld implements OnInit {
     var inicio: any = this.sixMonthAgoDate.getTime().toString();
     var final: any = this.todayDate.getTime().toString();
     this._httpService
-      .getValoresFiltrados(this.listVariables[1]._id, inicio, final, 'max')
+      .getAllInRange(this.listVariables[1]._id, inicio, final)
       .subscribe((data) => {
         console.log(data);
         this._httpService.stream_RegistroFiltrado(data['datos']);
@@ -372,7 +373,7 @@ export class ListarDatosComponentOld implements OnInit {
             } else {
               console.log('no hay datos: ', data);
               setTimeout(() => {
-                this.renderChart(createdChartItem.nombre, createdChartItem);
+                this.renderChart(createdChartItem);
               }, 500);
             }
           });
@@ -384,9 +385,13 @@ export class ListarDatosComponentOld implements OnInit {
       },
     });
   }
-  renderChart(ctx: string, createdChartItem: any) {
+
+  renderChart(createdChartItem: any) {
+    var inicio = new Date('2023-05-01').getTime().toString();
+    var final = new Date('2024-12-31').getTime().toString();
     let datosRenderChart: any[] = [];
-    const createdChart = new Chart(ctx, {
+
+    const createdChart = new Chart(createdChartItem.nombre, {
       type: createdChartItem.tipo,
       data: {
         labels: [],
@@ -422,7 +427,7 @@ export class ListarDatosComponentOld implements OnInit {
       const dsColor = this.utils.namedColor(i);
 
       this._httpService
-        .getValores(createdChartItem.variable[i]._id)
+        .getAllInRange(createdChartItem.variable[i]._id, inicio, final)
         .subscribe((message) => {
           datosRenderChart = message['datos'];
           const newDataset = {
@@ -470,6 +475,8 @@ export class ListarDatosComponentOld implements OnInit {
   }
 
   renderChartOnStartUp(chart: any) {
+    var inicio = new Date('2023-05-01').getTime().toString();
+    var final = new Date('2024-12-31').getTime().toString();
     let datosRenderChart: any[] = [];
     const createdChart = new Chart(chart.nombre, {
       type: chart.tipo,
@@ -505,7 +512,7 @@ export class ListarDatosComponentOld implements OnInit {
     for (let i = 0; i < chart.variables.length; i++) {
       const dsColor = this.utils.namedColor(i);
       this._httpService
-        .getValores(chart.variables[i]._id)
+        .getAllInRange(chart.variables[i]._id, inicio, final)
         .subscribe((message) => {
           // console.log(
           //   'render chart datos',

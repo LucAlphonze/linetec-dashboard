@@ -13,6 +13,7 @@ import { FormBuilder, FormControl } from '@angular/forms';
 import { MatMenu, MatMenuTrigger } from '@angular/material/menu';
 import { ChartGeneratorService } from 'src/app/service/chart-generator.service';
 import { environment } from 'src/environments/environment';
+import { ToastrService } from 'ngx-toastr';
 // import zoomPlugin from 'chartjs-plugin-zoom';
 Chart.register(...registerables);
 Chart.defaults.font.family = 'DIN-PRO';
@@ -173,7 +174,8 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
     private jwtHelper: JwtHelperService,
     private spinnerService: SpinnerService,
     private builder: FormBuilder,
-    private chartService: ChartGeneratorService
+    private chartService: ChartGeneratorService,
+    private toastr: ToastrService
   ) {}
 
   ngOnInit(): void {
@@ -242,6 +244,7 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
         this.getRegistros();
       }
     );
+
     this.expirationCheck();
 
     this.subscription = this._httpService.listaRegistroFiltrado2.subscribe(
@@ -305,11 +308,21 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
       (message: any) => {
         console.log('chart info datos: ', message);
         this.changeCurrentValues(
-          this.chartList2[message.index].chart,
+          message.chart,
           message.value,
-          message.datos ? message.datos : this.chartList2.datos,
+          this.listDatos,
+          message.variables,
           message.index
         );
+      }
+    );
+    this.subscription = this._httpService.listChartInfo.subscribe(
+      (message: any) => {
+        console.log('new chart: ', message);
+        this.chartList = message;
+        this.poblarChartArray(this.chartList);
+
+        console.log('chartlist: ', this.chartList);
       }
     );
   }
@@ -371,25 +384,45 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
           if (i == sortedList.length - 1) {
             this.spinnerService.detenerSpinner('grafico');
             this.chart.update();
+            this.getCharts();
           }
         }
-        for (let i = 0; i < this.chartList.length; i++) {
-          this.chartList2[i].chart.data.datasets[0].data = sortedList[i]?.info
-            .sort(
-              (objA: any, objB: any) =>
-                Number(new Date(objA.date)) - Number(new Date(objB.date))
-            )
-            .map(
-              (x: any) =>
-                (this.dato = {
-                  y: parseFloat(x.min.valor_lectura.toFixed(2)),
-                  x: new Date(x.min.fecha_lectura).getTime(),
-                })
-            );
-          this.chartList2[i].datos = [sortedList[i]];
-          this.chartList2[i].chart.update();
-        }
+        // for (let i = 0; i < this.chartList.length; i++) {
+        //   this.chartList2[i].chart.data.datasets[0].data = sortedList[i]?.info
+        //     .sort(
+        //       (objA: any, objB: any) =>
+        //         Number(new Date(objA.date)) - Number(new Date(objB.date))
+        //     )
+        //     .map(
+        //       (x: any) =>
+        //         (this.dato = {
+        //           y: parseFloat(x.min.valor_lectura.toFixed(2)),
+        //           x: new Date(x.min.fecha_lectura).getTime(),
+        //         })
+        //     );
+        //   this.chartList2[i].datos = [sortedList[i]];
+        //   this.chartList2[i].chart.update();
+        // }
       });
+  }
+
+  getCharts() {
+    this._httpService
+      .httpGet(environment.API_URL_CHARTS)
+      .subscribe((data: any) => {
+        console.log(data['datos']);
+        this.chartList = data['datos'];
+      });
+
+    setTimeout(() => {
+      this.chartService.renderChart(
+        this.chartList,
+        this.canvasBackgroundColor,
+        this.listDatos
+      );
+      this.chartList2 = this.chartService.getCharts();
+      this.chartService.streamCharts(this.chartList2);
+    }, 1000);
   }
 
   getVariables() {
@@ -397,29 +430,20 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
       this._httpService.stream_Variables(data);
       console.log(data);
 
-      this.chartList = [
-        {
-          titulo: data[0] ? data[0].nombre : 'myChart1',
-          id: data[0],
-        },
-        {
-          titulo: data[1] ? data[1].nombre : 'myChart2',
-          id: data[1],
-        },
-        {
-          titulo: data[2] ? data[2].nombre : 'myChart3',
-          id: data[2],
-        },
-      ];
-      setTimeout(() => {
-        this.chartService.generate(
-          this.chartList,
-          this.decimation,
-          this.canvasBackgroundColor
-        );
-        this.chartList2 = this.chartService.getCharts();
-        this.chartService.streamCharts(this.chartList2);
-      }, 500);
+      // this.chartList = [
+      //   {
+      //     titulo: data[0] ? data[0].nombre : 'myChart1',
+      //     id: data[0],
+      //   },
+      //   {
+      //     titulo: data[1] ? data[1].nombre : 'myChart2',
+      //     id: data[1],
+      //   },
+      //   {
+      //     titulo: data[2] ? data[2].nombre : 'myChart3',
+      //     id: data[2],
+      //   },
+      // ];
     });
   }
 
@@ -501,17 +525,25 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
     this.isOpen = !this.isOpen;
     console.log('is open value', this.isOpen);
   }
-  changeCurrentValues(chart: any, val: string, datos: any, index?: number) {
+  changeCurrentValues(
+    chart: any,
+    val: string,
+    datos: any,
+    listaDeVariables: any,
+    index?: number
+  ) {
     console.log('change current values: ', val);
     console.log('chart: ', chart);
+    console.log('datos: ', datos);
+    console.log('lista de variables', listaDeVariables);
 
-    var sortedList = this.listVariables;
+    var sortedList = listaDeVariables;
     sortedList = sortedList
       .map((item: { _id: any }) => {
         const item2 = datos.find((i2: { _id: any }) => i2._id === item._id);
         return item2;
       })
-      .filter((e) => {
+      .filter((e: any) => {
         return e !== undefined;
       });
     console.log('change current values sorted list: ', sortedList);
@@ -641,7 +673,8 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
         this.changeCurrentValues(
           this.chart,
           this.selectedValue,
-          this.listDatos
+          this.listDatos,
+          this.listVariables
         );
       });
   }
@@ -655,7 +688,12 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
   }
   setValue(value: any) {
     this.selectedValue = value;
-    this.changeCurrentValues(this.chart, this.selectedValue, this.listDatos);
+    this.changeCurrentValues(
+      this.chart,
+      this.selectedValue,
+      this.listDatos,
+      this.listVariables
+    );
   }
 
   getChartsOnStartUp() {
@@ -674,7 +712,17 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
     });
   }
   renderChartOnStartUp(chart: any) {
+    console.log('render chart startup', chart);
+    // var inicio = new Date('2023-05-01').getTime().toString();
+    // var final = new Date('2024-12-31').getTime().toString();
     let datosRenderChart: any[] = [];
+    var decimation_on_start_up: any = {
+      id: 'decimation',
+      enabled: true,
+      algorithm: 'lttb',
+      samples: 100,
+      threshold: 1000,
+    };
     const createdChart = new Chart(chart.nombre, {
       type: chart.tipo,
       data: {
@@ -682,63 +730,213 @@ export class ListarDatosComponent implements OnInit, OnDestroy {
         datasets: [],
       },
       options: {
+        // hay que arreglar esto para que funcione la data decimation
+        // Turn off animations and data parsing for performance
         aspectRatio: 1,
         maintainAspectRatio: false,
         animation: false,
         parsing: false,
         plugins: {
-          decimation: this.decimation,
+          decimation: decimation_on_start_up,
+        },
+        elements: {
+          line: {
+            tension: 0.5,
+          },
         },
         scales: {
           y: {
             type: 'linear',
+            beginAtZero: true,
+            ticks: {},
+            grid: {
+              display: false,
+            },
           },
           x: {
             type: 'time',
+
             ticks: {
               source: 'auto',
+              // Disabled rotation for performance
               maxRotation: 0,
               autoSkip: true,
+            },
+            grid: {
+              display: false,
             },
           },
         },
       },
+      plugins: [this.canvasBackgroundColor],
     });
 
     this._httpService.stream_ChartData_Info(createdChart);
-    for (let i = 0; i < chart.variables.length; i++) {
-      const dsColor = this.utils.namedColor(i);
-      this._httpService
-        .getValores(chart.variables[i]._id)
-        .subscribe((message) => {
-          // console.log(
-          //   'render chart datos',
-          //   message,
-          //   'variable:',
-          //   chart.variables[i].nombre
-          // );
-          datosRenderChart = message['datos'];
-          const newDataset = {
-            label: chart.variables[i].nombre,
-            data: datosRenderChart
-              .map(
-                (x) =>
-                  (this.dato = {
-                    y: parseFloat(x.max.toFixed(2)),
-                    x: new Date(x._id).getTime() + 10800000,
-                  })
-              )
-              .filter((x) => {
-                return x.x > new Date('2023-04-30').getTime();
-              }),
-            backgroundColor: this.utils.transparentize(dsColor, 0.5),
-            borderColor: dsColor,
-          };
-          createdChart.data.datasets.push(newDataset);
 
+    for (let i = 0; i < chart.variables.length; i++) {
+      var sortedList = chart.variables;
+      sortedList = sortedList.map((item: { _id: any }) => {
+        const item2 = this.listDatos.find(
+          (i2: { _id: any }) => i2._id === item._id
+        );
+        return item2 ? { ...item, ...item2 } : item;
+      });
+      sortedList = sortedList.filter((e: any) => 'info' in e);
+      if (createdChart.data.datasets.length < sortedList.length) {
+        for (let j = 0; j < sortedList.length; j++) {
+          const dsColor = this.utils.namedColor(
+            createdChart.data.datasets.length
+          );
+          const dataSet = {
+            data: [],
+            label: sortedList[j].nombre,
+            borderColor: dsColor,
+            backgroundColor: this.utils.transparentize(dsColor, 0.5),
+          };
+          createdChart.data.datasets.push(dataSet);
+        }
+      }
+
+      console.log('sortedList: ', sortedList);
+      for (let i = 0; i < sortedList.length; i++) {
+        createdChart.data.datasets[i].data = sortedList[i]?.info
+          .sort(
+            (objA: any, objB: any) =>
+              Number(new Date(objA.date)) - Number(new Date(objB.date))
+          )
+          .map(
+            (x: any) =>
+              (this.dato = {
+                y: parseFloat(x.max.valor_lectura.toFixed(2)),
+                x: new Date(x.max.fecha_lectura).getTime(),
+              })
+          );
+        createdChart.update();
+
+        if (i == sortedList.length - 1) {
+          this.spinnerService.detenerSpinner('grafico');
           createdChart.update();
-        });
+        }
+      }
     }
     // console.log('created Chart: ', createdChart);
+  }
+
+  updateChart(chart: any, createdChart: any) {
+    console.log('chart: ', chart, 'created chart: ', createdChart);
+    let datosRenderChart = [];
+    var inicio = new Date('2023-05-01').getTime().toString();
+    var final = new Date('2024-12-31').getTime().toString();
+    for (let i = 0; i < chart.variables.length; i++) {
+      const dsColor = this.utils.namedColor(i);
+
+      switch (chart.tipo) {
+        case 'bar':
+          console.log('chart tipo: ', chart.tipo);
+          // this._httpService
+          //   .getAllInRange(chart.variables[i]._id, inicio, final)
+          //   .subscribe((message) => {
+          //     datosRenderChart = message;
+          //     const newDataset = {
+          //       label: chart.variables[i].nombre,
+          //       data: datosRenderChart.map(
+          //         (x: any) =>
+          //           (this.dato = {
+          //             y: parseFloat(x.valor_lectura.toFixed(2)),
+          //             x: new Date(x.time_stamp).getTime(),
+          //           })
+          //       ),
+          //       backgroundColor: this.utils.transparentize(dsColor, 0.5),
+          //       borderColor: dsColor,
+          //     };
+          //     createdChart.config.data.datasets[i] = newDataset;
+
+          //     createdChart.update();
+          //   });
+          break;
+        case 'line':
+          var sortedList = chart.variables;
+          sortedList = sortedList.map((item: { _id: any }) => {
+            const item2 = this.listDatos.find(
+              (i2: { _id: any }) => i2._id === item._id
+            );
+            return item2 ? { ...item, ...item2 } : item;
+          });
+          sortedList = sortedList.filter((e: any) => 'info' in e);
+          if (createdChart.data.datasets.length < sortedList.length) {
+            for (let j = 0; j < sortedList.length; j++) {
+              const dataSet = {
+                data: [],
+                label: sortedList[j].nombre,
+                borderColor: dsColor,
+                backgroundColor: this.utils.transparentize(dsColor, 0.5),
+              };
+              createdChart.config.data.datasets[i] = dataSet;
+            }
+          }
+
+          console.log('sortedList: ', sortedList);
+          for (let i = 0; i < sortedList.length; i++) {
+            createdChart.data.datasets[i].data = sortedList[i]?.info
+              .sort(
+                (objA: any, objB: any) =>
+                  Number(new Date(objA.date)) - Number(new Date(objB.date))
+              )
+              .map(
+                (x: any) =>
+                  (this.dato = {
+                    y: parseFloat(x.max.valor_lectura.toFixed(2)),
+                    x: new Date(x.max.fecha_lectura).getTime(),
+                  })
+              );
+            createdChart.update();
+
+            if (i == sortedList.length - 1) {
+              createdChart.config.options.plugins.decimation = this.decimation;
+
+              createdChart.update();
+            }
+          }
+          break;
+        default:
+          break;
+      }
+    }
+  }
+  poblarChartArray(createdChartItem: any) {
+    this.authService.postForm(this.chartUrl, createdChartItem).subscribe({
+      next: (res: any) => {
+        console.log('respuesta: ', res);
+        if (res.status == 500) {
+          this.toastr.warning(res.error.error);
+        } else {
+          this.toastr.success('Chart registrado correctamente');
+          this._httpService.httpGet(this.chartUrl).subscribe((data: any) => {
+            this.chartList = data['datos'];
+            if (this.chartList.length > 0) {
+              console.log('si hay datos: ', data['datos']);
+              for (let i = 0; i < this.chartList.length; i++) {
+                setTimeout(() => {
+                  this.renderChartOnStartUp(this.chartList[i]);
+                }, 500);
+              }
+            } else {
+              console.log('no hay datos: ', data['datos']);
+              setTimeout(() => {
+                this.chartService.renderChart(
+                  createdChartItem,
+                  this.canvasBackgroundColor,
+                  this.listDatos
+                );
+              }, 1000);
+            }
+          });
+        }
+      },
+      error: (error: any) => {
+        this.toastr.error(error);
+        console.log(error);
+      },
+    });
   }
 }

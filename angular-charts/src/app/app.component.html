@@ -45,58 +45,166 @@
   }
 </style>
 
-<mat-toolbar class="toolbar flex items-center" *ngIf="isMenuRequired">
-  <div class="grid grid-cols-3 grid-rows-1 gap-4 content-center">
-    <div class="col-span-1 pl-5">
-      <a routerLink="/" class="navbar-menu">
-        <img
-          src="assets/3- ISOTIPO LINETEC (T con fondo) PNG.png"
-          alt=""
-          class="lintec_logo"
-      /></a>
-    </div>
-    <div class="col-span-1 pt-5">
-      <a *ngIf="isAdminUser" routerLink="/admin" class="navbar-menu"
-        >Formularios</a
-      >
-    </div>
-    <div class="col-span-1 pt-5">
-      <a *ngIf="isAdminUser" routerLink="/user" class="navbar-menu">Usuarios</a>
-    </div>
-  </div>
+<mat-sidenav-container class="example-container">
+  <mat-sidenav #sidenav mode="side" [(opened)]="opened">
+    <div class="p-3" *ngIf="isAdminUser">
+      <mat-card>
+        <mat-card-header>
+          <h2>Crear Chart</h2>
+        </mat-card-header>
+        <mat-card-content>
+          <form
+            [formGroup]="tipoChart"
+            (submit)="tipoChart.reset()"
+            (ngSubmit)="poblarChartArray()"
+          >
+            <div class="p-3">
+              <mat-form-field>
+                <mat-label>tipo de chart</mat-label>
+                <mat-select formControlName="tipo">
+                  <mat-option
+                    *ngFor="let chart of charts"
+                    [value]="chart.value"
+                    >{{ chart.viewValue }}</mat-option
+                  >
+                </mat-select>
+              </mat-form-field>
+            </div>
 
-  <span class="spacer"></span>
-  <div class="perfil">
-    <p [attr.data-letters]="iniciales" class="profile"></p>
-    <p *ngIf="!mobile" class="fullName">{{ fullName }}</p>
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      class="navbar-menu m-5"
-      (click)="logOut()"
-    >
-      <g clip-path="url(#clip0_137_246)">
-        <path
-          d="M22.829 9.17192L18.95 5.29292C18.7614 5.11076 18.5088 5.00997 18.2466 5.01224C17.9844 5.01452 17.7336 5.11969 17.5482 5.3051C17.3628 5.49051 17.2576 5.74132 17.2553 6.00352C17.2531 6.26571 17.3539 6.51832 17.536 6.70692L21.415 10.5859C21.5303 10.7034 21.631 10.8344 21.715 10.9759C21.7 10.9759 21.688 10.9679 21.673 10.9679L5.98901 10.9999C5.7238 10.9999 5.46944 11.1053 5.28191 11.2928C5.09437 11.4803 4.98901 11.7347 4.98901 11.9999C4.98901 12.2651 5.09437 12.5195 5.28191 12.707C5.46944 12.8946 5.7238 12.9999 5.98901 12.9999L21.667 12.9679C21.695 12.9679 21.718 12.9539 21.745 12.9519C21.6563 13.1211 21.5438 13.2767 21.411 13.4139L17.532 17.2929C17.4365 17.3852 17.3603 17.4955 17.3079 17.6175C17.2555 17.7395 17.2279 17.8707 17.2268 18.0035C17.2256 18.1363 17.2509 18.268 17.3012 18.3909C17.3515 18.5138 17.4257 18.6254 17.5196 18.7193C17.6135 18.8132 17.7252 18.8875 17.8481 18.9377C17.971 18.988 18.1026 19.0133 18.2354 19.0122C18.3682 19.011 18.4994 18.9834 18.6214 18.931C18.7434 18.8786 18.8538 18.8024 18.946 18.7069L22.825 14.8279C23.5749 14.0778 23.9962 13.0606 23.9962 11.9999C23.9962 10.9393 23.5749 9.92203 22.825 9.17192H22.829Z"
-          fill="#c82d3b"
-        />
-        <path
-          d="M7 22H5C4.20435 22 3.44129 21.6839 2.87868 21.1213C2.31607 20.5587 2 19.7956 2 19V5C2 4.20435 2.31607 3.44129 2.87868 2.87868C3.44129 2.31607 4.20435 2 5 2H7C7.26522 2 7.51957 1.89464 7.70711 1.70711C7.89464 1.51957 8 1.26522 8 1C8 0.734784 7.89464 0.48043 7.70711 0.292893C7.51957 0.105357 7.26522 0 7 0L5 0C3.67441 0.00158786 2.40356 0.528882 1.46622 1.46622C0.528882 2.40356 0.00158786 3.67441 0 5L0 19C0.00158786 20.3256 0.528882 21.5964 1.46622 22.5338C2.40356 23.4711 3.67441 23.9984 5 24H7C7.26522 24 7.51957 23.8946 7.70711 23.7071C7.89464 23.5196 8 23.2652 8 23C8 22.7348 7.89464 22.4804 7.70711 22.2929C7.51957 22.1054 7.26522 22 7 22Z"
-          fill="#c82d3b"
-        />
-      </g>
-      <defs>
-        <clipPath id="clip0_137_246">
-          <rect width="24" height="24" fill="white" />
-        </clipPath>
-      </defs>
-    </svg>
-  </div>
-</mat-toolbar>
+            <div class="p-3">
+              <mat-form-field>
+                <mat-label>Nombre del chart</mat-label>
+                <input matInput formControlName="titulo" />
+              </mat-form-field>
+            </div>
 
-<div role="main">
-  <router-outlet class=""></router-outlet>
-</div>
+            <div class="p-3">
+              <mat-form-field>
+                <mat-label>Variables</mat-label>
+                <mat-select formControlName="variable" multiple>
+                  <mat-option
+                    *ngFor="let variable of listVariables"
+                    [value]="variable"
+                    >{{ variable.nombre }}</mat-option
+                  >
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <button
+              mat-raised-button
+              color="primary"
+              [disabled]="
+                !tipoChart.value.tipo ||
+                !tipoChart.value.titulo ||
+                !tipoChart.value.variable
+              "
+            >
+              crear chart
+            </button>
+          </form>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <div *ngFor="let chart of chartList" [formGroup]="chartForm">
+      <mat-expansion-panel hideToggle>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            {{ chart.nombre }}
+          </mat-panel-title>
+          <mat-panel-description>
+            Tocar para modificar las variables del chart
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+
+        <mat-form-field>
+          <mat-label>Variables</mat-label>
+
+          <mat-select
+            multiple
+            formControlName="{{ chart.nombre }}"
+            [(ngModel)]="chart.variables"
+            [compareWith]="comparer"
+          >
+            <mat-option
+              *ngFor="let variable of listVariables"
+              [value]="variable"
+              >{{ variable.nombre }}</mat-option
+            >
+          </mat-select>
+        </mat-form-field>
+        <p *ngFor="let variable of chart.variables">
+          {{ variable.nombre }}
+        </p>
+        <button
+          mat-raised-button
+          color="primary"
+          (click)="updateVariables(chart)"
+        >
+          Actualizar Variables
+        </button>
+      </mat-expansion-panel>
+    </div>
+  </mat-sidenav>
+  <mat-sidenav-content class="fondo">
+    <div class="content" role="main">
+      <router-outlet></router-outlet>
+    </div>
+    <mat-toolbar class="toolbar flex items-center" *ngIf="isMenuRequired">
+      <button mat-icon-button (click)="sidenav.toggle()">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <div class="grid grid-cols-3 grid-rows-1 gap-4 content-center">
+        <div class="col-span-1 pl-5">
+          <a routerLink="/" class="navbar-menu">
+            <img
+              src="assets/3- ISOTIPO LINETEC (T con fondo) PNG.png"
+              alt=""
+              class="lintec_logo"
+          /></a>
+        </div>
+        <div class="col-span-1 pt-5">
+          <a *ngIf="isAdminUser" routerLink="/admin" class="navbar-menu"
+            >Formularios</a
+          >
+        </div>
+        <div class="col-span-1 pt-5">
+          <a *ngIf="isAdminUser" routerLink="/user" class="navbar-menu"
+            >Usuarios</a
+          >
+        </div>
+      </div>
+
+      <span class="spacer"></span>
+      <div class="perfil">
+        <p [attr.data-letters]="iniciales" class="profile"></p>
+        <p *ngIf="!mobile" class="fullName">{{ fullName }}</p>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          class="navbar-menu m-5"
+          (click)="logOut()"
+        >
+          <g clip-path="url(#clip0_137_246)">
+            <path
+              d="M22.829 9.17192L18.95 5.29292C18.7614 5.11076 18.5088 5.00997 18.2466 5.01224C17.9844 5.01452 17.7336 5.11969 17.5482 5.3051C17.3628 5.49051 17.2576 5.74132 17.2553 6.00352C17.2531 6.26571 17.3539 6.51832 17.536 6.70692L21.415 10.5859C21.5303 10.7034 21.631 10.8344 21.715 10.9759C21.7 10.9759 21.688 10.9679 21.673 10.9679L5.98901 10.9999C5.7238 10.9999 5.46944 11.1053 5.28191 11.2928C5.09437 11.4803 4.98901 11.7347 4.98901 11.9999C4.98901 12.2651 5.09437 12.5195 5.28191 12.707C5.46944 12.8946 5.7238 12.9999 5.98901 12.9999L21.667 12.9679C21.695 12.9679 21.718 12.9539 21.745 12.9519C21.6563 13.1211 21.5438 13.2767 21.411 13.4139L17.532 17.2929C17.4365 17.3852 17.3603 17.4955 17.3079 17.6175C17.2555 17.7395 17.2279 17.8707 17.2268 18.0035C17.2256 18.1363 17.2509 18.268 17.3012 18.3909C17.3515 18.5138 17.4257 18.6254 17.5196 18.7193C17.6135 18.8132 17.7252 18.8875 17.8481 18.9377C17.971 18.988 18.1026 19.0133 18.2354 19.0122C18.3682 19.011 18.4994 18.9834 18.6214 18.931C18.7434 18.8786 18.8538 18.8024 18.946 18.7069L22.825 14.8279C23.5749 14.0778 23.9962 13.0606 23.9962 11.9999C23.9962 10.9393 23.5749 9.92203 22.825 9.17192H22.829Z"
+              fill="#c82d3b"
+            />
+            <path
+              d="M7 22H5C4.20435 22 3.44129 21.6839 2.87868 21.1213C2.31607 20.5587 2 19.7956 2 19V5C2 4.20435 2.31607 3.44129 2.87868 2.87868C3.44129 2.31607 4.20435 2 5 2H7C7.26522 2 7.51957 1.89464 7.70711 1.70711C7.89464 1.51957 8 1.26522 8 1C8 0.734784 7.89464 0.48043 7.70711 0.292893C7.51957 0.105357 7.26522 0 7 0L5 0C3.67441 0.00158786 2.40356 0.528882 1.46622 1.46622C0.528882 2.40356 0.00158786 3.67441 0 5L0 19C0.00158786 20.3256 0.528882 21.5964 1.46622 22.5338C2.40356 23.4711 3.67441 23.9984 5 24H7C7.26522 24 7.51957 23.8946 7.70711 23.7071C7.89464 23.5196 8 23.2652 8 23C8 22.7348 7.89464 22.4804 7.70711 22.2929C7.51957 22.1054 7.26522 22 7 22Z"
+              fill="#c82d3b"
+            />
+          </g>
+          <defs>
+            <clipPath id="clip0_137_246">
+              <rect width="24" height="24" fill="white" />
+            </clipPath>
+          </defs>
+        </svg>
+      </div>
+    </mat-toolbar>
+  </mat-sidenav-content>
+  <!-- Toolbar -->
+</mat-sidenav-container>

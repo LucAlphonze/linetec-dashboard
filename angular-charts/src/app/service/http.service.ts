@@ -38,29 +38,13 @@ export class HttpService {
 
   constructor(private http: HttpClient) {}
 
-  getValores(variable: string): Observable<any> {
-    return this.http.get(this.registroGeneralts + 'all/' + variable, {
-      headers: {
-        Authorization: 'Bearer ' + sessionStorage.getItem('token')?.toString(),
-      },
-    });
-  }
-  getValoresFiltrados(
-    variable: String,
-    inicio: String,
-    fin: String,
-    operacion: string
-  ): Observable<any> {
-    return this.http.get(
-      this.registroGeneral + `filter/${variable}/${inicio}/${fin}/${operacion}`,
-      {
-        headers: {
-          Authorization:
-            'Bearer ' + sessionStorage.getItem('token')?.toString(),
-        },
-      }
-    );
-  }
+  // getValores(variable: string): Observable<any> {
+  //   return this.http.get(this.registroGeneralts + 'all/' + variable, {
+  //     headers: {
+  //       Authorization: 'Bearer ' + sessionStorage.getItem('token')?.toString(),
+  //     },
+  //   });
+  // }
   getValoresFiltrados2(
     inicio: String,
     fin: String,

@@ -1,4 +1,5 @@
 const Chart = require("../models/chart.model");
+const mongoose = require("mongoose");
 
 const obtenerCharts = async (req, res) => {
   try {
@@ -17,12 +18,28 @@ const obtenerCharts = async (req, res) => {
 };
 
 const crearChart = async (req, res) => {
+  // console.log(req.body);
+  // return res.json({
+  //   datos: req.body,
+  // });
   try {
     const existeChart = await Chart.findOne({
       nombre: { $regex: new RegExp(req.body.nombre, "i") },
     });
+    const existeChartID = await Chart.findOne({
+      _id: new mongoose.Types.ObjectId(req.body._id),
+    });
 
-    if (existeChart) {
+    if (existeChart && existeChartID) {
+      await Chart.findByIdAndUpdate(req.body._id, req.body, {
+        new: true,
+      });
+      return res.status(204).json({
+        ok: true,
+        status: 204,
+        datos: req.body,
+      });
+    } else if (existeChart) {
       return res.status(500).json({
         ok: false,
         status: 500,
@@ -41,7 +58,7 @@ const crearChart = async (req, res) => {
   } catch (err) {
     res.status(500).json({
       ok: false,
-      error: err,
+      error: err.message,
     });
   }
 };
