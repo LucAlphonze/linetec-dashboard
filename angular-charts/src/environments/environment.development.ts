@@ -27,5 +27,4 @@ export const environment = {
   API_URL_ARGENTINA_DEPARTAMENTOS: `https://apis.datos.gob.ar/georef/api/departamentos?provincia=`,
   API_URL_ARGENTINA_LOCALIDADES: `https://apis.datos.gob.ar/georef/api/localidades?provincia=`,
   API_URL_CHARTS: `${BASE_URL}:3001/api/charts/`,
-  MAPTILER_API_KEY: 'ct6jtoaDxAenL9unZq8r',
 };

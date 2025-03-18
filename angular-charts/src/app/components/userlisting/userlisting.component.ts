@@ -19,8 +19,6 @@ import {
   checkSpecial,
   checkUpperCase,
 } from 'src/app/service/validator';
-import { MapmodalComponent } from './mapmodal/mapmodal.component';
-
 @Component({
   selector: 'app-userlisting',
   templateUrl: './userlisting.component.html',
@@ -124,14 +122,6 @@ export class UserlistingComponent implements OnInit {
         variable_id: variable_id,
         titulo: 'este usuario',
       },
-    });
-  }
-  openMapDialog(elemento: any): void {
-    const dialogRef = this.dialog.open(MapmodalComponent, {
-      data: { elemento },
-    });
-    dialogRef.afterClosed().subscribe((res) => {
-      elemento.direccion = res;
     });
   }
   showPass(element: any): void {
