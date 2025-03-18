@@ -13,7 +13,6 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "allowedCommonJsDependencies": ["moment"],
             "outputPath": "dist/angular-charts",
             "index": "src/index.html",
             "main": "src/main.ts",
@@ -29,9 +28,11 @@
               "node_modules/ngx-spinner/animations/ball-spin-clockwise.css",
               "node_modules/ngx-spinner/animations/cog.css",
               "node_modules/ngx-spinner/animations/square-jelly-box.css",
-              "node_modules/ngx-spinner/animations/timer.css"
+              "node_modules/ngx-spinner/animations/timer.css",
+              "./node_modules/maplibre-gl/dist/maplibre-gl.css"
             ],
-            "scripts": []
+            "scripts": [],
+            "allowedCommonJsDependencies": ["moment"]
           },
           "configurations": {
             "production": {
